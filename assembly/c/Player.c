@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <z64.h>
 #include "macro.h"
+#include <z64extended.h>
 #include "ArrowCycle.h"
 #include "ArrowMagic.h"
 #include "DekuHop.h"
@@ -9,6 +10,7 @@
 #include "Icetrap.h"
 #include "Reloc.h"
 #include "Misc.h"
+#include "Extra.h"
 #include "enums.h"
 #include "Util.h"
 #include "GiantMask.h"
@@ -59,6 +61,9 @@ void Player_InitFuncPointers() {
     sPlayer_UpperAction_CarryAboveHead = z2_Player_UpperAction_CarryAboveHead;
     sFuncPointersInitialized = true;
 }
+
+extern uint8_t CFG_SWAP_ENABLED;
+extern uint8_t CFG_SKIP_GUARD_ENABLED;
 
 bool Player_BeforeDamageProcess(ActorPlayer* player, GlobalContext* ctxt) {
     return Icetrap_Give(player, ctxt);
@@ -216,6 +221,33 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
     if (sInstantTranformTimer) {
         sInstantTranformTimer--;
     }
+	
+	Handle_Rupee_Drain(player, ctxt);
+	
+	if (CFG_SWAP_ENABLED) {
+		if (ctxt->msgCtx.currentMessageId == 0x00F6 && !LOST_HERO_SHIELD)
+			HAVE_EXTRA_SRAM ^= 16;
+		if (gSaveContext.perm.unk4C.equipment.shield == 1 && LOST_HERO_SHIELD)
+			HAVE_EXTRA_SRAM ^= 16;
+	}
+		
+	if (CFG_SKIP_GUARD_ENABLED) {
+		if (!(clock_town_guard & (1 << 5)) &&  HAVE_TALKED_GUARD)
+			clock_town_guard |= 32;
+		if ( (clock_town_guard & (1 << 5)) && !HAVE_TALKED_GUARD)
+			HAVE_EXTRA_SRAM |= 64;
+	}
+	
+	Handle_Hud(ctxt);
+	Handle_Ocarina_Icons(ctxt);
+	
+	if (!SAVE_DPAD) {
+		HAVE_EXTRA_SRAM |= 2;
+		DPAD_SET1_UP     = DPAD_SET2_UP    = ITEM_DEKU_MASK;
+		DPAD_SET1_RIGHT  = DPAD_SET2_RIGHT = ITEM_ZORA_MASK;
+		DPAD_SET1_DOWN   = DPAD_SET2_DOWN  = ITEM_OCARINA;
+		DPAD_SET1_LEFT   = DPAD_SET2_LEFT  = ITEM_GORON_MASK;
+	}
 }
 
 bool Player_CanReceiveItem(GlobalContext* ctxt) {

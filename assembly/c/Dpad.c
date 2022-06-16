@@ -7,6 +7,9 @@
 #include "Sprite.h"
 #include "Util.h"
 
+extern uint8_t CFG_WS_ENABLED;
+extern uint8_t dpad_alt;
+
 // D-Pad configuration structure that can be set by a randomizer.
 struct DpadConfig DPAD_CONFIG = {
     .magic = DPAD_CONFIG_MAGIC,
@@ -34,9 +37,10 @@ static u8 gTextureItems[4] = {
 };
 
 // Position of D-Pad texture.
-const static u16 gPosition[2][2] = {
+const static u16 gPosition[3][3] = {
     { 30,  60 },  // Left
     { 270, 75 },  // Right
+    { 374, 75 },  // Right WS
 };
 
 // Positions of D-Pad item textures, relative to main texture.
@@ -93,13 +97,16 @@ static bool AreCItemsDisabledByEntrance(GlobalContext* ctxt) {
 }
 
 static void GetDpadItemUsability(GlobalContext* ctxt, bool* dest) {
-    for (int i = 0; i < 4; i++) {
-        if (AreCItemsDisabledByEntrance(ctxt)) {
-            dest[i] = false;
-        } else {
-            dest[i] = Buttons_CheckCItemUsable(ctxt, DPAD_CONFIG.primary.values[i]);
-        }
-    }
+	uint8_t set1[4] = { DPAD_SET1_UP, DPAD_SET1_RIGHT, DPAD_SET1_DOWN, DPAD_SET1_LEFT };
+	uint8_t set2[4] = { DPAD_SET2_UP, DPAD_SET2_RIGHT, DPAD_SET2_DOWN, DPAD_SET2_LEFT };
+	
+	for (int i = 0; i < 4; i++) {
+		if (AreCItemsDisabledByEntrance(ctxt))
+			dest[i] = false;
+		if (!dpad_alt)
+			dest[i] = Buttons_CheckCItemUsable(ctxt, set1[i]);
+		else dest[i] = Buttons_CheckCItemUsable(ctxt, set2[i]);
+	}
 }
 
 static bool IsAnyItemUsable(const u8* dpad, const bool* usable) {
@@ -235,16 +242,30 @@ bool Dpad_Handle(ActorPlayer* player, GlobalContext* ctxt) {
     if ((player->stateFlags.state1 & flags1) != 0) {
         return false;
     }
+	
+	if (ctxt->state.input[0].current.buttons.l)
+		return false;
 
-    if (padPressed.du && gUsable[0]) {
-        return TryUseItem(ctxt, player, DPAD_CONFIG.primary.du);
-    } else if (padPressed.dr && gUsable[1]) {
-        return TryUseItem(ctxt, player, DPAD_CONFIG.primary.dr);
-    } else if (padPressed.dd && gUsable[2]) {
-        return TryUseItem(ctxt, player, DPAD_CONFIG.primary.dd);
-    } else if (padPressed.dl && gUsable[3]) {
-        return TryUseItem(ctxt, player, DPAD_CONFIG.primary.dl);
-    }
+	if (!dpad_alt) {
+		if (padPressed.du && gUsable[0])
+			return TryUseItem(ctxt, player, DPAD_SET1_UP);
+		else if (padPressed.dr && gUsable[1])
+			return TryUseItem(ctxt, player, DPAD_SET1_RIGHT);
+		else if (padPressed.dd && gUsable[2])
+			return TryUseItem(ctxt, player, DPAD_SET1_DOWN);
+		else if (padPressed.dl && gUsable[3])
+			return TryUseItem(ctxt, player, DPAD_SET1_LEFT);
+	}
+	else {
+		if (padPressed.du && gUsable[0])
+			return TryUseItem(ctxt, player, DPAD_SET2_UP);
+		else if (padPressed.dr && gUsable[1])
+			return TryUseItem(ctxt, player, DPAD_SET2_RIGHT);
+		else if (padPressed.dd && gUsable[2])
+			return TryUseItem(ctxt, player, DPAD_SET2_DOWN);
+		else if (padPressed.dl && gUsable[3])
+			return TryUseItem(ctxt, player, DPAD_SET2_LEFT);
+	}
 
     return false;
 }
@@ -261,11 +282,15 @@ void Dpad_Draw(GlobalContext* ctxt) {
     if (DPAD_CONFIG.state == DPAD_STATE_DISABLED || DPAD_CONFIG.display == DPAD_DISPLAY_NONE) {
         return;
     }
-
+	
+	uint8_t set1[4] = { DPAD_SET1_UP, DPAD_SET1_RIGHT, DPAD_SET1_DOWN, DPAD_SET1_LEFT };
+	uint8_t set2[4] = { DPAD_SET2_UP, DPAD_SET2_RIGHT, DPAD_SET2_DOWN, DPAD_SET2_LEFT };
+	
     // If we don't have any D-Pad items, draw nothing
-    if (!HaveAny(DPAD_CONFIG.primary.values)) {
+    if (!HaveAny(set1) && !dpad_alt)
         return;
-    }
+	else if (!HaveAny(set2) && dpad_alt)
+        return;
 
     // Check for minigame frame, and do nothing unless transitioning into minigame
     // In which case the C-buttons alpha will be used instead for fade-in
@@ -290,10 +315,22 @@ void Dpad_Draw(GlobalContext* ctxt) {
     }
 
     // Check if any items shown on the D-Pad are usable
-    // If none are, draw main D-Pad sprite faded
-    if (!IsAnyItemUsable(DPAD_CONFIG.primary.values, gUsable) && primAlpha > 0x4A) {
-        primAlpha = 0x4A;
-    }
+    // If none are, draw main D-Pad sprite faded	
+	if (!IsAnyItemUsable(set1, gUsable) && primAlpha > 0x4A && !dpad_alt)
+		primAlpha = 0x4A;
+	else if (!IsAnyItemUsable(set2, gUsable) && primAlpha > 0x4A && dpad_alt)
+		primAlpha = 0x4A;
+	
+	if (ctxt->pauseCtx.state == 0) {
+		if (!dpad_alt) {
+			if (set1[0] == ITEM_NONE && set1[1] == ITEM_NONE && set1[2] == ITEM_NONE && set1[3] == ITEM_NONE)
+				return;
+		}
+		else {
+			if (set2[0] == ITEM_NONE && set2[1] == ITEM_NONE && set2[2] == ITEM_NONE && set2[3] == ITEM_NONE)
+				return;
+		}
+	}
 
     // Show faded while flying as a Deku
     ActorPlayer* player = GET_PLAYER(ctxt);
@@ -302,7 +339,12 @@ void Dpad_Draw(GlobalContext* ctxt) {
     }
 
     // Get index of main sprite position (left or right)
-    u8 posIdx = (DPAD_CONFIG.display == DPAD_DISPLAY_LEFT) ? 0 : 1;
+	u8 posIdx = 0;
+	if (DPAD_CONFIG.display == DPAD_DISPLAY_RIGHT) {
+		if (CFG_WS_ENABLED)
+			posIdx = 2;
+		else posIdx = 1;
+	}
 
     // Main sprite position
     u16 x = gPosition[posIdx][0];
@@ -311,7 +353,10 @@ void Dpad_Draw(GlobalContext* ctxt) {
 
     // Main sprite color
     Color color = HUD_COLOR_CONFIG.dpad;
-
+	
+	if (ctxt->pauseCtx.state == 6)
+		primAlpha = 0xFF;
+	
     DispBuf* db = &ctxt->state.gfxCtx->overlay;
     gSPDisplayList(db->p++, &gSetupDb);
     gDPPipeSync(db->p++);
@@ -322,7 +367,10 @@ void Dpad_Draw(GlobalContext* ctxt) {
 
     Sprite* sprite = Sprite_GetItemTexturesSprite();
     for (int i = 0; i < 4; i++) {
-        u8 value = DPAD_CONFIG.primary.values[i];
+		u8 value;
+		if (!dpad_alt)
+			value = set1[i];
+		else value = set2[i];
 
         // Calculate x/y from relative positions
         u16 ix = x + gPositions[i][0];

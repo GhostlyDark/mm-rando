@@ -1085,6 +1085,36 @@ struct GlobalContext {
     /* 0x18B4B */ UNK_TYPE1 pad18B4B[0x309];
     /* 0x18E54 */ SceneTableEntry* currentSceneTableEntry;
     /* 0x18E58 */ UNK_TYPE1 pad18E58[0x400];
+	
+	// Extra missing data
+	/* 0x19258 */ u8 filler1[0x3E];
+	/* 0x19296 */ u8 text_state;
+	/* 0x19297 */ u8 filler2[0x49];
+	/* 0x192E0 */ u16 use_hookshot;
+	/* 0x192E2 */ u8 filler3[0x1E];
+	/* 0x19300 */ u16 jump_height;
+	/* 0x19302 */ u8 filler4[0x2];
+	/* 0x19304 */ u16 jump_gravity;
+	/* 0x19306 */ u8 filler5[0x3E];
+	/* 0x19344 */ u16 var_803FFE64;
+	/* 0x19346 */ u16 playable_state;
+	/* 0x19348 */ u8 filler6[0x100];
+	/* 0x19448 */ u8 opening_chest;
+	/* 0x19449 */ u8 filler7[0x9B];
+	/* 0x194E4 */ u16 link_action;
+	/* 0x194E6 */ u8 filler8[0x6];
+	/* 0x194EC */ u32 var_8040000C;
+	/* 0x194F0 */ u8 filler9[0x134];
+	/* 0x19624 */ u8 link_anim_1;
+	/* 0x19625 */ u8 link_anim_2;
+	/* 0x19626 */ u8 filler10[0x6D6];
+	/* 0x19CFC */ u16 deku_hovering;
+	/* 0x19CFE */ u8 filler11[0x2];
+	/* 0x19D00 */ u32 opening_door;
+	/* 0x19D04 */ u8 filler12[0x74];
+	/* 0x19D78 */ u16 jump_state;
+	/* 0x19D7A */ u8 filler13[0x3E];
+	/* 0x19DB8 */ u16 deku_stick_timer;
 }; // size = 0x19258
 
 typedef struct SequenceChannelContext {
