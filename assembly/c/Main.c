@@ -19,7 +19,7 @@ void Main_CInit(void) {
     HudColors_Init();
     ActorExt_Init();
     Models_Init();
-    MMR_Init();
+//  MMR_Init();
     Misc_Init();
     Text_Init();
     WorldColors_Init();
