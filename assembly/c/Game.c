@@ -3,6 +3,7 @@
 #include "OverlayMenu.h"
 #include "MMR.h"
 #include "Music.h"
+#include "Fps.h"
 
 bool Game_IsPlayerActor(void) {
     return s801D0B70.selected == &s801D0B70.playerActor;
@@ -24,9 +25,11 @@ void Game_AfterPrepareDisplayBuffers(GraphicsContext* gfx) {
  * Hook function called after game processes next frame.
  **/
 void Game_AfterUpdate(GlobalContext* ctxt) {
-    OverlayMenu_Draw(ctxt);
+    /*OverlayMenu_Draw(ctxt);
     Music_Update(ctxt);
     if (Game_IsPlayerActor()) {
         MMR_ProcessItemQueue(ctxt);
-    }
+    }*/
+	
+	Handle_FPS(ctxt);
 }

@@ -185,5 +185,5 @@ bool PauseMenu_SelectItemShowAButtonEnabled(GlobalContext* ctxt) {
  **/
 void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
     // Update pause menu colors.
-    HudColors_UpdatePauseMenuColors(ctxt);
+    //HudColors_UpdatePauseMenuColors(ctxt);
 }
