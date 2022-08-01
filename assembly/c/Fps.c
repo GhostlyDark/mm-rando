@@ -16,24 +16,24 @@ void Handle_FPS(GlobalContext* ctxt) {
 	if (gPlayUpdateInput.pressEdge.buttons.l) {
 		fps_switch ^= 1;
 		if (fps_switch)
-			z2_playsfx(0x4814);
-		else z2_playsfx(0x4813);
+			z2_PlaySfx(0x4814);
+		else z2_PlaySfx(0x4813);
 	}
 	
 	if (!fps_switch)
-		fps_limit = link_animation_speed = 3;
+		ctxt->state.framerateDivisor = link_animation_speed = 3;
 	else if (text_state == 0x01 || jump_state == 0x0100 || opening_chest == 0x01 || var_801D7B44 == 0x01)
-		fps_limit = link_animation_speed = 2;
+		ctxt->state.framerateDivisor = link_animation_speed = 2;
 	else if (fps_switch)
-		fps_limit = link_animation_speed = 2;
+		ctxt->state.framerateDivisor = link_animation_speed = 2;
 	else if (playable_state == 0xFF08)
-		fps_limit = link_animation_speed = 3;
+		ctxt->state.framerateDivisor = link_animation_speed = 3;
 	else if (playable_state == 0x3208 && use_hookshot == 0x100B)
-		fps_limit = link_animation_speed = 3;
+		ctxt->state.framerateDivisor  = link_animation_speed = 3;
 	
-	if (fps_limit == 2) {
-		if (clock_speed == 3)
-			clock_speed = 2;
+	if (ctxt->state.framerateDivisor == 2) {
+		if (gStaticContext.timeSpeed == 3)
+			gStaticContext.timeSpeed = 2;
 		
 		var_801160AE = 0x0006;
 		var_80116702 = 0x0000;
@@ -92,8 +92,8 @@ void Handle_FPS(GlobalContext* ctxt) {
 			}
 		}*/
 	}
-	else if (fps_limit == 3) {
-		if (clock_speed == 2)
-			clock_speed = 3;
+	else if (ctxt->state.framerateDivisor == 3) {
+		if (gStaticContext.timeSpeed == 2)
+			gStaticContext.timeSpeed = 3;
 	}
 }

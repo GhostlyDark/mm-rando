@@ -5,9 +5,9 @@
 
 void Handle_FPS(GlobalContext* ctxt);
 
-#define fps_limit					(*(uint8_t*)	0x803E6BC2)
+#define gStaticContext              (*(StaticContext*)          StaticContextAddr)
+
 #define link_animation_speed		(*(uint8_t*)	0x803825E1)
-#define clock_speed					(*(uint8_t*)	0x80382503)
 #define deku_hovering				(*(uint16_t*)	0x8040081C)
 #define playable_state				(*(uint16_t*)	0x803FFE66)
 #define use_hookshot				(*(uint16_t*)	0x803FFE00)
