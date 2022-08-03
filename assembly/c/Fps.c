@@ -99,7 +99,7 @@ void Toggle_Minimap(GlobalContext* ctxt) {
 
 void Handle_FPS(GlobalContext* ctxt) {
 	
-	if (!CFG_FPS_ENABLED || ctxt->pauseCtx.state != 0 || gSaveContext.extra.titleSetupIndex != 0)
+	if (!CFG_FPS_ENABLED || ctxt->pauseCtx.state != 0 || gSaveContext.extra.titleSetupIndex != 0 || gRspSegmentPhysAddrs.gameplayKeep == 0)
 		return;
 	
 	if ( (ctxt->state.input[0].current.buttons.l && ctxt->state.input[0].pressEdge.buttons.z) || (ctxt->state.input[0].current.buttons.z && ctxt->state.input[0].pressEdge.buttons.l) ) {
