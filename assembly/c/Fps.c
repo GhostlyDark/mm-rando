@@ -1,7 +1,7 @@
 #include "FPS.h"
 #include "Input.h"
 
-uint8_t	 CFG_FPS_ENABLED			= 1;
+extern uint8_t CFG_FPS_ENABLED;
 
 uint16_t deku_stick_timer_switch	= 0;
 uint16_t last_time					= 0;
@@ -99,7 +99,7 @@ void Toggle_Minimap(GlobalContext* ctxt) {
 
 void Handle_FPS(GlobalContext* ctxt) {
 	
-	if (!CFG_FPS_ENABLED || ctxt->pauseCtx.state != 0 || gSaveContext.extra.titleSetupIndex != 0 || gRspSegmentPhysAddrs.gameplayKeep == 0)
+	if (!CFG_FPS_ENABLED || ctxt->pauseCtx.state != 0 || gSaveContext.extra.titleSetupIndex != 0 || gRspSegmentPhysAddrs.gameplayKeep == 0 || map_select_active == 0x00000222)
 		return;
 	
 	if ( (ctxt->state.input[0].current.buttons.l && ctxt->state.input[0].pressEdge.buttons.z) || (ctxt->state.input[0].current.buttons.z && ctxt->state.input[0].pressEdge.buttons.l) ) {
@@ -109,7 +109,7 @@ void Handle_FPS(GlobalContext* ctxt) {
 		else z2_PlaySfx(0x4813);
 	}
 	
-	if (!fps_switch)
+	if (!fps_switch || opening_door == 0x00800020)
 		ctxt->state.framerateDivisor = link_animation_speed = 3;
 	else if (text_state == 0x01 || jump_state == 0x0100 || opening_chest == 0x01 || var_801D7B44 == 0x01)
 		ctxt->state.framerateDivisor = link_animation_speed = 2;

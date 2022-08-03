@@ -102,6 +102,7 @@
 PAYLOAD_START:
 
 .include "Init.asm"
+.include "Config.asm"
 ;.include "Actor.asm"
 ;.include "ArrowMagic.asm"
 ;.include "BankAmount.asm"

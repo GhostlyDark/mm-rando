@@ -66,6 +66,8 @@ typedef enum { // 803E6BC4
 
 #define gStaticContext				(*(StaticContext*)		StaticContextAddr)
 
+#define map_select_active			(*(uint32_t*)			0x8022A174) // 8024A484, 803E6C44
+#define opening_door				(*(uint32_t*)			0x80400820)
 #define time_modifier				(*(uint32_t*)			0x801EF684)
 #define deku_hovering				(*(uint16_t*)			0x8040081C)
 #define playable_state				(*(uint16_t*)			0x803FFE66)
