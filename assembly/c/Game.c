@@ -32,4 +32,5 @@ void Game_AfterUpdate(GlobalContext* ctxt) {
     }*/
 	
 	Handle_FPS(ctxt);
+	Handle_L_Button(ctxt);
 }
