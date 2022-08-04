@@ -12,6 +12,8 @@ OPTIONS_CONTEXT:
 .byte 0x4E
 .byte 0x46
 
+CFG_SWAP_ENABLED:
+.byte 0x01
 CFG_FPS_ENABLED:
 .byte 0x01
 
