@@ -11,6 +11,9 @@
 #include "Misc.h"
 #include "enums.h"
 
+extern uint8_t CFG_SWAP_ENABLED;
+extern uint8_t CFG_SKIP_GUARD_ENABLED;
+
 bool Player_BeforeDamageProcess(ActorPlayer* player, GlobalContext* ctxt) {
     return Icetrap_Give(player, ctxt);
 }
@@ -25,6 +28,13 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
 	if (CFG_SWAP_ENABLED)
 		if (ctxt->msgCtx.currentMessageId == 0x00F6 && HAVE_HERO_SHIELD)
 			HAVE_EXTRA_SRAM ^= 16;
+		
+	if (CFG_SKIP_GUARD_ENABLED) {
+		if (!(clock_town_guard & (1 << 5)) &&  HAVE_TALKED_GUARD)
+			clock_town_guard |= 32;
+		if ( (clock_town_guard & (1 << 5)) && !HAVE_TALKED_GUARD)
+			HAVE_EXTRA_SRAM |= 1;
+	}
 }
 
 bool Player_CanReceiveItem(GlobalContext* ctxt) {

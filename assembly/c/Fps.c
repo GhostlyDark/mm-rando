@@ -12,7 +12,6 @@ uint8_t block						= 0;
 uint8_t pressed_r					= 0;
 uint8_t pressed_z					= 0;
 
-
 void Handle_L_Button(GlobalContext* ctxt) {
 	InputPad padReleased = ctxt->state.input[0].releaseEdge.buttons;
 	
