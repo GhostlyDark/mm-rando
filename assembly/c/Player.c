@@ -25,9 +25,12 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
     ArrowMagic_Handle(player, ctxt);
     DekuHop_Handle(player, ctxt);
 	
-	if (CFG_SWAP_ENABLED)
-		if (ctxt->msgCtx.currentMessageId == 0x00F6 && HAVE_HERO_SHIELD)
+	if (CFG_SWAP_ENABLED) {
+		if (ctxt->msgCtx.currentMessageId == 0x00F6 && !LOST_HERO_SHIELD)
 			HAVE_EXTRA_SRAM ^= 16;
+		if (gSaveContext.perm.unk4C.equipment.shield == 1 && LOST_HERO_SHIELD)
+			HAVE_EXTRA_SRAM ^= 16;
+	}
 		
 	if (CFG_SKIP_GUARD_ENABLED) {
 		if (!(clock_town_guard & (1 << 5)) &&  HAVE_TALKED_GUARD)

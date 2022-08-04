@@ -77,10 +77,10 @@ typedef enum { // 803E6BC4
 #define active_shield				(*(uint8_t*)			0x803FFEF4)
 #define HAVE_EXTRA_SRAM				(gSaveContext.perm.inv.quantities[0])
 #define HAVE_TALKED_GUARD			(HAVE_EXTRA_SRAM & (1 << 0) )
-#define HAVE_KOKIRI_SWORD			(HAVE_EXTRA_SRAM & (1 << 1) )
+#define LOST_KOKIRI_SWORD			(HAVE_EXTRA_SRAM & (1 << 1) )
 #define HAVE_RAZOR_SWORD			(HAVE_EXTRA_SRAM & (1 << 2) )
 #define HAVE_GILDED_SWORD			(HAVE_EXTRA_SRAM & (1 << 3) )
-#define HAVE_HERO_SHIELD			(HAVE_EXTRA_SRAM & (1 << 4) )
+#define LOST_HERO_SHIELD			(HAVE_EXTRA_SRAM & (1 << 4) )
 #define HAVE_MIRROR_SHIELD			(HAVE_EXTRA_SRAM & (1 << 5) )
 
 #endif
