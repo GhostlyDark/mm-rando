@@ -193,7 +193,7 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
     // Update pause menu colors.
     //HudColors_UpdatePauseMenuColors(ctxt);
 	
-	if (ctxt->pauseCtx.screenIndex == 2) {
+	if (ctxt->pauseCtx.screenIndex == 2 && CFG_SWAP_ENABLED) {
 		if (ctxt->pauseCtx.cells2.values[2] == 0x05) { // Sword Swapping
 			uint8_t sword = gSaveContext.perm.unk4C.equipment.sword;
 			

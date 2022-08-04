@@ -22,8 +22,9 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
     ArrowMagic_Handle(player, ctxt);
     DekuHop_Handle(player, ctxt);
 	
-	if (ctxt->msgCtx.currentMessageId == 0x00F6 && HAVE_HERO_SHIELD)
-		HAVE_EXTRA_SRAM ^= 16;
+	if (CFG_SWAP_ENABLED)
+		if (ctxt->msgCtx.currentMessageId == 0x00F6 && HAVE_HERO_SHIELD)
+			HAVE_EXTRA_SRAM ^= 16;
 }
 
 bool Player_CanReceiveItem(GlobalContext* ctxt) {
