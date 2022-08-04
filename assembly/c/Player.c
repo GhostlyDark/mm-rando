@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <z64.h>
+#include <z64extended.h>
 #include "ArrowCycle.h"
 #include "ArrowMagic.h"
 #include "DekuHop.h"
@@ -20,6 +21,9 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
     ArrowCycle_Handle(player, ctxt);
     ArrowMagic_Handle(player, ctxt);
     DekuHop_Handle(player, ctxt);
+	
+	if (ctxt->msgCtx.currentMessageId == 0x00F6 && HAVE_HERO_SHIELD)
+		HAVE_EXTRA_SRAM ^= 16;
 }
 
 bool Player_CanReceiveItem(GlobalContext* ctxt) {

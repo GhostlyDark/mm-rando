@@ -1,4 +1,5 @@
 #include <z64.h>
+#include <z64extended.h>
 #include "Models.h"
 #include "OverlayMenu.h"
 #include "MMR.h"

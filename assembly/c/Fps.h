@@ -2,6 +2,7 @@
 #define FPS_H
 
 #include <z64.h>
+#include <z64extended.h>
 
 void Handle_L_Button(GlobalContext* ctxt);
 void Toggle_Minimap(GlobalContext* ctxt);
@@ -64,8 +65,6 @@ typedef enum { // 803E6BC4
 	SCENE_STONE_TOWER_TEMPLE_INV		= 0x0018,
 } scene_id;
 
-#define gStaticContext				(*(StaticContext*)		StaticContextAddr)
-
 #define map_select_active			(*(uint32_t*)			0x8022A174) // 8024A484, 803E6C44
 #define opening_door				(*(uint32_t*)			0x80400820)
 #define time_modifier				(*(uint32_t*)			0x801EF684)
@@ -86,16 +85,5 @@ typedef enum { // 803E6BC4
 #define var_80116702				(*(uint16_t*)			0x80116702)
 #define var_803FFE64				(*(uint16_t*)			0x803FFE64)
 #define var_801D7B44				(*(uint8_t*)			0x801D7B44)
-
-#define r_minimap_disabled			(*(uint8_t*)			0x80383023)
-
-/* Minimap SRAM Locations (801F0514) */
-#define minimap_clock_town			(gSaveContext.perm.minimapBitfield[0] & (1 << 4) )
-#define minimap_milk_road			(gSaveContext.perm.minimapBitfield[1] & (1 << 1) )
-#define minimap_woodfall			(gSaveContext.perm.minimapBitfield[3] & (1 << 0) )
-#define minimap_snowhead			(gSaveContext.perm.minimapBitfield[5] & (1 << 3) )
-#define minimap_great_bay			(gSaveContext.perm.minimapBitfield[1] & (1 << 4) )
-#define minimap_stone_tower			(gSaveContext.perm.minimapBitfield[0] & (1 << 5) )
-
 
 #endif

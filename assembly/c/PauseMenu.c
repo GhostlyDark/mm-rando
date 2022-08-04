@@ -1,4 +1,5 @@
 #include <z64.h>
+#include <z64extended.h>
 #include "HudColors.h"
 #include "Misc.h"
 #include "QuestItemStorage.h"
@@ -6,13 +7,6 @@
 #include "Reloc.h"
 #include "SaveFile.h"
 #include "Input.h"
-
-#define active_shield				(*(uint8_t*)	0x803FFEF4)
-#define HAVE_EXTRA_SRAM				(gSaveContext.perm.inv.quantities[0])
-#define HAVE_RAZOR_SWORD			(HAVE_EXTRA_SRAM & (1 << 1) )
-#define HAVE_GILDED_SWORD			(HAVE_EXTRA_SRAM & (1 << 2) )
-#define HAVE_HERO_SHIELD			(HAVE_EXTRA_SRAM & (1 << 3) )
-#define HAVE_MIRROR_SHIELD			(HAVE_EXTRA_SRAM & (1 << 4) )
 
 extern uint8_t CFG_SWAP_ENABLED;
 
@@ -203,21 +197,23 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
 		if (ctxt->pauseCtx.cells2.values[2] == 0x05) { // Sword Swapping
 			uint8_t sword = gSaveContext.perm.unk4C.equipment.sword;
 			
-			if (sword == 2 && !HAVE_RAZOR_SWORD)
+			if (sword == 1 && !HAVE_KOKIRI_SWORD)
 				HAVE_EXTRA_SRAM |= 2;
-			if (sword == 3 && !HAVE_GILDED_SWORD)
+			if (sword == 2 && !HAVE_RAZOR_SWORD)
 				HAVE_EXTRA_SRAM |= 4;
+			if (sword == 3 && !HAVE_GILDED_SWORD)
+				HAVE_EXTRA_SRAM |= 8;
 			
 			if (gPlayUpdateInput.pressEdge.buttons.cl) {
 				sword--;
 				if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem != ITEM_RAZOR_SWORD) )
 					sword--;
-				if (sword == 1 && gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD)
+				if (sword == 1 && (!HAVE_KOKIRI_SWORD || gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD) )
 					sword--;
 			}
 			else if (gPlayUpdateInput.pressEdge.buttons.cr) {
 				sword++;
-				if (sword == 1 && gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD)
+				if (sword == 1 && (!HAVE_KOKIRI_SWORD || gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD) )
 					sword++;
 				if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD) )
 					sword++;
@@ -238,9 +234,9 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
 			uint8_t shield = gSaveContext.perm.unk4C.equipment.shield;
 			
 			if (shield == 1 && !HAVE_HERO_SHIELD)
-				HAVE_EXTRA_SRAM |= 8;
-			if (shield == 2 && !HAVE_MIRROR_SHIELD)
 				HAVE_EXTRA_SRAM |= 16;
+			if (shield == 2 && !HAVE_MIRROR_SHIELD)
+				HAVE_EXTRA_SRAM |= 32;
 			
 			if (gPlayUpdateInput.pressEdge.buttons.cl) {
 				shield--;
