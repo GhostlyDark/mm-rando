@@ -2,12 +2,16 @@
 #include "Input.h"
 
 extern uint8_t CFG_FPS_ENABLED;
+extern uint8_t CFG_HIDE_HUD_ENABLED;
 
 uint16_t deku_stick_timer_switch	= 0;
 uint16_t last_time					= 0;
 uint16_t started_timer				= 0;
 
 uint8_t fps_switch					= 1;
+uint8_t hud_hide                    = 0;
+uint8_t hud_hearts_hide				= 1;
+uint8_t hud_counter					= 0;
 uint8_t block						= 0;
 uint8_t pressed_r					= 0;
 uint8_t pressed_z					= 0;
@@ -21,6 +25,7 @@ void Handle_L_Button(GlobalContext* ctxt) {
 		pressed_z = 1;
 	if (padReleased.l && !pressed_r && !pressed_z) {
 		Toggle_Minimap(ctxt);
+		Hide_Hud(ctxt);
 	}
 	if (!ctxt->state.input[0].current.buttons.l)
 		pressed_r = pressed_z = 0;
@@ -96,8 +101,50 @@ void Toggle_Minimap(GlobalContext* ctxt) {
 	else z2_PlaySfx(0x4814);
 }
 
-void Handle_FPS(GlobalContext* ctxt) {
+void Handle_Hud(GlobalContext* ctxt) {
+	if (!hud_hide)
+		return;
 	
+	if (ctxt->interfaceCtx.alphas.minimap != 0) {
+		if (hud_counter < 8) {
+			hud_counter++;
+			return;
+		}
+	}
+	else hud_counter = 0;
+	
+	if (ctxt->interfaceCtx.alphas.buttonA			> 40)	ctxt->interfaceCtx.alphas.buttonA		-= 40; else ctxt->interfaceCtx.alphas.buttonA		= 0;
+	if (ctxt->interfaceCtx.alphas.buttonB			> 40)	ctxt->interfaceCtx.alphas.buttonB		-= 40; else ctxt->interfaceCtx.alphas.buttonB		= 0;
+	if (ctxt->interfaceCtx.alphas.buttonCLeft		> 40)	ctxt->interfaceCtx.alphas.buttonCLeft	-= 40; else ctxt->interfaceCtx.alphas.buttonCLeft	= 0;
+	if (ctxt->interfaceCtx.alphas.buttonCDown		> 40)	ctxt->interfaceCtx.alphas.buttonCDown	-= 40; else ctxt->interfaceCtx.alphas.buttonCDown	= 0;
+	if (ctxt->interfaceCtx.alphas.buttonCRight		> 40)	ctxt->interfaceCtx.alphas.buttonCRight	-= 40; else ctxt->interfaceCtx.alphas.buttonCRight	= 0;
+	if (ctxt->interfaceCtx.alphas.minimap			> 40)	ctxt->interfaceCtx.alphas.minimap		-= 40; else ctxt->interfaceCtx.alphas.minimap		= 0;
+		
+	if (hud_hearts_hide) {
+		if (ctxt->interfaceCtx.alphas.life			> 40)	ctxt->interfaceCtx.alphas.life			-= 40; else ctxt->interfaceCtx.alphas.life			= 0;
+		if (ctxt->interfaceCtx.alphas.magicRupees	> 40)	ctxt->interfaceCtx.alphas.magicRupees	-= 40; else ctxt->interfaceCtx.alphas.magicRupees	= 0;
+	}
+	else {
+		if (ctxt->interfaceCtx.alphas.life			< 215)	ctxt->interfaceCtx.alphas.life			+= 40; else ctxt->interfaceCtx.alphas.life			= 255;
+		if (ctxt->interfaceCtx.alphas.magicRupees	< 215)	ctxt->interfaceCtx.alphas.magicRupees	+= 40; else ctxt->interfaceCtx.alphas.magicRupees	= 255;
+	}
+}
+
+void Hide_Hud(GlobalContext* ctxt) {
+	if (!CFG_HIDE_HUD_ENABLED || ctxt->pauseCtx.debugMenu != 0)
+		return;
+	
+	if (ctxt->pauseCtx.state == 6 && ctxt->pauseCtx.screenIndex == 1) {
+		hud_hide ^= 1;
+		if (hud_hide)
+			z2_PlaySfx(0x4813);
+		else z2_PlaySfx(0x4814);
+	}
+	else if (ctxt->pauseCtx.state == 0 && hud_hide)
+		hud_hearts_hide ^= 1;
+}
+
+void Handle_FPS(GlobalContext* ctxt) {
 	if (!CFG_FPS_ENABLED || ctxt->pauseCtx.state != 0 || gSaveContext.extra.titleSetupIndex != 0 || ctxt->state.framerateDivisor == 1)
 		return;
 	

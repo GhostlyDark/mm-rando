@@ -9,6 +9,7 @@
 #include "Icetrap.h"
 #include "Reloc.h"
 #include "Misc.h"
+#include "Fps.h"
 #include "enums.h"
 
 extern uint8_t CFG_SWAP_ENABLED;
@@ -38,6 +39,8 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
 		if ( (clock_town_guard & (1 << 5)) && !HAVE_TALKED_GUARD)
 			HAVE_EXTRA_SRAM |= 1;
 	}
+	
+	Handle_Hud(ctxt);
 }
 
 bool Player_CanReceiveItem(GlobalContext* ctxt) {

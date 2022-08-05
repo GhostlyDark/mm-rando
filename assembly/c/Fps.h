@@ -6,6 +6,8 @@
 
 void Handle_L_Button(GlobalContext* ctxt);
 void Toggle_Minimap(GlobalContext* ctxt);
+void Handle_Hud(GlobalContext* ctxt);
+void Hide_Hud(GlobalContext* ctxt);
 void Handle_FPS(GlobalContext* ctxt);
 
 #define map_select_active			(*(uint32_t*)			0x8022A174) // 8024A484, 803E6C44
