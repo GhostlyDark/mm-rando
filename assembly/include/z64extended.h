@@ -83,4 +83,9 @@ typedef enum { // 803E6BC4
 #define LOST_HERO_SHIELD			(HAVE_EXTRA_SRAM & (1 << 4) )
 #define HAVE_MIRROR_SHIELD			(HAVE_EXTRA_SRAM & (1 << 5) )
 
+/* Smithy */
+#define smithy						(*(uint8_t*)			0x801EFC4F)
+#define REFORGING_KOKIRI_SWORD		( (smithy & (1 << 0)) && (smithy & (1 << 1)) && !(smithy & (1 << 2)) )
+#define REFORGING_RAZOR_SWORD		( (smithy & (1 << 0)) && (smithy & (1 << 1)) &&  (smithy & (1 << 2)) )
+
 #endif

@@ -206,16 +206,16 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
 			
 			if (gPlayUpdateInput.pressEdge.buttons.cl) {
 				sword--;
-				if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD) )
+				if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD || REFORGING_RAZOR_SWORD) )
 					sword--;
-				if (sword == 1 && gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD)
+				if (sword == 1 && (gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD || REFORGING_KOKIRI_SWORD) )
 					sword--;
 			}
 			else if (gPlayUpdateInput.pressEdge.buttons.cr) {
 				sword++;
-				if (sword == 1 && gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD)
+				if (sword == 1 && gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD || REFORGING_KOKIRI_SWORD)
 					sword++;
-				if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD) )
+				if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD || REFORGING_RAZOR_SWORD) )
 					sword++;
 				if (sword == 3 && (!HAVE_GILDED_SWORD || gSaveContext.perm.stolenItem == ITEM_GILDED_SWORD) )
 					sword++;
