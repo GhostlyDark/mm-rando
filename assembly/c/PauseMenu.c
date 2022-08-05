@@ -200,11 +200,8 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
 }
 
 void Handle_Sword_Swap(GlobalContext* ctxt) {
-	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 0x05)
+	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 0x05 || (!gPlayUpdateInput.pressEdge.buttons.cl && !gPlayUpdateInput.pressEdge.buttons.cr) )
 		return;
-	if (!gPlayUpdateInput.pressEdge.buttons.cl || !gPlayUpdateInput.pressEdge.buttons.cr)
-		return;
-	
 	uint8_t sword = gSaveContext.perm.unk4C.equipment.sword;
 	
 	if (sword == 2 && !HAVE_RAZOR_SWORD)
@@ -241,11 +238,8 @@ void Handle_Sword_Swap(GlobalContext* ctxt) {
 }
 
 void Handle_Shield_Swap(GlobalContext* ctxt) {
-	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 0x04)
+	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 0x04 || (!gPlayUpdateInput.pressEdge.buttons.cl && !gPlayUpdateInput.pressEdge.buttons.cr) )
 		return;
-	if (!gPlayUpdateInput.pressEdge.buttons.cl || !gPlayUpdateInput.pressEdge.buttons.cr)
-		return;
-	
 	uint8_t shield = gSaveContext.perm.unk4C.equipment.shield;
 	
 	if (shield == 2 && !HAVE_MIRROR_SHIELD)
