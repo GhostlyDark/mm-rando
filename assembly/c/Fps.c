@@ -1,5 +1,4 @@
 #include "FPS.h"
-#include "Input.h"
 
 extern uint8_t CFG_FPS_ENABLED;
 extern uint8_t CFG_HIDE_HUD_ENABLED;

@@ -59,33 +59,36 @@ typedef enum { // 803E6BC4
 	SCENE_STONE_TOWER_TEMPLE			= 0x0016,
 	SCENE_STONE_TOWER_TEMPLE_INV		= 0x0018,
 } scene_id;
+	
+typedef void (*z2_UpdateButtonIcon_proc)	(GlobalContext* ctxt, int button);
+#define z2_UpdateButtonIcon					((z2_UpdateButtonIcon_proc)		0x80112B40)
 
-#define gStaticContext				(*(StaticContext*)		StaticContextAddr)
+#define gStaticContext						(*(StaticContext*)				StaticContextAddr)
 
-#define r_minimap_disabled			(*(uint8_t*)			0x80383023)
-#define clock_town_guard			(*(uint8_t*)			0x801F0574)
+#define r_minimap_disabled					(*(uint8_t*)					0x80383023)
+#define clock_town_guard					(*(uint8_t*)					0x801F0574)
 
 /* Minimap SRAM Locations (801F0514) */
-#define minimap_clock_town			(gSaveContext.perm.minimapBitfield[0] & (1 << 4) )
-#define minimap_milk_road			(gSaveContext.perm.minimapBitfield[1] & (1 << 1) )
-#define minimap_woodfall			(gSaveContext.perm.minimapBitfield[3] & (1 << 0) )
-#define minimap_snowhead			(gSaveContext.perm.minimapBitfield[5] & (1 << 3) )
-#define minimap_great_bay			(gSaveContext.perm.minimapBitfield[1] & (1 << 4) )
-#define minimap_stone_tower			(gSaveContext.perm.minimapBitfield[0] & (1 << 5) )
+#define minimap_clock_town					(gSaveContext.perm.minimapBitfield[0] & (1 << 4) )
+#define minimap_milk_road					(gSaveContext.perm.minimapBitfield[1] & (1 << 1) )
+#define minimap_woodfall					(gSaveContext.perm.minimapBitfield[3] & (1 << 0) )
+#define minimap_snowhead					(gSaveContext.perm.minimapBitfield[5] & (1 << 3) )
+#define minimap_great_bay					(gSaveContext.perm.minimapBitfield[1] & (1 << 4) )
+#define minimap_stone_tower					(gSaveContext.perm.minimapBitfield[0] & (1 << 5) )
 
 /* Extra SRAM */
-#define active_shield				(*(uint8_t*)			0x803FFEF4)
-#define HAVE_EXTRA_SRAM				(*(uint8_t*)			0x801EF677)	// (gSaveContext.perm.inv.quantities[0])
-#define HAVE_TALKED_GUARD			(HAVE_EXTRA_SRAM & (1 << 0) )
-#define LOST_KOKIRI_SWORD			(HAVE_EXTRA_SRAM & (1 << 1) )
-#define HAVE_RAZOR_SWORD			(HAVE_EXTRA_SRAM & (1 << 2) )
-#define HAVE_GILDED_SWORD			(HAVE_EXTRA_SRAM & (1 << 3) )
-#define LOST_HERO_SHIELD			(HAVE_EXTRA_SRAM & (1 << 4) )
-#define HAVE_MIRROR_SHIELD			(HAVE_EXTRA_SRAM & (1 << 5) )
+#define active_shield						(*(uint8_t*)					0x803FFEF4)
+#define HAVE_EXTRA_SRAM						(*(uint8_t*)					0x801EF677)	// (gSaveContext.perm.inv.quantities[0])
+#define HAVE_TALKED_GUARD					(HAVE_EXTRA_SRAM & (1 << 0) )
+#define LOST_KOKIRI_SWORD					(HAVE_EXTRA_SRAM & (1 << 1) )
+#define HAVE_RAZOR_SWORD					(HAVE_EXTRA_SRAM & (1 << 2) )
+#define HAVE_GILDED_SWORD					(HAVE_EXTRA_SRAM & (1 << 3) )
+#define LOST_HERO_SHIELD					(HAVE_EXTRA_SRAM & (1 << 4) )
+#define HAVE_MIRROR_SHIELD					(HAVE_EXTRA_SRAM & (1 << 5) )
 
 /* Smithy */
-#define smithy						(*(uint8_t*)			0x801EFC4F)
-#define REFORGING_KOKIRI_SWORD		( (smithy & (1 << 0)) && (smithy & (1 << 1)) && !(smithy & (1 << 2)) )
-#define REFORGING_RAZOR_SWORD		( (smithy & (1 << 0)) && (smithy & (1 << 1)) &&  (smithy & (1 << 2)) )
+#define smithy								(*(uint8_t*)					0x801EFC4F)
+#define REFORGING_KOKIRI_SWORD				( (smithy & (1 << 0)) && (smithy & (1 << 1)) && !(smithy & (1 << 2)) )
+#define REFORGING_RAZOR_SWORD				( (smithy & (1 << 0)) && (smithy & (1 << 1)) &&  (smithy & (1 << 2)) )
 
 #endif

@@ -1,12 +1,4 @@
-#include <z64.h>
-#include <z64extended.h>
-#include "HudColors.h"
-#include "Misc.h"
-#include "QuestItemStorage.h"
-#include "QuestItems.h"
-#include "Reloc.h"
-#include "SaveFile.h"
-#include "Input.h"
+#include "PauseScreen.h"
 
 extern uint8_t CFG_SWAP_ENABLED;
 extern uint8_t CFG_UNEQUIP_ENABLED;
@@ -234,6 +226,7 @@ void Handle_Sword_Swap(GlobalContext* ctxt) {
 			gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = 0x4C + sword;
 		else gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_NONE;
 		z2_PlaySfx(0x4808);
+		z2_UpdateButtonIcon(ctxt, 0x00);
 	}
 }
 

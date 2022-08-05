@@ -3,6 +3,7 @@
 
 #include <z64.h>
 #include <z64extended.h>
+#include "Input.h"
 
 void Handle_L_Button(GlobalContext* ctxt);
 void Toggle_Minimap(GlobalContext* ctxt);
