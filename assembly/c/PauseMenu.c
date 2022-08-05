@@ -9,6 +9,7 @@
 #include "Input.h"
 
 extern uint8_t CFG_SWAP_ENABLED;
+extern uint8_t CFG_UNEQUIP_ENABLED;
 
 uint8_t redraw_b_button = 0;
 
@@ -193,65 +194,91 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
     // Update pause menu colors.
     //HudColors_UpdatePauseMenuColors(ctxt);
 	
-	if (ctxt->pauseCtx.screenIndex == 2 && CFG_SWAP_ENABLED) {
-		if (ctxt->pauseCtx.cells2.values[2] == 0x05) { // Sword Swapping
-			uint8_t sword = gSaveContext.perm.unk4C.equipment.sword;
-			
-			if (sword == 2 && !HAVE_RAZOR_SWORD)
-				HAVE_EXTRA_SRAM |= 4;
-			if (sword == 3 && !HAVE_GILDED_SWORD) {
-				HAVE_EXTRA_SRAM |= 4;
-				HAVE_EXTRA_SRAM |= 8;
-			}
-			
-			if (gPlayUpdateInput.pressEdge.buttons.cl) {
-				sword--;
-				if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD || REFORGING_RAZOR_SWORD) )
-					sword--;
-				if (sword == 1 && (gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD || REFORGING_KOKIRI_SWORD) )
-					sword--;
-			}
-			else if (gPlayUpdateInput.pressEdge.buttons.cr) {
-				sword++;
-				if (sword == 1 && gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD || REFORGING_KOKIRI_SWORD)
-					sword++;
-				if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD || REFORGING_RAZOR_SWORD) )
-					sword++;
-				if (sword == 3 && (!HAVE_GILDED_SWORD || gSaveContext.perm.stolenItem == ITEM_GILDED_SWORD) )
-					sword++;
-			}
-			
-			if (sword >= 0 && sword <= 3 && sword != gSaveContext.perm.unk4C.equipment.sword) {
-				gSaveContext.perm.unk4C.equipment.sword	= sword;
-				if (sword != 0)
-					gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = 0x4C + sword;
-				else gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_NONE;
-				z2_PlaySfx(0x4808);
-			}
-		}
+	Handle_Sword_Swap(ctxt);
+	Handle_Shield_Swap(ctxt);
+	Handle_Unequipping(ctxt);
+}
 
-		if (ctxt->pauseCtx.cells2.values[2] == 0x04) { // Shield Swapping
-			uint8_t shield = gSaveContext.perm.unk4C.equipment.shield;
-			if (shield == 2 && !HAVE_MIRROR_SHIELD)
-				HAVE_EXTRA_SRAM |= 32;
-			
-			if (gPlayUpdateInput.pressEdge.buttons.cl) {
-				shield--;
-				if (shield == 1 && LOST_HERO_SHIELD)
-					shield--;
-			}
-			else if (gPlayUpdateInput.pressEdge.buttons.cr) {
-				shield++;
-				if (shield == 1 && LOST_HERO_SHIELD)
-					shield++;
-				if (shield == 2 && !HAVE_MIRROR_SHIELD)
-					shield++;
-			}
-			
-			if (shield >= 0 && shield <= 2 && shield != gSaveContext.perm.unk4C.equipment.shield) {
-				gSaveContext.perm.unk4C.equipment.shield = active_shield = shield;
-				z2_PlaySfx(0x4808);
-			}
-		}
+void Handle_Sword_Swap(GlobalContext* ctxt) {
+	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 0x05)
+		return;
+	if (!gPlayUpdateInput.pressEdge.buttons.cl || !gPlayUpdateInput.pressEdge.buttons.cr)
+		return;
+	
+	uint8_t sword = gSaveContext.perm.unk4C.equipment.sword;
+	
+	if (sword == 2 && !HAVE_RAZOR_SWORD)
+		HAVE_EXTRA_SRAM |= 4;
+	if (sword == 3 && !HAVE_GILDED_SWORD) {
+		HAVE_EXTRA_SRAM |= 4;
+		HAVE_EXTRA_SRAM |= 8;
 	}
+	
+	if (gPlayUpdateInput.pressEdge.buttons.cl) {
+		sword--;
+		if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD || REFORGING_RAZOR_SWORD) )
+			sword--;
+		if (sword == 1 && (gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD || REFORGING_KOKIRI_SWORD) )
+			sword--;
+	}
+	else if (gPlayUpdateInput.pressEdge.buttons.cr) {
+		sword++;
+		if (sword == 1 && gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD || REFORGING_KOKIRI_SWORD)
+			sword++;
+		if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD || REFORGING_RAZOR_SWORD) )
+			sword++;
+		if (sword == 3 && (!HAVE_GILDED_SWORD || gSaveContext.perm.stolenItem == ITEM_GILDED_SWORD) )
+			sword++;
+	}
+	
+	if (sword >= 0 && sword <= 3 && sword != gSaveContext.perm.unk4C.equipment.sword) {
+		gSaveContext.perm.unk4C.equipment.sword	= sword;
+		if (sword != 0)
+			gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = 0x4C + sword;
+		else gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_NONE;
+		z2_PlaySfx(0x4808);
+	}
+}
+
+void Handle_Shield_Swap(GlobalContext* ctxt) {
+	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 0x04)
+		return;
+	if (!gPlayUpdateInput.pressEdge.buttons.cl || !gPlayUpdateInput.pressEdge.buttons.cr)
+		return;
+	
+	uint8_t shield = gSaveContext.perm.unk4C.equipment.shield;
+	
+	if (shield == 2 && !HAVE_MIRROR_SHIELD)
+		HAVE_EXTRA_SRAM |= 32;
+			
+	if (gPlayUpdateInput.pressEdge.buttons.cl) {
+		shield--;
+		if (shield == 1 && LOST_HERO_SHIELD)
+			shield--;
+	}
+	else if (gPlayUpdateInput.pressEdge.buttons.cr) {
+		shield++;
+		if (shield == 1 && LOST_HERO_SHIELD)
+			shield++;
+		if (shield == 2 && !HAVE_MIRROR_SHIELD)
+			shield++;
+	}
+	
+	if (shield >= 0 && shield <= 2 && shield != gSaveContext.perm.unk4C.equipment.shield) {
+		gSaveContext.perm.unk4C.equipment.shield = active_shield = shield;
+		z2_PlaySfx(0x4808);
+	}
+}
+
+void Handle_Unequipping(GlobalContext* ctxt) {
+	if (!CFG_UNEQUIP_ENABLED || (ctxt->pauseCtx.screenIndex != 0 && ctxt->pauseCtx.screenIndex != 3 && !gPlayUpdateInput.pressEdge.buttons.cu) || !gPlayUpdateInput.pressEdge.buttons.cu)
+		return;
+	
+	for (uint8_t button=1; button<=3; button++)
+		if ( (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ctxt->pauseCtx.selectedItem) || (ctxt->pauseCtx.selectedItem == ITEM_BOW && gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] >= ITEM_BOW_FIRE_ARROW && gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] <= ITEM_BOW_LIGHT_ARROW) ) {
+			gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = 0xFF;
+			gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = 0xFF;
+			z2_PlaySfx(0x480A);
+			break;
+		}
 }
