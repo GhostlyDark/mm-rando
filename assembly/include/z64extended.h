@@ -59,6 +59,20 @@ typedef enum { // 803E6BC4
 	SCENE_STONE_TOWER_TEMPLE			= 0x0016,
 	SCENE_STONE_TOWER_TEMPLE_INV		= 0x0018,
 } scene_id;
+
+enum ocarinaItemValue {
+	ITEM_DEKU_PIPES		= 0x0B,
+	ITEM_GORON_DRUMS	= 0x1C,
+	ITEM_ZORA_GUITAR	= 0x26,
+};
+
+/*#define ocarina_icons_1					(*(uint8_t*)					0x80719E2C)	// 80779E2C
+#define ocarina_icons_2						(*(uint8_t*)					0x80719E37)	// 80779E37
+#define ocarina_icons_3						(*(uint8_t*)					0x80719E48)	// 80779E48
+#define ocarina_icons_4						(*(uint8_t*)					0x80719E52)	// 80779E52
+#define play_deku_pipes						(*(uint8_t*)					0x801C2571)
+#define play_goron_drums					(*(uint8_t*)					0x801C2571)
+#define play_zora_guitar					(*(uint8_t*)					0x801C2571)*/
 	
 typedef void (*z2_UpdateButtonIcon_proc)	(GlobalContext* ctxt, int button);
 #define z2_UpdateButtonIcon					((z2_UpdateButtonIcon_proc)		0x80112B40)
