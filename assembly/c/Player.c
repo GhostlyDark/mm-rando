@@ -9,7 +9,7 @@
 #include "Icetrap.h"
 #include "Reloc.h"
 #include "Misc.h"
-#include "Fps.h"
+#include "Extra.h"
 #include "enums.h"
 
 extern uint8_t CFG_SWAP_ENABLED;
@@ -41,6 +41,7 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
 	}
 	
 	Handle_Hud(ctxt);
+	Handle_Ocarina_Icons(ctxt);
 }
 
 bool Player_CanReceiveItem(GlobalContext* ctxt) {

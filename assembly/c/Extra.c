@@ -1,7 +1,8 @@
-#include "FPS.h"
+#include "Extra.h"
 
 extern uint8_t CFG_FPS_ENABLED;
 extern uint8_t CFG_HIDE_HUD_ENABLED;
+extern uint8_t CFG_OCARINA_ICONS_ENABLED;
 
 uint16_t deku_stick_timer_switch	= 0;
 uint16_t last_time					= 0;
@@ -14,6 +15,11 @@ uint8_t hud_counter					= 0;
 uint8_t block						= 0;
 uint8_t pressed_r					= 0;
 uint8_t pressed_z					= 0;
+
+void Handle_Extra_Functions(GlobalContext* ctxt) {
+	Handle_FPS(ctxt);
+	Handle_L_Button(ctxt);
+}
 
 void Handle_L_Button(GlobalContext* ctxt) {
 	InputPad padReleased = ctxt->state.input[0].releaseEdge.buttons;
@@ -158,10 +164,10 @@ void Handle_FPS(GlobalContext* ctxt) {
 		ctxt->state.framerateDivisor = link_animation_speed = 3;
 	else if (text_state == 0x01 || jump_state == 0x0100 || opening_chest == 0x01 || var_801D7B44 == 0x01)
 		ctxt->state.framerateDivisor = link_animation_speed = 2;
-	else if (fps_switch)
-		ctxt->state.framerateDivisor = link_animation_speed = 2;
 	else if (playable_state == 0xFF08)
 		ctxt->state.framerateDivisor = link_animation_speed = 3;
+	else if (fps_switch)
+		ctxt->state.framerateDivisor = link_animation_speed = 2;
 	else if (playable_state == 0x3208 && use_hookshot == 0x100B)
 		ctxt->state.framerateDivisor  = link_animation_speed = 3;
 	
@@ -229,5 +235,78 @@ void Handle_FPS(GlobalContext* ctxt) {
 	else if (ctxt->state.framerateDivisor == 3) {
 		if (gStaticContext.timeSpeed == 2)
 			gStaticContext.timeSpeed = 3;
+	}
+}
+
+void Handle_Ocarina_Icons(GlobalContext* ctxt) {
+	if (!CFG_OCARINA_ICONS_ENABLED)
+		return;
+	
+	if (gSaveContext.perm.currentForm == PLAYER_FORM_HUMAN) {
+		if (gSaveContext.perm.inv.items[0] == ITEM_DEKU_PIPES || gSaveContext.perm.inv.items[0] == ITEM_GORON_DRUMS || gSaveContext.perm.inv.items[0] == ITEM_ZORA_GUITAR)
+			for (uint8_t button=1; button<=3; button++) {
+				if (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_DEKU_PIPES || gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_GORON_DRUMS ||gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_ZORA_GUITAR) {
+				gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = ITEM_OCARINA;
+				gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = SLOT_OCARINA;
+				z2_UpdateButtonIcon(ctxt, button);
+				break;
+			}
+			gSaveContext.perm.inv.items[0] = ITEM_OCARINA;
+		}
+		if (DPAD_CONFIG.state != DPAD_STATE_DISABLED)
+			for (uint8_t dpad=0; dpad<=4; dpad++)
+				if (DPAD_CONFIG.primary.values[dpad] == ITEM_DEKU_PIPES || DPAD_CONFIG.primary.values[dpad] == ITEM_GORON_DRUMS || DPAD_CONFIG.primary.values[dpad] == ITEM_ZORA_GUITAR)
+					DPAD_CONFIG.primary.values[dpad] = ITEM_OCARINA;
+	}
+	
+	else if (gSaveContext.perm.currentForm == PLAYER_FORM_DEKU) {
+		if (gSaveContext.perm.inv.items[0] == ITEM_OCARINA || gSaveContext.perm.inv.items[0] == ITEM_GORON_DRUMS || gSaveContext.perm.inv.items[0] == ITEM_ZORA_GUITAR)
+			for (uint8_t button=1; button<=3; button++) {
+				if (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_OCARINA || gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_GORON_DRUMS ||gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_ZORA_GUITAR) {
+				gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = ITEM_DEKU_PIPES;
+				gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = SLOT_OCARINA;
+				z2_UpdateButtonIcon(ctxt, button);
+				break;
+			}
+			gSaveContext.perm.inv.items[0] = ITEM_DEKU_PIPES;
+		}
+		if (DPAD_CONFIG.state != DPAD_STATE_DISABLED)
+			for (uint8_t dpad=0; dpad<=4; dpad++)
+				if (DPAD_CONFIG.primary.values[dpad] == ITEM_OCARINA || DPAD_CONFIG.primary.values[dpad] == ITEM_GORON_DRUMS || DPAD_CONFIG.primary.values[dpad] == ITEM_ZORA_GUITAR)
+					DPAD_CONFIG.primary.values[dpad] = ITEM_DEKU_PIPES;
+	}
+	
+	else if (gSaveContext.perm.currentForm == PLAYER_FORM_GORON) {
+		if (gSaveContext.perm.inv.items[0] == ITEM_DEKU_PIPES || gSaveContext.perm.inv.items[0] == ITEM_OCARINA || gSaveContext.perm.inv.items[0] == ITEM_ZORA_GUITAR)
+			for (uint8_t button=1; button<=3; button++) {
+				if (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_DEKU_PIPES || gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_OCARINA ||gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_ZORA_GUITAR) {
+				gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = ITEM_GORON_DRUMS;
+				gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = SLOT_OCARINA;
+				z2_UpdateButtonIcon(ctxt, button);
+				break;
+			}
+			gSaveContext.perm.inv.items[0] = ITEM_GORON_DRUMS;
+		}
+		if (DPAD_CONFIG.state != DPAD_STATE_DISABLED)
+			for (uint8_t dpad=0; dpad<=4; dpad++)
+				if (DPAD_CONFIG.primary.values[dpad] == ITEM_DEKU_PIPES || DPAD_CONFIG.primary.values[dpad] == ITEM_OCARINA || DPAD_CONFIG.primary.values[dpad] == ITEM_ZORA_GUITAR)
+					DPAD_CONFIG.primary.values[dpad] = ITEM_GORON_DRUMS;
+	}
+	
+	else if (gSaveContext.perm.currentForm == PLAYER_FORM_ZORA) {
+		if (gSaveContext.perm.inv.items[0] == ITEM_DEKU_PIPES || gSaveContext.perm.inv.items[0] == ITEM_GORON_DRUMS || gSaveContext.perm.inv.items[0] == ITEM_OCARINA)
+			for (uint8_t button=1; button<=3; button++) {
+				if (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_DEKU_PIPES || gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_GORON_DRUMS ||gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_OCARINA) {
+				gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = ITEM_ZORA_GUITAR;
+				gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = SLOT_OCARINA;
+				z2_UpdateButtonIcon(ctxt, button);
+				break;
+			}
+			gSaveContext.perm.inv.items[0] = ITEM_ZORA_GUITAR;
+		}
+		if (DPAD_CONFIG.state != DPAD_STATE_DISABLED)
+			for (uint8_t dpad=0; dpad<=4; dpad++)
+				if (DPAD_CONFIG.primary.values[dpad] == ITEM_DEKU_PIPES || DPAD_CONFIG.primary.values[dpad] == ITEM_GORON_DRUMS || DPAD_CONFIG.primary.values[dpad] == ITEM_OCARINA)
+					DPAD_CONFIG.primary.values[dpad] = ITEM_ZORA_GUITAR;
 	}
 }

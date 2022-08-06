@@ -1,15 +1,18 @@
-#ifndef FPS_H
-#define FPS_H
+#ifndef EXTRA_H
+#define EXTRA_H
 
 #include <z64.h>
 #include <z64extended.h>
 #include "Input.h"
+#include "Dpad.h"
 
+void Handle_Extra_Functions(GlobalContext* ctxt);
 void Handle_L_Button(GlobalContext* ctxt);
 void Toggle_Minimap(GlobalContext* ctxt);
 void Handle_Hud(GlobalContext* ctxt);
 void Hide_Hud(GlobalContext* ctxt);
 void Handle_FPS(GlobalContext* ctxt);
+void Handle_Ocarina_Icons(GlobalContext* ctxt);
 
 #define map_select_active			(*(uint32_t*)			0x8022A174) // 8024A484, 803E6C44
 #define opening_door				(*(uint32_t*)			0x80400820)
