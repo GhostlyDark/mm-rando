@@ -3,6 +3,11 @@
 extern uint8_t CFG_FPS_ENABLED;
 extern uint8_t CFG_HIDE_HUD_ENABLED;
 extern uint8_t CFG_OCARINA_ICONS_ENABLED;
+extern uint8_t CFG_INVENTORY_EDITOR_ENABLED;
+extern uint8_t CFG_INFINITE_HEALTH;
+extern uint8_t CFG_INFINITE_MAGIC;
+extern uint8_t CFG_INFINITE_AMMO;
+extern uint8_t CFG_INFINITE_RUPEES;
 
 uint16_t deku_stick_timer_switch	= 0;
 uint16_t last_time					= 0;
@@ -19,6 +24,7 @@ uint8_t pressed_z					= 0;
 void Handle_Extra_Functions(GlobalContext* ctxt) {
 	Handle_FPS(ctxt);
 	Handle_L_Button(ctxt);
+	Handle_Infinite();
 }
 
 void Handle_L_Button(GlobalContext* ctxt) {
@@ -31,6 +37,7 @@ void Handle_L_Button(GlobalContext* ctxt) {
 	if (padReleased.l && !pressed_r && !pressed_z) {
 		Toggle_Minimap(ctxt);
 		Hide_Hud(ctxt);
+		Inventory_Editor(ctxt);
 	}
 	if (!ctxt->state.input[0].current.buttons.l)
 		pressed_r = pressed_z = 0;
@@ -308,5 +315,74 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt) {
 			for (uint8_t dpad=0; dpad<=4; dpad++)
 				if (DPAD_CONFIG.primary.values[dpad] == ITEM_DEKU_PIPES || DPAD_CONFIG.primary.values[dpad] == ITEM_GORON_DRUMS || DPAD_CONFIG.primary.values[dpad] == ITEM_OCARINA)
 					DPAD_CONFIG.primary.values[dpad] = ITEM_ZORA_GUITAR;
+	}
+}
+
+void Handle_Infinite() {
+	if (CFG_INFINITE_HEALTH) {
+		if (gSaveContext.perm.unk24.currentLife < gSaveContext.perm.unk24.maxLife)
+			gSaveContext.perm.unk24.currentLife = gSaveContext.perm.unk24.maxLife;
+	}
+	
+	if (CFG_INFINITE_MAGIC) {
+		if (gSaveContext.perm.unk24.magicLevel == 1)
+			gSaveContext.perm.unk24.currentMagic = 0x30;
+		else if (gSaveContext.perm.unk24.magicLevel == 2)
+			gSaveContext.perm.unk24.currentMagic = 0x60;
+	}
+	
+	if (CFG_INFINITE_AMMO) {
+		if (gSaveContext.perm.inv.upgrades.dekuNut == 1)
+			gSaveContext.perm.inv.quantities[0x09] = gItemUpgradeCapacity.nutCapacity[1];
+		else if (gSaveContext.perm.inv.upgrades.dekuNut == 2)
+			gSaveContext.perm.inv.quantities[0x09] = gItemUpgradeCapacity.nutCapacity[2];
+		else if (gSaveContext.perm.inv.upgrades.dekuNut == 3)
+			gSaveContext.perm.inv.quantities[0x09] = gItemUpgradeCapacity.nutCapacity[3];
+		
+		if (gSaveContext.perm.inv.upgrades.dekuStick == 1)
+			gSaveContext.perm.inv.quantities[0x08] = gItemUpgradeCapacity.stickCapacity[1];
+		else if (gSaveContext.perm.inv.upgrades.dekuStick == 2)
+			gSaveContext.perm.inv.quantities[0x08] = gItemUpgradeCapacity.stickCapacity[2];
+		else if (gSaveContext.perm.inv.upgrades.dekuStick == 3)
+			gSaveContext.perm.inv.quantities[0x08] = gItemUpgradeCapacity.stickCapacity[3];
+
+		if (gSaveContext.perm.inv.upgrades.quiver == 1)
+			gSaveContext.perm.inv.quantities[0x01] = gItemUpgradeCapacity.arrowCapacity[1];
+		else if (gSaveContext.perm.inv.upgrades.quiver == 2)
+			gSaveContext.perm.inv.quantities[0x01] = gItemUpgradeCapacity.arrowCapacity[2];
+		else if (gSaveContext.perm.inv.upgrades.quiver == 3)
+			gSaveContext.perm.inv.quantities[0x01] = gItemUpgradeCapacity.arrowCapacity[3];
+		
+		if (gSaveContext.perm.inv.upgrades.bombBag == 1)
+			gSaveContext.perm.inv.quantities[0x06] = gSaveContext.perm.inv.quantities[0x07] = gItemUpgradeCapacity.bombCapacity[1];
+		else if (gSaveContext.perm.inv.upgrades.bombBag == 2)
+			gSaveContext.perm.inv.quantities[0x06] = gSaveContext.perm.inv.quantities[0x07] = gItemUpgradeCapacity.bombCapacity[2];
+		else if (gSaveContext.perm.inv.upgrades.bombBag == 3)
+			gSaveContext.perm.inv.quantities[0x06] = gSaveContext.perm.inv.quantities[0x07] = gItemUpgradeCapacity.bombCapacity[3];
+	}
+	
+	if (CFG_INFINITE_RUPEES) {
+		if (gSaveContext.perm.inv.upgrades.wallet == 0)
+			gSaveContext.perm.unk24.rupees = gItemUpgradeCapacity.walletCapacity[0];
+		else if (gSaveContext.perm.inv.upgrades.wallet == 1)
+			gSaveContext.perm.unk24.rupees = gItemUpgradeCapacity.walletCapacity[1];
+		else if (gSaveContext.perm.inv.upgrades.wallet == 2)
+			gSaveContext.perm.unk24.rupees = gItemUpgradeCapacity.walletCapacity[2];
+		else if (gSaveContext.perm.inv.upgrades.wallet == 3)
+			gSaveContext.perm.unk24.rupees = gItemUpgradeCapacity.walletCapacity[3];
+	}
+}
+
+void Inventory_Editor(GlobalContext* ctxt) {
+	if (!CFG_INVENTORY_EDITOR_ENABLED || ctxt->pauseCtx.state != 6)
+		return;
+	
+	if (ctxt->pauseCtx.debugMenu == 0 && ctxt->pauseCtx.screenIndex == 2) {
+		ctxt->pauseCtx.debugMenu = 2;
+		z2_PlaySfx(0x4813);
+	}
+	else if (ctxt->pauseCtx.debugMenu == 2) {
+		ctxt->pauseCtx.debugMenu = 0;
+		z2_PlaySfx(0x4814);
 	}
 }
