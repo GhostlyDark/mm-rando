@@ -1,8 +1,11 @@
 #include "Extra.h"
 
+extern uint8_t CFG_DUAL_DPAD_ENABLED;
 extern uint8_t CFG_FPS_ENABLED;
 extern uint8_t CFG_HIDE_HUD_ENABLED;
 extern uint8_t CFG_OCARINA_ICONS_ENABLED;
+extern uint8_t CFG_FLOW_OF_TIME_ENABLED;
+extern uint8_t CFG_INSTANT_ELEGY_ENABLED;
 extern uint8_t CFG_INVENTORY_EDITOR_ENABLED;
 extern uint8_t CFG_INFINITE_HEALTH;
 extern uint8_t CFG_INFINITE_MAGIC;
@@ -12,46 +15,59 @@ extern uint8_t CFG_INFINITE_RUPEES;
 uint16_t deku_stick_timer_switch	= 0;
 uint16_t last_time					= 0;
 uint16_t started_timer				= 0;
+uint16_t elegy_timer                = 0;
 
+uint8_t dpad_alt                    = 0;
 uint8_t fps_switch					= 1;
 uint8_t hud_hide                    = 0;
 uint8_t hud_hearts_hide				= 1;
 uint8_t hud_counter					= 0;
+
 uint8_t block						= 0;
 uint8_t pressed_r					= 0;
 uint8_t pressed_z					= 0;
+uint8_t pressed_du					= 0;
+uint8_t pressed_dr					= 0;
+uint8_t pressed_dd					= 0;
+uint8_t pressed_dl					= 0;
 
 void Handle_Extra_Functions(GlobalContext* ctxt) {
+	if (CFG_DUAL_DPAD_ENABLED) {
+		if (ctxt->state.input[0].current.buttons.l && ctxt->state.input[0].releaseEdge.buttons.r) {
+			dpad_alt ^= 1;
+			if (dpad_alt)
+				z2_PlaySfx(0x4813);
+			else z2_PlaySfx(0x4814);
+		}
+	}
+	
 	Handle_FPS(ctxt);
+	Handle_Quick_Pad(ctxt);
 	Handle_L_Button(ctxt);
 	Handle_Infinite();
 }
 
 void Handle_L_Button(GlobalContext* ctxt) {
-	InputPad padReleased = ctxt->state.input[0].releaseEdge.buttons;
+	InputPad paddCurr = ctxt->state.input[0].current.buttons;
 	
-	if (ctxt->state.input[0].current.buttons.r)
-		pressed_r = 1;
-	if (ctxt->state.input[0].current.buttons.z)
-		pressed_z = 1;
-	if (padReleased.l && !pressed_r && !pressed_z) {
+	if (ctxt->state.input[0].releaseEdge.buttons.l && !paddCurr.r && !paddCurr.z && !paddCurr.du && !paddCurr.dr && !paddCurr.dd && !paddCurr.dl) {
 		Toggle_Minimap(ctxt);
 		Hide_Hud(ctxt);
 		Inventory_Editor(ctxt);
 	}
-	if (!ctxt->state.input[0].current.buttons.l)
-		pressed_r = pressed_z = 0;
 	
-	if (ctxt->state.input[0].pressEdge.buttons.l && !ctxt->state.input[0].current.buttons.r)
+	if (ctxt->state.input[0].pressEdge.buttons.l)
 		block = 1;
-	else if (ctxt->state.input[0].pressEdge.buttons.l && !ctxt->state.input[0].current.buttons.z)
-		block = 1;
-	if (!ctxt->state.input[0].current.buttons.l)
+	if (!paddCurr.l)
 		block = 0;
 	
 	if (block) {
-		ctxt->state.input[0].current.buttons.r = ctxt->state.input[0].pressEdge.buttons.r = 0;
-		ctxt->state.input[0].current.buttons.z = ctxt->state.input[0].pressEdge.buttons.z = 0;
+		paddCurr.r  = ctxt->state.input[0].pressEdge.buttons.r  = 0;
+		paddCurr.z  = ctxt->state.input[0].pressEdge.buttons.z  = 0;
+		paddCurr.du = ctxt->state.input[0].pressEdge.buttons.du = 0;
+		paddCurr.dr = ctxt->state.input[0].pressEdge.buttons.dr = 0;
+		paddCurr.dd = ctxt->state.input[0].pressEdge.buttons.dd = 0;
+		paddCurr.dl = ctxt->state.input[0].pressEdge.buttons.dl = 0;
 	}
 	
 	ctxt->state.input[0].pressEdge.buttons.l = 0;	
@@ -160,7 +176,7 @@ void Handle_FPS(GlobalContext* ctxt) {
 	if (!CFG_FPS_ENABLED || ctxt->pauseCtx.state != 0 || gSaveContext.extra.titleSetupIndex != 0 || ctxt->state.framerateDivisor == 1)
 		return;
 	
-	if ( (ctxt->state.input[0].current.buttons.l && ctxt->state.input[0].pressEdge.buttons.z) || (ctxt->state.input[0].current.buttons.z && ctxt->state.input[0].pressEdge.buttons.l) ) {
+	if (ctxt->state.input[0].current.buttons.l && ctxt->state.input[0].pressEdge.buttons.z) {
 		fps_switch ^= 1;
 		if (fps_switch)
 			z2_PlaySfx(0x4814);
@@ -249,7 +265,7 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt) {
 	if (!CFG_OCARINA_ICONS_ENABLED)
 		return;
 	
-	if (gSaveContext.perm.currentForm == PLAYER_FORM_HUMAN) {
+	if (gSaveContext.perm.currentForm == PLAYER_FORM_HUMAN || gSaveContext.perm.currentForm == PLAYER_FORM_FIERCE_DEITY) {
 		if (gSaveContext.perm.inv.items[0] == ITEM_DEKU_PIPES || gSaveContext.perm.inv.items[0] == ITEM_GORON_DRUMS || gSaveContext.perm.inv.items[0] == ITEM_ZORA_GUITAR)
 			for (uint8_t button=1; button<=3; button++) {
 				if (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_DEKU_PIPES || gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_GORON_DRUMS ||gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_ZORA_GUITAR) {
@@ -385,4 +401,55 @@ void Inventory_Editor(GlobalContext* ctxt) {
 		ctxt->pauseCtx.debugMenu = 0;
 		z2_PlaySfx(0x4814);
 	}
+}
+
+void Handle_Quick_Pad(GlobalContext* ctxt) {
+	if (CFG_INSTANT_ELEGY_ENABLED && !elegy_anim_state && link_anim_2 == 0x67)
+		link_anim_1 = 5;
+	
+	if (playable_state == 0xFF08 || ctxt->pauseCtx.state != 0)
+		return;
+	
+	if (gSaveContext.perm.inv.items[0] != ITEM_OCARINA && gSaveContext.perm.inv.items[0] != ITEM_DEKU_PIPES && gSaveContext.perm.inv.items[0] != ITEM_GORON_DRUMS && gSaveContext.perm.inv.items[0] != ITEM_ZORA_GUITAR)
+		return;
+	
+	InputPad padPress = ctxt->state.input[0].pressEdge.buttons;
+	InputPad paddCurr = ctxt->state.input[0].current.buttons;
+	
+	if (CFG_FLOW_OF_TIME_ENABLED && gSaveContext.perm.inv.questStatus.songOfTime) {
+		if (paddCurr.l && padPress.du) { // Inverse Time
+			if (gSaveContext.perm.timeSpeed == 0) {
+				gSaveContext.perm.timeSpeed = -2;
+				z2_PlaySfx(0x4813);
+			}
+			else {
+				gSaveContext.perm.timeSpeed = 0;
+				z2_PlaySfx(0x4814);
+			}
+		}
+		else if (paddCurr.l && paddCurr.dl) { // Speed up time
+			if (ctxt->state.framerateDivisor == 3)
+				gSaveContext.perm.time += 6;
+			else gSaveContext.perm.time += 9;
+		}
+		else if (paddCurr.l && paddCurr.dr) { // Speed up time by a lot
+			if (ctxt->state.framerateDivisor == 3)
+				gSaveContext.perm.time += 12;
+			else gSaveContext.perm.time += 18;
+		}
+	}
+	
+	if (CFG_INSTANT_ELEGY_ENABLED) {
+		if (!gSaveContext.perm.inv.questStatus.elegyOfEmptiness)
+			return;
+		if (ctxt->sceneNum != SCENE_ROAD_TO_IKANA_CANYON && ctxt->sceneNum != SCENE_IKANA_CANYON && ctxt->sceneNum != SCENE_BOTTOM_OF_THE_WELL && ctxt->sceneNum != SCENE_ANCIENT_CASTLE_OF_IKANA && ctxt->sceneNum != SCENE_ANCIENT_CASTLE_OF_IKANA_BOSS \
+		&& ctxt->sceneNum != SCENE_STONE_TOWER && ctxt->sceneNum != SCENE_STONE_TOWER_INV && ctxt->sceneNum != SCENE_GHOST_HUT && ctxt->sceneNum != SCENE_SECRET_SHRINE && ctxt->sceneNum != SCENE_STONE_TOWER_TEMPLE && ctxt->sceneNum != SCENE_STONE_TOWER_TEMPLE_INV  \
+		&& ctxt->sceneNum != SCENE_STONE_TOWER_TEMPLE_BOSS)
+			return;
+		
+		if (paddCurr.l && padPress.dd && link_anim_1 != 0x67) { // Instant Elegy
+			link_anim_1 = 0x67;
+		}
+	}
+	
 }

@@ -15,6 +15,7 @@ void Handle_FPS(GlobalContext* ctxt);
 void Handle_Ocarina_Icons(GlobalContext* ctxt);
 void Handle_Infinite();
 void Inventory_Editor(GlobalContext* ctxt);
+void Handle_Quick_Pad(GlobalContext* ctxt);
 
 #define map_select_active			(*(uint32_t*)			0x8022A174) // 8024A484, 803E6C44
 #define opening_door				(*(uint32_t*)			0x80400820)
@@ -36,5 +37,10 @@ void Inventory_Editor(GlobalContext* ctxt);
 #define var_80116702				(*(uint16_t*)			0x80116702)
 #define var_803FFE64				(*(uint16_t*)			0x803FFE64)
 #define var_801D7B44				(*(uint8_t*)			0x801D7B44)
+
+#define link_anim_1					(*(uint8_t*)			0x80400144)
+#define link_anim_2					(*(uint8_t*)			0x80400145)
+#define elegy_anim_state			(*(uint8_t*)			0x801B1BEE)
+
 
 #endif
