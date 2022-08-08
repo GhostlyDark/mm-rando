@@ -3,6 +3,8 @@
 extern uint8_t CFG_SWAP_ENABLED;
 extern uint8_t CFG_UNEQUIP_ENABLED;
 
+extern uint8_t dpad_alt;
+
 uint8_t redraw_b_button = 0;
 
 // Vertex buffers.
@@ -189,6 +191,7 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
 	Handle_Sword_Swap(ctxt);
 	Handle_Shield_Swap(ctxt);
 	Handle_Unequipping(ctxt);
+	Handle_Mapping_Items(ctxt);
 }
 
 void Handle_Sword_Swap(GlobalContext* ctxt) {
@@ -268,4 +271,64 @@ void Handle_Unequipping(GlobalContext* ctxt) {
 			z2_PlaySfx(0x480A);
 			break;
 		}
+}
+
+void Handle_Mapping_Items(GlobalContext* ctxt) {
+	
+	if (ctxt->pauseCtx.screenIndex != 0 && ctxt->pauseCtx.screenIndex != 3)
+		return;
+	
+	uint8_t item = ctxt->pauseCtx.selectedItem;
+	InputPad pad = gPlayUpdateInput.pressEdge.buttons;
+	
+	if (item >= ITEM_FIRE_ARROW   && item <= ITEM_LIGHT_ARROW)
+		return;
+	if (item >= ITEM_EMPTY_BOTTLE && item <= ITEM_EMPTY_BOTTLE_2)
+		return;
+	if (item >= ITEM_MOON_TEAR    && item <= ITEM_MAP)
+		return;
+	if (item>= ITEM_BOW_FIRE_ARROW)
+		return;
+	
+	if (!dpad_alt) {
+		if (pad.du) {
+			(DPAD_CONFIG.primary.du == item)		? (DPAD_CONFIG.primary.du = ITEM_NONE)	: (DPAD_CONFIG.primary.du = item);
+			(DPAD_CONFIG.primary.du == ITEM_NONE)	? (z2_PlaySfx(0x480A))					: (z2_PlaySfx(0x4808));
+		}
+		
+		else if (pad.dr) {
+			(DPAD_CONFIG.primary.dr == item)		? (DPAD_CONFIG.primary.dr = ITEM_NONE)	: (DPAD_CONFIG.primary.dr = item);
+			(DPAD_CONFIG.primary.dr == ITEM_NONE)	? (z2_PlaySfx(0x480A))					: (z2_PlaySfx(0x4808));
+		}
+	
+		else if (pad.dd) {
+			(DPAD_CONFIG.primary.dd == item)		? (DPAD_CONFIG.primary.dd = ITEM_NONE)	: (DPAD_CONFIG.primary.dd = item);
+			(DPAD_CONFIG.primary.dd == ITEM_NONE)	? (z2_PlaySfx(0x480A))					: (z2_PlaySfx(0x4808));
+		}
+		else if (pad.dl) {
+			(DPAD_CONFIG.primary.dl == item)		? (DPAD_CONFIG.primary.dl = ITEM_NONE)	: (DPAD_CONFIG.primary.dl = item);
+			(DPAD_CONFIG.primary.dl	== ITEM_NONE)	? (z2_PlaySfx(0x480A))					: (z2_PlaySfx(0x4808));
+		}
+	}
+	else {
+		if (pad.du) {
+			(DPAD_CONFIG.alts[0].du == item)		? (DPAD_CONFIG.alts[0].du = ITEM_NONE)	: (DPAD_CONFIG.alts[0].du = item);
+			(DPAD_CONFIG.alts[0].du == ITEM_NONE)	? (z2_PlaySfx(0x480A))					: (z2_PlaySfx(0x4808));
+		}
+		
+		else if (pad.dr) {
+			(DPAD_CONFIG.alts[0].dr == item)		? (DPAD_CONFIG.alts[0].dr = ITEM_NONE)	: (DPAD_CONFIG.alts[0].dr = item);
+			(DPAD_CONFIG.alts[0].dr == ITEM_NONE)	? (z2_PlaySfx(0x480A))					: (z2_PlaySfx(0x4808));
+		}
+	
+		else if (pad.dd) {
+			(DPAD_CONFIG.alts[0].dd == item)		? (DPAD_CONFIG.alts[0].dd = ITEM_NONE)	: (DPAD_CONFIG.alts[0].dd = item);
+			(DPAD_CONFIG.alts[0].dd == ITEM_NONE)	? (z2_PlaySfx(0x480A))					: (z2_PlaySfx(0x4808));
+		}
+		else if (pad.dl) {
+			(DPAD_CONFIG.alts[0].dl == item)		? (DPAD_CONFIG.alts[0].dl = ITEM_NONE)	: (DPAD_CONFIG.alts[0].dl = item);
+			(DPAD_CONFIG.alts[0].dl	== ITEM_NONE)	? (z2_PlaySfx(0x480A))					: (z2_PlaySfx(0x4808));
+		}
+	}
+	
 }

@@ -45,6 +45,11 @@ void Handle_Extra_Functions(GlobalContext* ctxt) {
 	Handle_Quick_Pad(ctxt);
 	Handle_L_Button(ctxt);
 	Handle_Infinite();
+	
+	if (ctxt->pauseCtx.state == 6) {
+		ctxt->state.input[0].current.buttons.dl = 0;
+		ctxt->state.input[0].current.buttons.dr = 0;
+	}
 }
 
 void Handle_L_Button(GlobalContext* ctxt) {
@@ -62,12 +67,12 @@ void Handle_L_Button(GlobalContext* ctxt) {
 		block = 0;
 	
 	if (block) {
-		paddCurr.r  = ctxt->state.input[0].pressEdge.buttons.r  = 0;
-		paddCurr.z  = ctxt->state.input[0].pressEdge.buttons.z  = 0;
-		paddCurr.du = ctxt->state.input[0].pressEdge.buttons.du = 0;
-		paddCurr.dr = ctxt->state.input[0].pressEdge.buttons.dr = 0;
-		paddCurr.dd = ctxt->state.input[0].pressEdge.buttons.dd = 0;
-		paddCurr.dl = ctxt->state.input[0].pressEdge.buttons.dl = 0;
+		ctxt->state.input[0].current.buttons.r  = 0;
+		ctxt->state.input[0].current.buttons.z  = 0;
+		ctxt->state.input[0].current.buttons.du = 0;
+		ctxt->state.input[0].current.buttons.dr = 0;
+		ctxt->state.input[0].current.buttons.dd = 0;
+		ctxt->state.input[0].current.buttons.dl = 0;
 	}
 	
 	ctxt->state.input[0].pressEdge.buttons.l = 0;	
@@ -277,7 +282,7 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt) {
 			gSaveContext.perm.inv.items[0] = ITEM_OCARINA;
 		}
 		if (DPAD_CONFIG.state != DPAD_STATE_DISABLED)
-			for (uint8_t dpad=0; dpad<=4; dpad++)
+			for (uint8_t dpad=0; dpad<4; dpad++)
 				if (DPAD_CONFIG.primary.values[dpad] == ITEM_DEKU_PIPES || DPAD_CONFIG.primary.values[dpad] == ITEM_GORON_DRUMS || DPAD_CONFIG.primary.values[dpad] == ITEM_ZORA_GUITAR)
 					DPAD_CONFIG.primary.values[dpad] = ITEM_OCARINA;
 	}
@@ -294,7 +299,7 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt) {
 			gSaveContext.perm.inv.items[0] = ITEM_DEKU_PIPES;
 		}
 		if (DPAD_CONFIG.state != DPAD_STATE_DISABLED)
-			for (uint8_t dpad=0; dpad<=4; dpad++)
+			for (uint8_t dpad=0; dpad<4; dpad++)
 				if (DPAD_CONFIG.primary.values[dpad] == ITEM_OCARINA || DPAD_CONFIG.primary.values[dpad] == ITEM_GORON_DRUMS || DPAD_CONFIG.primary.values[dpad] == ITEM_ZORA_GUITAR)
 					DPAD_CONFIG.primary.values[dpad] = ITEM_DEKU_PIPES;
 	}
@@ -311,7 +316,7 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt) {
 			gSaveContext.perm.inv.items[0] = ITEM_GORON_DRUMS;
 		}
 		if (DPAD_CONFIG.state != DPAD_STATE_DISABLED)
-			for (uint8_t dpad=0; dpad<=4; dpad++)
+			for (uint8_t dpad=0; dpad<4; dpad++)
 				if (DPAD_CONFIG.primary.values[dpad] == ITEM_DEKU_PIPES || DPAD_CONFIG.primary.values[dpad] == ITEM_OCARINA || DPAD_CONFIG.primary.values[dpad] == ITEM_ZORA_GUITAR)
 					DPAD_CONFIG.primary.values[dpad] = ITEM_GORON_DRUMS;
 	}
@@ -328,7 +333,7 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt) {
 			gSaveContext.perm.inv.items[0] = ITEM_ZORA_GUITAR;
 		}
 		if (DPAD_CONFIG.state != DPAD_STATE_DISABLED)
-			for (uint8_t dpad=0; dpad<=4; dpad++)
+			for (uint8_t dpad=0; dpad<4; dpad++)
 				if (DPAD_CONFIG.primary.values[dpad] == ITEM_DEKU_PIPES || DPAD_CONFIG.primary.values[dpad] == ITEM_GORON_DRUMS || DPAD_CONFIG.primary.values[dpad] == ITEM_OCARINA)
 					DPAD_CONFIG.primary.values[dpad] = ITEM_ZORA_GUITAR;
 	}
@@ -416,14 +421,14 @@ void Handle_Quick_Pad(GlobalContext* ctxt) {
 	InputPad padPress = ctxt->state.input[0].pressEdge.buttons;
 	InputPad paddCurr = ctxt->state.input[0].current.buttons;
 	
-	if (CFG_FLOW_OF_TIME_ENABLED && gSaveContext.perm.inv.questStatus.songOfTime) {
+	if (CFG_FLOW_OF_TIME_ENABLED && gSaveContext.perm.inv.questStatus.songOfTime && gSaveContext.perm.timeSpeed != TIME_SPEED_STOPPED) {
 		if (paddCurr.l && padPress.du) { // Inverse Time
-			if (gSaveContext.perm.timeSpeed == 0) {
-				gSaveContext.perm.timeSpeed = -2;
+			if (gSaveContext.perm.timeSpeed == TIME_SPEED_NORMAL) {
+				gSaveContext.perm.timeSpeed = TIME_SPEED_INVERTED;
 				z2_PlaySfx(0x4813);
 			}
 			else {
-				gSaveContext.perm.timeSpeed = 0;
+				gSaveContext.perm.timeSpeed = TIME_SPEED_NORMAL;
 				z2_PlaySfx(0x4814);
 			}
 		}

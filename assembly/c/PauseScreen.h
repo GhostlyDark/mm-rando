@@ -10,6 +10,7 @@
 #include "Reloc.h"
 #include "SaveFile.h"
 #include "Input.h"
+#include "Dpad.h"
 
 static Vtx* GetVtxBuffer(GlobalContext* ctxt, u32 vertIdx, int slot);
 static void DrawIcon(GraphicsContext* gfx, const Vtx* vtx, u32 segAddr, u16 width, u16 height, u16 qidx);
@@ -23,5 +24,6 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt);
 void Handle_Sword_Swap(GlobalContext* ctxt);
 void Handle_Shield_Swap(GlobalContext* ctxt);
 void Handle_Unequipping(GlobalContext* ctxt);
+void Handle_Mapping_Items(GlobalContext* ctxt);
 	
 #endif

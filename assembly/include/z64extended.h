@@ -81,6 +81,9 @@ enum ocarinaItemValue {
 typedef void (*z2_UpdateButtonIcon_proc)	(GlobalContext* ctxt, int button);
 #define z2_UpdateButtonIcon					((z2_UpdateButtonIcon_proc)		0x80112B40)
 
+typedef void (*z2_SetItem_proc)				(GlobalContext* ctxt, int item, int button);
+#define z2_SetItem							((z2_SetItem_proc)				0x80114FD0)
+
 #define gStaticContext						(*(StaticContext*)				StaticContextAddr)
 
 #define r_minimap_disabled					(*(uint8_t*)					0x80383023)
