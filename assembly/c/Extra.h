@@ -16,6 +16,7 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt);
 void Handle_Infinite();
 void Inventory_Editor(GlobalContext* ctxt);
 void Handle_Quick_Pad(GlobalContext* ctxt);
+void Set_B_Button(GlobalContext* ctxt);
 
 #define map_select_active			(*(uint32_t*)			0x8022A174) // 8024A484, 803E6C44
 #define opening_door				(*(uint32_t*)			0x80400820)

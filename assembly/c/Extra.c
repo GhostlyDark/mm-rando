@@ -1,6 +1,7 @@
 #include "Extra.h"
 
 extern uint8_t CFG_DUAL_DPAD_ENABLED;
+extern uint8_t CFG_B_BUTTON_ITEM_ENABLED;
 extern uint8_t CFG_FPS_ENABLED;
 extern uint8_t CFG_HIDE_HUD_ENABLED;
 extern uint8_t CFG_OCARINA_ICONS_ENABLED;
@@ -59,6 +60,7 @@ void Handle_L_Button(GlobalContext* ctxt) {
 		Toggle_Minimap(ctxt);
 		Hide_Hud(ctxt);
 		Inventory_Editor(ctxt);
+		Set_B_Button(ctxt);
 	}
 	
 	if (ctxt->state.input[0].pressEdge.buttons.l)
@@ -457,4 +459,28 @@ void Handle_Quick_Pad(GlobalContext* ctxt) {
 		}
 	}
 	
+}
+
+void Set_B_Button(GlobalContext* ctxt) {
+	if (!CFG_B_BUTTON_ITEM_ENABLED || ctxt->pauseCtx.screenIndex != 0 || ctxt->pauseCtx.state != 6 || ctxt->pauseCtx.debugMenu != 0)
+		return;
+	
+	uint8_t item = ctxt->pauseCtx.selectedItem;
+	
+	if (item == ITEM_FIRE_ARROW)
+		item = ITEM_BOW_FIRE_ARROW;
+	else if (item == ITEM_ICE_ARROW)
+		item = ITEM_BOW_ICE_ARROW;
+	else if (item == ITEM_LIGHT_ARROW)
+		item = ITEM_BOW_LIGHT_ARROW;
+	else if (item >= ITEM_EMPTY_BOTTLE)
+		return;
+	else if (item >= ITEM_BOW && item <= ITEM_LIGHT_ARROW)
+		return;
+	else if (item == ITEM_BOMB || item == ITEM_BOMBCHU)
+		return;
+	
+	gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = gSaveContext.perm.unk4C.formButtonSlots[0].buttons[0] = item;
+	z2_UpdateButtonIcon(ctxt, 0);
+	z2_PlaySfx(0x4808);
 }

@@ -188,6 +188,9 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
     // Update pause menu colors.
     //HudColors_UpdatePauseMenuColors(ctxt);
 	
+	if (ctxt->pauseCtx.debugMenu != 0)
+		return;
+	
 	Handle_Sword_Swap(ctxt);
 	Handle_Shield_Swap(ctxt);
 	Handle_Unequipping(ctxt);
@@ -229,7 +232,7 @@ void Handle_Sword_Swap(GlobalContext* ctxt) {
 			gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = 0x4C + sword;
 		else gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_NONE;
 		z2_PlaySfx(0x4808);
-		z2_UpdateButtonIcon(ctxt, 0x00);
+		z2_UpdateButtonIcon(ctxt, 0);
 	}
 }
 
@@ -266,8 +269,7 @@ void Handle_Unequipping(GlobalContext* ctxt) {
 	
 	for (uint8_t button=1; button<=3; button++)
 		if ( (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ctxt->pauseCtx.selectedItem) || (ctxt->pauseCtx.selectedItem == ITEM_BOW && gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] >= ITEM_BOW_FIRE_ARROW && gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] <= ITEM_BOW_LIGHT_ARROW) ) {
-			gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = 0xFF;
-			gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = 0xFF;
+			gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = 0xFF;
 			z2_PlaySfx(0x480A);
 			break;
 		}
