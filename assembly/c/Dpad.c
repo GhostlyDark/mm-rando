@@ -243,7 +243,7 @@ bool Dpad_Handle(ActorPlayer* player, GlobalContext* ctxt) {
         return false;
     }
 
-	if (!dpad_alt) {
+	if (dpad_alt) {
 		if (padPressed.du && gUsable[0])
 			return TryUseItem(ctxt, player, DPAD_CONFIG.alts[0].du);
 		else if (padPressed.dr && gUsable[1])

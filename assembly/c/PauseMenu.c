@@ -2,6 +2,7 @@
 
 extern uint8_t CFG_SWAP_ENABLED;
 extern uint8_t CFG_UNEQUIP_ENABLED;
+extern uint8_t CFG_B_BUTTON_ITEM_ENABLED;
 
 extern uint8_t dpad_alt;
 
@@ -195,10 +196,13 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
 	Handle_Shield_Swap(ctxt);
 	Handle_Unequipping(ctxt);
 	Handle_Mapping_Items(ctxt);
+	
+	if (CFG_B_BUTTON_ITEM_ENABLED && gPlayUpdateInput.pressEdge.buttons.cu)
+		Handle_Equip_Sword(ctxt);
 }
 
 void Handle_Sword_Swap(GlobalContext* ctxt) {
-	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 0x05 || (!gPlayUpdateInput.pressEdge.buttons.cl && !gPlayUpdateInput.pressEdge.buttons.cr) )
+	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 5 || (!gPlayUpdateInput.pressEdge.buttons.cl && !gPlayUpdateInput.pressEdge.buttons.cr) )
 		return;
 	uint8_t sword = gSaveContext.perm.unk4C.equipment.sword;
 	
@@ -228,16 +232,23 @@ void Handle_Sword_Swap(GlobalContext* ctxt) {
 	
 	if (sword >= 0 && sword <= 3 && sword != gSaveContext.perm.unk4C.equipment.sword) {
 		gSaveContext.perm.unk4C.equipment.sword	= sword;
-		if (sword != 0)
-			gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = 0x4C + sword;
-		else gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_NONE;
-		z2_PlaySfx(0x4808);
-		z2_UpdateButtonIcon(ctxt, 0);
+		Handle_Equip_Sword(ctxt);
 	}
 }
 
+void Handle_Equip_Sword(GlobalContext* ctxt) {
+	if (ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 5)
+		return;
+	
+	if (gSaveContext.perm.unk4C.equipment.sword != 0)
+		gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_KOKIRI_SWORD + gSaveContext.perm.unk4C.equipment.sword - 1;
+	else gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_NONE;
+	z2_UpdateButtonIcon(ctxt, 0);
+	z2_PlaySfx(0x4808);
+}
+
 void Handle_Shield_Swap(GlobalContext* ctxt) {
-	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 0x04 || (!gPlayUpdateInput.pressEdge.buttons.cl && !gPlayUpdateInput.pressEdge.buttons.cr) )
+	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 4 || (!gPlayUpdateInput.pressEdge.buttons.cl && !gPlayUpdateInput.pressEdge.buttons.cr) )
 		return;
 	uint8_t shield = gSaveContext.perm.unk4C.equipment.shield;
 	
@@ -276,20 +287,22 @@ void Handle_Unequipping(GlobalContext* ctxt) {
 }
 
 void Handle_Mapping_Items(GlobalContext* ctxt) {
-	
 	if (ctxt->pauseCtx.screenIndex != 0 && ctxt->pauseCtx.screenIndex != 3)
 		return;
 	
 	uint8_t item = ctxt->pauseCtx.selectedItem;
 	InputPad pad = gPlayUpdateInput.pressEdge.buttons;
 	
-	if (item >= ITEM_FIRE_ARROW   && item <= ITEM_LIGHT_ARROW)
+	/*if (item >= ITEM_FIRE_ARROW   && item <= ITEM_LIGHT_ARROW)
 		return;
 	if (item >= ITEM_EMPTY_BOTTLE && item <= ITEM_EMPTY_BOTTLE_2)
 		return;
 	if (item >= ITEM_MOON_TEAR    && item <= ITEM_MAP)
 		return;
 	if (item>= ITEM_BOW_FIRE_ARROW)
+		return;*/
+	
+	if (item != ITEM_OCARINA && item != ITEM_DEKU_PIPES && item != ITEM_GORON_DRUMS && item != ITEM_OCARINA && item != ITEM_ZORA_GUITAR && item != ITEM_DEKU_MASK && item != ITEM_GORON_MASK && item != ITEM_ZORA_MASK && item != ITEM_FIERCE_DEITY_MASK)
 		return;
 	
 	if (!dpad_alt) {

@@ -462,7 +462,7 @@ void Handle_Quick_Pad(GlobalContext* ctxt) {
 }
 
 void Set_B_Button(GlobalContext* ctxt) {
-	if (!CFG_B_BUTTON_ITEM_ENABLED || ctxt->pauseCtx.screenIndex != 0 || ctxt->pauseCtx.state != 6 || ctxt->pauseCtx.debugMenu != 0)
+	if (!CFG_B_BUTTON_ITEM_ENABLED || ctxt->pauseCtx.state != 6 || ctxt->pauseCtx.screenIndex != 0 || ctxt->pauseCtx.debugMenu != 0)
 		return;
 	
 	uint8_t item = ctxt->pauseCtx.selectedItem;
@@ -477,7 +477,7 @@ void Set_B_Button(GlobalContext* ctxt) {
 		return;
 	else if (item >= ITEM_BOW && item <= ITEM_LIGHT_ARROW)
 		return;
-	else if (item == ITEM_BOMB || item == ITEM_BOMBCHU)
+	else if (item == ITEM_BOMB || item == ITEM_BOMBCHU || item == ITEM_LENS || item == ITEM_POWDER_KEG)
 		return;
 	
 	gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = gSaveContext.perm.unk4C.formButtonSlots[0].buttons[0] = item;

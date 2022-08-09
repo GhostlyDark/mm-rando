@@ -22,6 +22,7 @@ bool PauseMenu_SelectItemProcessAButton(GlobalContext* ctxt, u32 curVal, u32 non
 bool PauseMenu_SelectItemShowAButtonEnabled(GlobalContext* ctxt);
 void PauseMenu_BeforeUpdate(GlobalContext* ctxt);
 void Handle_Sword_Swap(GlobalContext* ctxt);
+void Handle_Equip_Sword(GlobalContext* ctxt);
 void Handle_Shield_Swap(GlobalContext* ctxt);
 void Handle_Unequipping(GlobalContext* ctxt);
 void Handle_Mapping_Items(GlobalContext* ctxt);
