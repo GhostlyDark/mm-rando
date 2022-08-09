@@ -33,14 +33,14 @@ uint8_t pressed_dd					= 0;
 uint8_t pressed_dl					= 0;
 
 void Handle_Extra_Functions(GlobalContext* ctxt) {
-	if (CFG_DUAL_DPAD_ENABLED) {
+	/*if (CFG_DUAL_DPAD_ENABLED) {
 		if (ctxt->state.input[0].current.buttons.l && ctxt->state.input[0].releaseEdge.buttons.r) {
 			dpad_alt ^= 1;
 			if (dpad_alt)
 				z2_PlaySfx(0x4813);
 			else z2_PlaySfx(0x4814);
 		}
-	}
+	}*/
 	
 	Handle_FPS(ctxt);
 	Handle_Quick_Pad(ctxt);
