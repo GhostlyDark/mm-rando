@@ -101,11 +101,21 @@ typedef void (*z2_SetItemButton_proc)		(GlobalContext* ctxt, int item, int butto
 #define active_shield						(*(uint8_t*)					0x803FFEF4)
 #define HAVE_EXTRA_SRAM						(*(uint8_t*)					0x801EF677)	// (gSaveContext.perm.inv.quantities[0])
 #define HAVE_TALKED_GUARD					(HAVE_EXTRA_SRAM & (1 << 0) )
-#define LOST_KOKIRI_SWORD					(HAVE_EXTRA_SRAM & (1 << 1) )
+#define SAVE_DPAD							(HAVE_EXTRA_SRAM & (1 << 1) )
 #define HAVE_RAZOR_SWORD					(HAVE_EXTRA_SRAM & (1 << 2) )
 #define HAVE_GILDED_SWORD					(HAVE_EXTRA_SRAM & (1 << 3) )
 #define LOST_HERO_SHIELD					(HAVE_EXTRA_SRAM & (1 << 4) )
 #define HAVE_MIRROR_SHIELD					(HAVE_EXTRA_SRAM & (1 << 5) )
+
+/* D-PAD */
+#define DPAD_SET1_UP						(gSaveContext.perm.inv.quantities[0x0])
+#define DPAD_SET1_RIGHT						(gSaveContext.perm.inv.quantities[0x2])
+#define DPAD_SET1_DOWN						(gSaveContext.perm.inv.quantities[0x3])
+#define DPAD_SET1_LEFT						(gSaveContext.perm.inv.quantities[0x4])
+#define DPAD_SET2_UP						(gSaveContext.perm.inv.quantities[0x5])
+#define DPAD_SET2_RIGHT						(gSaveContext.perm.inv.quantities[0xB])
+#define DPAD_SET2_DOWN						(gSaveContext.perm.inv.quantities[0xE])
+#define DPAD_SET2_LEFT						(gSaveContext.perm.inv.quantities[0xF])
 
 /* Smithy */
 #define smithy								(*(uint8_t*)					0x801EFC4F)

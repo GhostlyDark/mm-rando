@@ -42,6 +42,14 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
 	
 	Handle_Hud(ctxt);
 	Handle_Ocarina_Icons(ctxt);
+	
+	if (!SAVE_DPAD) {
+		HAVE_EXTRA_SRAM |= 2;
+		DPAD_SET1_UP     = DPAD_SET2_UP    = ITEM_DEKU_MASK;
+		DPAD_SET1_RIGHT  = DPAD_SET2_RIGHT = ITEM_ZORA_MASK;
+		DPAD_SET1_DOWN   = DPAD_SET2_DOWN  = ITEM_OCARINA;
+		DPAD_SET1_LEFT   = DPAD_SET2_LEFT  = ITEM_GORON_MASK;
+	}
 }
 
 bool Player_CanReceiveItem(GlobalContext* ctxt) {

@@ -43,5 +43,4 @@ void Set_B_Button(GlobalContext* ctxt);
 #define link_anim_2					(*(uint8_t*)			0x80400145)
 #define elegy_anim_state			(*(uint8_t*)			0x801B1BEE)
 
-
 #endif
