@@ -3,6 +3,7 @@
 extern uint8_t CFG_SWAP_ENABLED;
 extern uint8_t CFG_UNEQUIP_ENABLED;
 extern uint8_t CFG_B_BUTTON_ITEM_ENABLED;
+extern uint8_t CFG_WS_ENABLED;
 
 extern uint8_t dpad_alt;
 
@@ -269,7 +270,10 @@ void Handle_Shield_Swap(GlobalContext* ctxt) {
 	}
 	
 	if (shield >= 0 && shield <= 2 && shield != gSaveContext.perm.unk4C.equipment.shield) {
-		gSaveContext.perm.unk4C.equipment.shield = active_shield = shield;
+		gSaveContext.perm.unk4C.equipment.shield = shield;
+		if (CFG_WS_ENABLED)
+			active_shield_ws = shield;
+		else active_shield = shield;
 		z2_PlaySfx(0x4808);
 	}
 }

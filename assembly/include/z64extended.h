@@ -89,7 +89,6 @@ typedef union PressedButtons {
 #define play_goron_drums					(*(uint8_t*)					0x801C2571)
 #define play_zora_guitar					(*(uint8_t*)					0x801C2571)*/
 
-
 typedef void (*z2_UpdateButtonIcon_proc)	(GlobalContext* ctxt, int button);
 #define z2_UpdateButtonIcon					((z2_UpdateButtonIcon_proc)		0x80112B40)
 
@@ -111,6 +110,7 @@ typedef void (*z2_SetItemButton_proc)		(GlobalContext* ctxt, int item, int butto
 
 /* Extra SRAM */
 #define active_shield						(*(uint8_t*)					0x803FFEF4)
+#define active_shield_ws					(*(uint8_t*)					0x804184F4)
 #define HAVE_EXTRA_SRAM						(*(uint8_t*)					0x801EF677)	// (gSaveContext.perm.inv.quantities[0])
 #define SAVE_DPAD							(HAVE_EXTRA_SRAM & (1 << 1) )
 #define HAVE_RAZOR_SWORD					(HAVE_EXTRA_SRAM & (1 << 2) )
