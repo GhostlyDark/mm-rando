@@ -25,12 +25,7 @@ uint8_t hud_hearts_hide				= 1;
 uint8_t hud_counter					= 0;
 
 uint8_t block						= 0;
-uint8_t pressed_r					= 0;
-uint8_t pressed_z					= 0;
-uint8_t pressed_du					= 0;
-uint8_t pressed_dr					= 0;
-uint8_t pressed_dd					= 0;
-uint8_t pressed_dl					= 0;
+PressedButtons pressed;
 
 void Handle_Extra_Functions(GlobalContext* ctxt) {
 	if (CFG_DUAL_DPAD_ENABLED) {
@@ -47,35 +42,43 @@ void Handle_Extra_Functions(GlobalContext* ctxt) {
 	Handle_L_Button(ctxt);
 	Handle_Infinite();
 	
-	if (ctxt->pauseCtx.state == 6) {
+	if (ctxt->pauseCtx.state == 6 && ctxt->pauseCtx.debugMenu == 0) {
 		ctxt->state.input[0].current.buttons.dl = 0;
 		ctxt->state.input[0].current.buttons.dr = 0;
 	}
 }
 
 void Handle_L_Button(GlobalContext* ctxt) {
-	InputPad paddCurr = ctxt->state.input[0].current.buttons;
+	InputPad padCurr = ctxt->state.input[0].current.buttons;
 	
-	if (ctxt->state.input[0].releaseEdge.buttons.l && !paddCurr.r && !paddCurr.z && !paddCurr.du && !paddCurr.dr && !paddCurr.dd && !paddCurr.dl) {
+	if (padCurr.r)
+		pressed.r = 1;
+	if (padCurr.z)
+		pressed.z = 1;
+	if (padCurr.du)
+		pressed.du = 1;
+	if (padCurr.dr)
+		pressed.dr = 1;
+	if (padCurr.dd)
+		pressed.dd = 1;
+	if (padCurr.dl)
+		pressed.dl = 1;
+	
+	if (ctxt->state.input[0].releaseEdge.buttons.l && !pressed.r && !pressed.z && !pressed.du && !pressed.dr && !pressed.dd && !pressed.dl) {
 		Toggle_Minimap(ctxt);
 		Hide_Hud(ctxt);
 		Inventory_Editor(ctxt);
 		Set_B_Button(ctxt);
 	}
 	
+	if (!padCurr.l)
+		pressed.r = pressed.z = pressed.du = pressed.dr = pressed.dd = pressed.dl = 0;
 	if (ctxt->state.input[0].pressEdge.buttons.l)
 		block = 1;
-	if (!paddCurr.l)
+	if (!padCurr.l)
 		block = 0;
-	
-	if (block) {
-		ctxt->state.input[0].current.buttons.r  = 0;
-		ctxt->state.input[0].current.buttons.z  = 0;
-		ctxt->state.input[0].current.buttons.du = 0;
-		ctxt->state.input[0].current.buttons.dr = 0;
-		ctxt->state.input[0].current.buttons.dd = 0;
-		ctxt->state.input[0].current.buttons.dl = 0;
-	}
+	if (block)
+		ctxt->state.input[0].current.buttons.r = ctxt->state.input[0].current.buttons.z = ctxt->state.input[0].current.buttons.du = ctxt->state.input[0].current.buttons.dr = ctxt->state.input[0].current.buttons.dd = ctxt->state.input[0].current.buttons.dl = 0;
 	
 	ctxt->state.input[0].pressEdge.buttons.l = 0;	
 }
@@ -192,7 +195,7 @@ void Handle_FPS(GlobalContext* ctxt) {
 	
 	if (!fps_switch || opening_door == 0x00800020)
 		ctxt->state.framerateDivisor = link_animation_speed = 3;
-	else if (text_state == 0x01 || jump_state == 0x0100 || opening_chest == 0x01 || var_801D7B44 == 0x01)
+	else if (text_state == 0x01 || jump_state == 0x0100 || opening_chest == 0x01 || var_801D7B44 == 0x01 || playing_ocarina)
 		ctxt->state.framerateDivisor = link_animation_speed = 2;
 	else if (playable_state == 0xFF08)
 		ctxt->state.framerateDivisor = link_animation_speed = 3;

@@ -37,7 +37,7 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
 		if (!(clock_town_guard & (1 << 5)) &&  HAVE_TALKED_GUARD)
 			clock_town_guard |= 32;
 		if ( (clock_town_guard & (1 << 5)) && !HAVE_TALKED_GUARD)
-			HAVE_EXTRA_SRAM |= 1;
+			HAVE_EXTRA_SRAM |= 64;
 	}
 	
 	Handle_Hud(ctxt);

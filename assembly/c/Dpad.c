@@ -240,6 +240,9 @@ bool Dpad_Handle(ActorPlayer* player, GlobalContext* ctxt) {
     if ((player->stateFlags.state1 & flags1) != 0) {
         return false;
     }
+	
+	if (ctxt->state.input[0].current.buttons.l)
+		return;
 
 	if (!dpad_alt) {
 		if (padPressed.du && gUsable[0])

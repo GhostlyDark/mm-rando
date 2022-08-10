@@ -70,6 +70,17 @@ enum ocarinaItemValue {
 	ITEM_ZORA_GUITAR	= 0x26,
 };
 
+typedef union PressedButtons {
+    struct {
+		uint8_t r;
+		uint8_t z;
+		uint8_t du;
+		uint8_t dr;
+		uint8_t dd;
+		uint8_t dl;
+    };
+} PressedButtons;
+
 /*#define ocarina_icons_1					(*(uint8_t*)					0x80719E2C)	// 80779E2C
 #define ocarina_icons_2						(*(uint8_t*)					0x80719E37)	// 80779E37
 #define ocarina_icons_3						(*(uint8_t*)					0x80719E48)	// 80779E48
@@ -77,7 +88,8 @@ enum ocarinaItemValue {
 #define play_deku_pipes						(*(uint8_t*)					0x801C2571)
 #define play_goron_drums					(*(uint8_t*)					0x801C2571)
 #define play_zora_guitar					(*(uint8_t*)					0x801C2571)*/
-	
+
+
 typedef void (*z2_UpdateButtonIcon_proc)	(GlobalContext* ctxt, int button);
 #define z2_UpdateButtonIcon					((z2_UpdateButtonIcon_proc)		0x80112B40)
 
@@ -100,12 +112,12 @@ typedef void (*z2_SetItemButton_proc)		(GlobalContext* ctxt, int item, int butto
 /* Extra SRAM */
 #define active_shield						(*(uint8_t*)					0x803FFEF4)
 #define HAVE_EXTRA_SRAM						(*(uint8_t*)					0x801EF677)	// (gSaveContext.perm.inv.quantities[0])
-#define HAVE_TALKED_GUARD					(HAVE_EXTRA_SRAM & (1 << 0) )
 #define SAVE_DPAD							(HAVE_EXTRA_SRAM & (1 << 1) )
 #define HAVE_RAZOR_SWORD					(HAVE_EXTRA_SRAM & (1 << 2) )
 #define HAVE_GILDED_SWORD					(HAVE_EXTRA_SRAM & (1 << 3) )
 #define LOST_HERO_SHIELD					(HAVE_EXTRA_SRAM & (1 << 4) )
 #define HAVE_MIRROR_SHIELD					(HAVE_EXTRA_SRAM & (1 << 5) )
+#define HAVE_TALKED_GUARD					(HAVE_EXTRA_SRAM & (1 << 6) )
 
 /* D-PAD */
 #define DPAD_SET1_UP						(gSaveContext.perm.inv.quantities[0x0])

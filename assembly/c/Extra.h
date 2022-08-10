@@ -32,6 +32,7 @@ void Set_B_Button(GlobalContext* ctxt);
 #define text_state					(*(uint8_t*)			0x803FFDB6)
 #define link_animation_speed		(*(uint8_t*)			0x803825E1)
 #define opening_chest				(*(uint8_t*)			0x803FFF68)
+#define playing_ocarina				(*(uint8_t*)			0x801D6FB4)
 
 #define var_8040000C				(*(uint32_t*)			0x8040000C)
 #define var_801160AE				(*(uint16_t*)			0x801160AE)
