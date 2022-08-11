@@ -242,7 +242,7 @@ bool Dpad_Handle(ActorPlayer* player, GlobalContext* ctxt) {
     }
 	
 	if (ctxt->state.input[0].current.buttons.l)
-		return;
+		return false;
 
 	if (!dpad_alt) {
 		if (padPressed.du && gUsable[0])
