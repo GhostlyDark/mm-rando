@@ -256,13 +256,13 @@ bool Dpad_Handle(ActorPlayer* player, GlobalContext* ctxt) {
 	}
 	else {
 		if (padPressed.du && gUsable[0])
-			return TryUseItem(ctxt, player, DPAD_SET1_UP);
+			return TryUseItem(ctxt, player, DPAD_SET2_UP);
 		else if (padPressed.dr && gUsable[1])
-			return TryUseItem(ctxt, player, DPAD_SET1_RIGHT);
+			return TryUseItem(ctxt, player, DPAD_SET2_RIGHT);
 		else if (padPressed.dd && gUsable[2])
-			return TryUseItem(ctxt, player, DPAD_SET1_DOWN);
+			return TryUseItem(ctxt, player, DPAD_SET2_DOWN);
 		else if (padPressed.dl && gUsable[3])
-			return TryUseItem(ctxt, player, DPAD_SET1_LEFT);
+			return TryUseItem(ctxt, player, DPAD_SET2_LEFT);
 	}
 
     return false;
