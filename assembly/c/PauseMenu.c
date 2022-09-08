@@ -1,10 +1,13 @@
-#include <z64.h>
-#include "HudColors.h"
-#include "Misc.h"
-#include "QuestItemStorage.h"
-#include "QuestItems.h"
-#include "Reloc.h"
-#include "SaveFile.h"
+#include "PauseScreen.h"
+
+extern uint8_t CFG_SWAP_ENABLED;
+extern uint8_t CFG_UNEQUIP_ENABLED;
+extern uint8_t CFG_B_BUTTON_ITEM_ENABLED;
+extern uint8_t CFG_WS_ENABLED;
+
+extern uint8_t dpad_alt;
+
+uint8_t redraw_b_button = 0;
 
 // Vertex buffers.
 static Vtx gVertexBufs[(4 * 3) * 2];
@@ -185,5 +188,166 @@ bool PauseMenu_SelectItemShowAButtonEnabled(GlobalContext* ctxt) {
  **/
 void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
     // Update pause menu colors.
-    HudColors_UpdatePauseMenuColors(ctxt);
+    //HudColors_UpdatePauseMenuColors(ctxt);
+	
+	if (ctxt->pauseCtx.debugMenu != 0)
+		return;
+	
+	Handle_Sword_Swap(ctxt);
+	Handle_Shield_Swap(ctxt);
+	Handle_Unequipping(ctxt);
+	Handle_Mapping_Items(ctxt);
+	
+	if (CFG_B_BUTTON_ITEM_ENABLED && gPlayUpdateInput.pressEdge.buttons.cu)
+		Handle_Equip_Sword(ctxt);
+}
+
+void Handle_Sword_Swap(GlobalContext* ctxt) {
+	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 5 || (!gPlayUpdateInput.pressEdge.buttons.cl && !gPlayUpdateInput.pressEdge.buttons.cr) )
+		return;
+	uint8_t sword = gSaveContext.perm.unk4C.equipment.sword;
+	
+	if (sword == 2 && !HAVE_RAZOR_SWORD)
+		HAVE_EXTRA_SRAM |= 4;
+	if (sword == 3 && !HAVE_GILDED_SWORD) {
+		HAVE_EXTRA_SRAM |= 4;
+		HAVE_EXTRA_SRAM |= 8;
+	}
+	
+	if (gPlayUpdateInput.pressEdge.buttons.cl) {
+		sword--;
+		if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD || REFORGING_RAZOR_SWORD) )
+			sword--;
+		if (sword == 1 && (gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD || REFORGING_KOKIRI_SWORD) )
+			sword--;
+	}
+	else if (gPlayUpdateInput.pressEdge.buttons.cr) {
+		sword++;
+		if (sword == 1 && gSaveContext.perm.stolenItem == ITEM_KOKIRI_SWORD || REFORGING_KOKIRI_SWORD)
+			sword++;
+		if (sword == 2 && (!HAVE_RAZOR_SWORD || gSaveContext.perm.stolenItem == ITEM_RAZOR_SWORD || REFORGING_RAZOR_SWORD) )
+			sword++;
+		if (sword == 3 && (!HAVE_GILDED_SWORD || gSaveContext.perm.stolenItem == ITEM_GILDED_SWORD) )
+			sword++;
+	}
+	
+	if (sword >= 0 && sword <= 3 && sword != gSaveContext.perm.unk4C.equipment.sword) {
+		gSaveContext.perm.unk4C.equipment.sword	= sword;
+		Handle_Equip_Sword(ctxt);
+	}
+}
+
+void Handle_Equip_Sword(GlobalContext* ctxt) {
+	if (ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 5)
+		return;
+	
+	if (gSaveContext.perm.unk4C.equipment.sword != 0)
+		gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_KOKIRI_SWORD + gSaveContext.perm.unk4C.equipment.sword - 1;
+	else gSaveContext.perm.unk4C.formButtonItems[0].buttons[0] = ITEM_NONE;
+	z2_UpdateButtonIcon(ctxt, 0);
+	z2_PlaySfx(0x4808);
+}
+
+void Handle_Shield_Swap(GlobalContext* ctxt) {
+	if (!CFG_SWAP_ENABLED || ctxt->pauseCtx.screenIndex != 2 || ctxt->pauseCtx.cells2.values[2] != 4 || (!gPlayUpdateInput.pressEdge.buttons.cl && !gPlayUpdateInput.pressEdge.buttons.cr) )
+		return;
+	uint8_t shield = gSaveContext.perm.unk4C.equipment.shield;
+	
+	if (shield == 2 && !HAVE_MIRROR_SHIELD)
+		HAVE_EXTRA_SRAM |= 32;
+			
+	if (gPlayUpdateInput.pressEdge.buttons.cl) {
+		shield--;
+		if (shield == 1 && LOST_HERO_SHIELD)
+			shield--;
+	}
+	else if (gPlayUpdateInput.pressEdge.buttons.cr) {
+		shield++;
+		if (shield == 1 && LOST_HERO_SHIELD)
+			shield++;
+		if (shield == 2 && !HAVE_MIRROR_SHIELD)
+			shield++;
+	}
+	
+	if (shield >= 0 && shield <= 2 && shield != gSaveContext.perm.unk4C.equipment.shield) {
+		gSaveContext.perm.unk4C.equipment.shield = shield;
+		if (CFG_WS_ENABLED)
+			active_shield_ws = shield;
+		else active_shield = shield;
+		z2_PlaySfx(0x4808);
+	}
+}
+
+void Handle_Unequipping(GlobalContext* ctxt) {
+	if (!CFG_UNEQUIP_ENABLED || (ctxt->pauseCtx.screenIndex != 0 && ctxt->pauseCtx.screenIndex != 3 && !gPlayUpdateInput.pressEdge.buttons.cu) || !gPlayUpdateInput.pressEdge.buttons.cu)
+		return;
+	
+	for (uint8_t button=1; button<=3; button++)
+		if ( (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ctxt->pauseCtx.selectedItem) || (ctxt->pauseCtx.selectedItem == ITEM_BOW && gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] >= ITEM_BOW_FIRE_ARROW && gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] <= ITEM_BOW_LIGHT_ARROW) ) {
+			gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = 0xFF;
+			z2_PlaySfx(0x480A);
+			break;
+		}
+}
+
+void Handle_Mapping_Items(GlobalContext* ctxt) {
+	if (ctxt->pauseCtx.screenIndex != 0 && ctxt->pauseCtx.screenIndex != 3)
+		return;
+	
+	uint8_t item = ctxt->pauseCtx.selectedItem;
+	InputPad pad = gPlayUpdateInput.pressEdge.buttons;
+	
+	/*if (item >= ITEM_FIRE_ARROW   && item <= ITEM_LIGHT_ARROW)
+		return;
+	if (item >= ITEM_EMPTY_BOTTLE && item <= ITEM_EMPTY_BOTTLE_2)
+		return;
+	if (item >= ITEM_MOON_TEAR    && item <= ITEM_MAP)
+		return;
+	if (item>= ITEM_BOW_FIRE_ARROW)
+		return;*/
+	
+	if (item != ITEM_OCARINA && item != ITEM_DEKU_PIPES && item != ITEM_GORON_DRUMS && item != ITEM_OCARINA && item != ITEM_ZORA_GUITAR && item != ITEM_DEKU_MASK && item != ITEM_GORON_MASK && item != ITEM_ZORA_MASK && item != ITEM_FIERCE_DEITY_MASK)
+		return;
+	
+	if (!dpad_alt) {
+		if (pad.du) {
+			(DPAD_SET1_UP == item)			? (DPAD_SET1_UP = ITEM_NONE)	: (DPAD_SET1_UP = item);
+			(DPAD_SET1_UP == ITEM_NONE)		? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
+		}
+		
+		else if (pad.dr) {
+			(DPAD_SET1_RIGHT == item)		? (DPAD_SET1_RIGHT = ITEM_NONE)	: (DPAD_SET1_RIGHT = item);
+			(DPAD_SET1_RIGHT == ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
+		}
+	
+		else if (pad.dd) {
+			(DPAD_SET1_DOWN == item)		? (DPAD_SET1_DOWN = ITEM_NONE)	: (DPAD_SET1_DOWN = item);
+			(DPAD_SET1_DOWN == ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
+		}
+		else if (pad.dl) {
+			(DPAD_SET1_LEFT == item)		? (DPAD_SET1_LEFT = ITEM_NONE)	: (DPAD_SET1_LEFT = item);
+			(DPAD_SET1_LEFT	== ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
+		}
+	}
+	else {
+		if (pad.du) {
+			(DPAD_SET2_UP == item)			? (DPAD_SET2_UP = ITEM_NONE)	: (DPAD_SET2_UP = item);
+			(DPAD_SET2_UP == ITEM_NONE)		? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
+		}
+		
+		else if (pad.dr) {
+			(DPAD_SET2_RIGHT == item)		? (DPAD_SET2_RIGHT = ITEM_NONE)	: (DPAD_SET2_RIGHT = item);
+			(DPAD_SET2_RIGHT == ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
+		}
+	
+		else if (pad.dd) {
+			(DPAD_SET2_DOWN == item)		? (DPAD_SET2_DOWN = ITEM_NONE)	: (DPAD_SET2_DOWN = item);
+			(DPAD_SET2_DOWN == ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
+		}
+		else if (pad.dl) {
+			(DPAD_SET2_LEFT == item)		? (DPAD_SET2_LEFT = ITEM_NONE)	: (DPAD_SET2_LEFT = item);
+			(DPAD_SET2_LEFT	== ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
+		}
+	}
+	
 }
