@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <z64.h>
+#include <z64extended.h>
 
 // Magic number for DpadConfig: "DPAD"
 #define DPAD_CONFIG_MAGIC 0x44504144
