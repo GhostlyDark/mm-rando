@@ -40,14 +40,20 @@ void Handle_Extra_Functions(GlobalContext* ctxt) {
 	
 	Handle_FPS(ctxt);
 	Handle_Quick_Pad(ctxt);
-	Handle_L_Button(ctxt);
+	Handle_L_Button_Ingame(ctxt);
+	Handle_L_Button_Paused(ctxt);
 	Handle_Infinite();
 	
 	if (ctxt->pauseCtx.state == 6 && ctxt->pauseCtx.debugMenu == 0)
 		ctxt->state.input[0].current.buttons.dr = ctxt->state.input[0].current.buttons.dl = 0;
 }
 
-void Handle_L_Button(GlobalContext* ctxt) {
+void Handle_L_Button_Ingame(GlobalContext* ctxt) {
+	if (!CFG_DUAL_DPAD_ENABLED && !CFG_FPS_ENABLED && !CFG_FLOW_OF_TIME_ENABLED && !CFG_INSTANT_ELEGY_ENABLED && !CFG_HIDE_HUD_ENABLED)
+		return;
+	if (ctxt->pauseCtx.state != 0 || gSaveContext.extra.fileIndex == 0xFF || gSaveContext.extra.titleSetupIndex != 0)
+		return;
+	
 	InputPad padCurr = ctxt->state.input[0].current.buttons;
 	
 	if (padCurr.r)
@@ -66,8 +72,6 @@ void Handle_L_Button(GlobalContext* ctxt) {
 	if (ctxt->state.input[0].releaseEdge.buttons.l && !pressed.r && !pressed.z && !pressed.du && !pressed.dr && !pressed.dd && !pressed.dl) {
 		Toggle_Minimap(ctxt);
 		Hide_Hud(ctxt);
-		Inventory_Editor(ctxt);
-		Set_B_Button(ctxt);
 	}
 	
 	if (!padCurr.l)
@@ -78,13 +82,42 @@ void Handle_L_Button(GlobalContext* ctxt) {
 		block = 0;
 	if (block)
 		ctxt->state.input[0].current.buttons.r = ctxt->state.input[0].current.buttons.z = ctxt->state.input[0].current.buttons.du = ctxt->state.input[0].current.buttons.dr = ctxt->state.input[0].current.buttons.dd = ctxt->state.input[0].current.buttons.dl = 0;
+	ctxt->state.input[0].pressEdge.buttons.l = 0;	
+}
+
+void Handle_L_Button_Paused(GlobalContext* ctxt) {
+	if (ctxt->pauseCtx.state != 6 || gSaveContext.extra.fileIndex == 0xFF || gSaveContext.extra.titleSetupIndex != 0)
+		return;
 	
+	InputPad padCurr = ctxt->state.input[0].current.buttons;
+	
+	if (padCurr.du)
+		pressed.du = 1;
+	if (padCurr.dr)
+		pressed.dr = 1;
+	if (padCurr.dd)
+		pressed.dd = 1;
+	if (padCurr.dl)
+		pressed.dl = 1;
+	
+	if (ctxt->state.input[0].releaseEdge.buttons.l && !pressed.du && !pressed.dr && !pressed.dd && !pressed.dl) {
+		Inventory_Editor(ctxt);
+		Hide_Hud(ctxt);
+		Set_B_Button(ctxt);
+	}
+	
+	if (!padCurr.l)
+		pressed.du = pressed.dr = pressed.dd = pressed.dl = 0;
+	if (ctxt->state.input[0].pressEdge.buttons.l)
+		block = 1;
+	if (!padCurr.l)
+		block = 0;
+	if (block)
+		ctxt->state.input[0].current.buttons.du = ctxt->state.input[0].current.buttons.dr = ctxt->state.input[0].current.buttons.dd = ctxt->state.input[0].current.buttons.dl = 0;
 	ctxt->state.input[0].pressEdge.buttons.l = 0;	
 }
 
 void Toggle_Minimap(GlobalContext* ctxt) {
-	if (ctxt->pauseCtx.state != 0)
-		return;
 	uint8_t proceed = 0;
 	
 	if (ctxt->sceneNum == SCENE_SOUTH_CLOCK_TOWN || ctxt->sceneNum == SCENE_NORTH_CLOCK_TOWN || ctxt->sceneNum == SCENE_WEST_CLOCK_TOWN || ctxt->sceneNum == SCENE_EAST_CLOCK_TOWN || ctxt->sceneNum == SCENE_LAUNDRY_POOL || ctxt->sceneNum == SCENE_TERMINA_FIELD) {
@@ -318,7 +351,7 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt) {
 	if (!CFG_OCARINA_ICONS_ENABLED)
 		return;
 	
-	if (gSaveContext.perm.currentForm == PLAYER_FORM_HUMAN || gSaveContext.perm.currentForm == PLAYER_FORM_FIERCE_DEITY) {
+	if (gSaveContext.extra.buttonsState.alphaTransition == 0xB || gSaveContext.perm.currentForm == PLAYER_FORM_HUMAN || gSaveContext.perm.currentForm == PLAYER_FORM_FIERCE_DEITY) {
 		if (gSaveContext.perm.inv.items[0] == ITEM_DEKU_PIPES || gSaveContext.perm.inv.items[0] == ITEM_GORON_DRUMS || gSaveContext.perm.inv.items[0] == ITEM_ZORA_GUITAR)
 			for (uint8_t button=1; button<=3; button++) {
 				if (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_DEKU_PIPES || gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_GORON_DRUMS ||gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ITEM_ZORA_GUITAR) {

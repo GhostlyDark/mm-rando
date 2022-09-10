@@ -7,7 +7,8 @@
 #include "Dpad.h"
 
 void Handle_Extra_Functions(GlobalContext* ctxt);
-void Handle_L_Button(GlobalContext* ctxt);
+void Handle_L_Button_Ingame(GlobalContext* ctxt);
+void Handle_L_Button_Paused(GlobalContext* ctxt);
 void Toggle_Minimap(GlobalContext* ctxt);
 void Handle_Hud(GlobalContext* ctxt);
 void Hide_Hud(GlobalContext* ctxt);
