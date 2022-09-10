@@ -67,7 +67,7 @@ typedef enum { // 803E6BC4
 enum ocarinaItemValue {
 	ITEM_DEKU_PIPES		= 0x26,
 	ITEM_GORON_DRUMS	= 0x1C,
-	ITEM_ZORA_GUITAR	= 0x0B,
+	ITEM_ZORA_GUITAR	= 0x27,
 };
 
 typedef union PressedButtons {
