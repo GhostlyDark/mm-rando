@@ -128,5 +128,6 @@ typedef void (*z2_SetItemButton_proc)		(GlobalContext* ctxt, int item, int butto
 
 /* Alpha */
 #define magicRupeesAlpha					(*(uint16_t*)					0x803F5D7A)
+#define minimapAlpha						(*(uint16_t*)					0x803F5D7C)
 
 #endif
