@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "Util.h"
 
+extern uint8_t CFG_WS_ENABLED;
 extern char DPAD_TEXTURE;
 #define DpadTextureRaw ((u8*)&DPAD_TEXTURE)
 
@@ -93,6 +94,9 @@ Sprite* Sprite_GetItemTexturesSprite(void) {
 }
 
 void Sprite_Init(void) {
+	if (CFG_WS_ENABLED)
+        gSetupDb[2] = gsDPSetScissor(G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH + 104, SCREEN_HEIGHT);
+	
     gSpriteDpad.buf = DpadTextureRaw;
 
     // Allocate space for item textures
