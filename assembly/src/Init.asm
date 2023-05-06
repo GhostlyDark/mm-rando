@@ -14,7 +14,7 @@ init:
     ; Displaced code
     lui     s0, 0x801C
     addiu   s0, s0, 0xD910
-    lui     a0, 0x0004
+    lui     a0, 0x0004 ;0x0004 -> 0x0006 WS
     or      s2, s0, r0
 
     lw      ra, 0x10 (sp)

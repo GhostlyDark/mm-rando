@@ -7,6 +7,7 @@
 #include "Sprite.h"
 #include "Util.h"
 
+extern uint8_t CFG_WS_ENABLED;
 extern uint8_t dpad_alt;
 
 // D-Pad configuration structure that can be set by a randomizer.
@@ -36,9 +37,10 @@ static u8 gTextureItems[4] = {
 };
 
 // Position of D-Pad texture.
-const static u16 gPosition[2][2] = {
+const static u16 gPosition[3][3] = {
     { 30,  60 },  // Left
     { 270, 75 },  // Right
+    { 374, 75 },  // Right WS
 };
 
 // Positions of D-Pad item textures, relative to main texture.
@@ -337,7 +339,12 @@ void Dpad_Draw(GlobalContext* ctxt) {
     }
 
     // Get index of main sprite position (left or right)
-    u8 posIdx = (DPAD_CONFIG.display == DPAD_DISPLAY_LEFT) ? 0 : 1;
+	u8 posIdx = 0;
+	if (DPAD_CONFIG.display == DPAD_DISPLAY_RIGHT) {
+		if (CFG_WS_ENABLED)
+			posIdx = 2;
+		else posIdx = 1;
+	}
 
     // Main sprite position
     u16 x = gPosition[posIdx][0];
