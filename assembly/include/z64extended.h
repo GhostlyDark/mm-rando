@@ -126,4 +126,7 @@ typedef void (*z2_SetItemButton_proc)		(GlobalContext* ctxt, int item, int butto
 #define REFORGING_KOKIRI_SWORD				( (smithy & (1 << 0)) && (smithy & (1 << 1)) && !(smithy & (1 << 2)) )
 #define REFORGING_RAZOR_SWORD				( (smithy & (1 << 0)) && (smithy & (1 << 1)) &&  (smithy & (1 << 2)) )
 
+/* Alpha */
+#define magicRupeesAlpha					(*(uint16_t*)					0x803F5D7A)
+
 #endif
