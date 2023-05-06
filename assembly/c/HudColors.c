@@ -1,8 +1,11 @@
 #include <stdbool.h>
 #include <z64.h>
+#include <z64extended.h>
 #include "Color.h"
 #include "HudColors.h"
 #include "Reloc.h"
+
+extern uint8_t CFG_WS_ENABLED;
 
 struct HudColorConfig HUD_COLOR_CONFIG = {
     .magic = HUD_COLOR_CONFIG_MAGIC,
@@ -96,6 +99,9 @@ static void ColorTo16(ColorRGB16* dest, Color src) {
 
 u32 HudColors_GetMagicMeterColor(bool inf) {
     u8 alpha = gGlobalContext.interfaceCtx.alphas.magicRupees & 0xFF;
+    if (CFG_WS_ENABLED)
+        alpha = magicRupeesAlpha & 0xFF;
+	
     if (inf) {
         return Color_ConvertToIntWithAlpha(HUD_COLOR_CONFIG.magicInf, alpha);
     } else {
@@ -109,11 +115,17 @@ u32 HudColors_GetMapColor(void) {
 
 u32 HudColors_GetMapPlayerCursorColor(void) {
     u8 alpha = gGlobalContext.interfaceCtx.alphas.minimap & 0xFF;
+    if (CFG_WS_ENABLED)
+        alpha = minimapAlpha & 0xFF;
+	
     return Color_ConvertToIntWithAlpha(HUD_COLOR_CONFIG.mapPlayerCursor, alpha);
 }
 
 u32 HudColors_GetMapEntranceCursorColor(void) {
     u8 alpha = gGlobalContext.interfaceCtx.alphas.minimap & 0xFF;
+    if (CFG_WS_ENABLED)
+        alpha = minimapAlpha & 0xFF;
+	
     return Color_ConvertToIntWithAlpha(HUD_COLOR_CONFIG.mapEntranceCursor, alpha);
 }
 
