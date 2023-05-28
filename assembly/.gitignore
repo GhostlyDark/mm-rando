@@ -6,11 +6,7 @@ armips*
 !.gitkeep
 
 # Ignore build files
-build/*.o
-build/*.txt
-build/generated/*.bin
-build/generated/*.json
-build/generated/*.txt
+build/
 
 # Ignore private vagrant directory
 .vagrant*
