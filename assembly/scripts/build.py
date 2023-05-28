@@ -7,7 +7,7 @@ import os
 import re
 from subprocess import check_call as call
 
-from rom_diff import create_diff
+#from rom_diff import create_diff
 from ntype import BigStream
 from crc import calculate_crc
 
@@ -176,13 +176,13 @@ def main():
     update_crc(os.path.join(relpath, 'roms/patched.z64'))
 
     # Diff ROMs
-    create_diff(
-        os.path.join(relpath, 'roms/base.z64'),
-        os.path.join(relpath, 'roms/patched.z64'),
-        os.path.join(generated_path, 'rom_patch.bin'),
-        virtual=args.virtual,
-        offset=offsets.table,
-    )
+#    create_diff(
+#        os.path.join(relpath, 'roms/base.z64'),
+#        os.path.join(relpath, 'roms/patched.z64'),
+#        os.path.join(generated_path, 'rom_patch.bin'),
+#        virtual=args.virtual,
+#        offset=offsets.table,
+#    )
 
 if __name__ == '__main__':
     main()
