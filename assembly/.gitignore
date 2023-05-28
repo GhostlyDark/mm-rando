@@ -2,6 +2,7 @@
 **/roms/*
 **/c/*.o
 armips*
+MakePPF3*
 **/__pycache__/*
 !.gitkeep
 
