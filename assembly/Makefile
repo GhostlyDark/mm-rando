@@ -15,7 +15,7 @@ mm: symbols
 copy: mm copy-only
 
 copy-only:
-	cp $(GEN_DIR)/rom_patch.bin $(RES_DIR)
+#	cp $(GEN_DIR)/rom_patch.bin $(RES_DIR)
 	cp $(GEN_DIR)/symbols.json  $(RES_DIR)
 
 symbols:
