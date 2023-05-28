@@ -160,7 +160,7 @@ def main():
     os.chdir(run_dir)
 
     # Create subdirectory for generated files if it doesn't exist.
-    generated_path = os.path.join(relpath, 'build/generated')
+    generated_path = os.path.join(relpath, 'roms')
     os.makedirs(generated_path, exist_ok=True)
 
     # Dump symbols as JSON
