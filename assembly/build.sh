@@ -8,4 +8,6 @@ tool_dir="$toplvl_dir/scripts"
 
 scripts/build.py --compile-c
 
-cmd //c $tool_dir/MakePPF3 c $rom_dir/base.z64 $rom_dir/patched.z64 $rom_dir/redux.ppf
+if [[ "$OSTYPE" == "msys"* ]]; then
+    cmd //c $tool_dir/MakePPF3 c $rom_dir/base.z64 $rom_dir/patched.z64 $rom_dir/redux.ppf
+fi
