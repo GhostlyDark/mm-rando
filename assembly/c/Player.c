@@ -25,6 +25,7 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
     ArrowCycle_Handle(player, ctxt);
     ArrowMagic_Handle(player, ctxt);
     DekuHop_Handle(player, ctxt);
+	Handle_Rupee_Drain(player, ctxt);
 	
 	if (CFG_SWAP_ENABLED) {
 		if (ctxt->msgCtx.currentMessageId == 0x00F6 && !LOST_HERO_SHIELD)

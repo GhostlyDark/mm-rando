@@ -1,7 +1,6 @@
 #include "PauseScreen.h"
 
 extern uint8_t CFG_SWAP_ENABLED;
-extern uint8_t CFG_UNEQUIP_ENABLED;
 extern uint8_t CFG_B_BUTTON_ITEM_ENABLED;
 extern uint8_t CFG_WS_ENABLED;
 
@@ -195,7 +194,7 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
 	
 	Handle_Sword_Swap(ctxt);
 	Handle_Shield_Swap(ctxt);
-	Handle_Unequipping(ctxt);
+	//Handle_Unequipping(ctxt);
 	Handle_Mapping_Items(ctxt);
 	
 	if (CFG_B_BUTTON_ITEM_ENABLED && gPlayUpdateInput.pressEdge.buttons.cu)
@@ -278,18 +277,6 @@ void Handle_Shield_Swap(GlobalContext* ctxt) {
 	}
 }
 
-void Handle_Unequipping(GlobalContext* ctxt) {
-	if (!CFG_UNEQUIP_ENABLED || (ctxt->pauseCtx.screenIndex != 0 && ctxt->pauseCtx.screenIndex != 3 && !gPlayUpdateInput.pressEdge.buttons.cu) || !gPlayUpdateInput.pressEdge.buttons.cu)
-		return;
-	
-	for (uint8_t button=1; button<=3; button++)
-		if ( (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == ctxt->pauseCtx.selectedItem) || (ctxt->pauseCtx.selectedItem == ITEM_BOW && gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] >= ITEM_BOW_FIRE_ARROW && gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] <= ITEM_BOW_LIGHT_ARROW) ) {
-			gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = 0xFF;
-			z2_PlaySfx(0x480A);
-			break;
-		}
-}
-
 void Handle_Mapping_Items(GlobalContext* ctxt) {
 	if (ctxt->pauseCtx.screenIndex != 0 && ctxt->pauseCtx.screenIndex != 3)
 		return;
@@ -297,7 +284,7 @@ void Handle_Mapping_Items(GlobalContext* ctxt) {
 	uint8_t item = ctxt->pauseCtx.selectedItem;
 	InputPad pad = gPlayUpdateInput.pressEdge.buttons;
 	
-	/*if (item >= ITEM_FIRE_ARROW   && item <= ITEM_LIGHT_ARROW)
+  /*if (item >= ITEM_FIRE_ARROW   && item <= ITEM_LIGHT_ARROW)
 		return;
 	if (item >= ITEM_EMPTY_BOTTLE && item <= ITEM_EMPTY_BOTTLE_2)
 		return;
@@ -306,48 +293,40 @@ void Handle_Mapping_Items(GlobalContext* ctxt) {
 	if (item>= ITEM_BOW_FIRE_ARROW)
 		return;*/
 	
-	if (item != ITEM_OCARINA && item != ITEM_DEKU_PIPES && item != ITEM_GORON_DRUMS && item != ITEM_OCARINA && item != ITEM_ZORA_GUITAR && item != ITEM_DEKU_MASK && item != ITEM_GORON_MASK && item != ITEM_ZORA_MASK && item != ITEM_FIERCE_DEITY_MASK)
+	if (item != ITEM_OCARINA    && item != ITEM_LENS        &&
+	    item != ITEM_DEKU_PIPES && item != ITEM_GORON_DRUMS && item != ITEM_OCARINA && item != ITEM_ZORA_GUITAR && item != ITEM_DEKU_MASK && item != ITEM_GORON_MASK && item != ITEM_ZORA_MASK && item != ITEM_FIERCE_DEITY_MASK)
 		return;
 	
 	if (!dpad_alt) {
-		if (pad.du) {
-			(DPAD_SET1_UP == item)			? (DPAD_SET1_UP = ITEM_NONE)	: (DPAD_SET1_UP = item);
-			(DPAD_SET1_UP == ITEM_NONE)		? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
-		}
-		
-		else if (pad.dr) {
-			(DPAD_SET1_RIGHT == item)		? (DPAD_SET1_RIGHT = ITEM_NONE)	: (DPAD_SET1_RIGHT = item);
-			(DPAD_SET1_RIGHT == ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
-		}
-	
-		else if (pad.dd) {
-			(DPAD_SET1_DOWN == item)		? (DPAD_SET1_DOWN = ITEM_NONE)	: (DPAD_SET1_DOWN = item);
-			(DPAD_SET1_DOWN == ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
-		}
-		else if (pad.dl) {
-			(DPAD_SET1_LEFT == item)		? (DPAD_SET1_LEFT = ITEM_NONE)	: (DPAD_SET1_LEFT = item);
-			(DPAD_SET1_LEFT	== ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
-		}
+		if (pad.du)
+			DPAD_SET1_UP    = Handle_Mapping_Item(DPAD_SET1_UP,    item);
+		else if (pad.dr)
+			DPAD_SET1_RIGHT = Handle_Mapping_Item(DPAD_SET1_RIGHT, item);
+		else if (pad.dd)
+			DPAD_SET1_DOWN  = Handle_Mapping_Item(DPAD_SET1_DOWN,  item);
+		else if (pad.dl)
+			DPAD_SET1_LEFT  = Handle_Mapping_Item(DPAD_SET1_LEFT,  item);
 	}
 	else {
-		if (pad.du) {
-			(DPAD_SET2_UP == item)			? (DPAD_SET2_UP = ITEM_NONE)	: (DPAD_SET2_UP = item);
-			(DPAD_SET2_UP == ITEM_NONE)		? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
-		}
-		
-		else if (pad.dr) {
-			(DPAD_SET2_RIGHT == item)		? (DPAD_SET2_RIGHT = ITEM_NONE)	: (DPAD_SET2_RIGHT = item);
-			(DPAD_SET2_RIGHT == ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
-		}
-	
-		else if (pad.dd) {
-			(DPAD_SET2_DOWN == item)		? (DPAD_SET2_DOWN = ITEM_NONE)	: (DPAD_SET2_DOWN = item);
-			(DPAD_SET2_DOWN == ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
-		}
-		else if (pad.dl) {
-			(DPAD_SET2_LEFT == item)		? (DPAD_SET2_LEFT = ITEM_NONE)	: (DPAD_SET2_LEFT = item);
-			(DPAD_SET2_LEFT	== ITEM_NONE)	? (z2_PlaySfx(0x480A))			: (z2_PlaySfx(0x4808));
-		}
+		if (pad.du)
+			DPAD_SET2_UP    = Handle_Mapping_Item(DPAD_SET2_UP,    item);
+		else if (pad.dr)
+			DPAD_SET2_RIGHT = Handle_Mapping_Item(DPAD_SET2_RIGHT, item);
+		else if (pad.dd)
+			DPAD_SET2_DOWN  = Handle_Mapping_Item(DPAD_SET2_DOWN,  item);
+		else if (pad.dl)
+			DPAD_SET2_LEFT  = Handle_Mapping_Item(DPAD_SET2_LEFT,  item);
 	}
 	
+}
+
+uint8_t Handle_Mapping_Item(uint8_t button, uint8_t item) {
+	if (button == item) {
+		z2_PlaySfx(0x480A);
+		return ITEM_NONE;
+	}
+	else {
+		z2_PlaySfx(0x4808);
+		return item;
+	}
 }
