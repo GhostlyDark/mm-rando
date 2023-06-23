@@ -30,7 +30,7 @@
 
 .include "Boot.asm"
 .include "Hacks.asm"
-;.include "Actor.Patch.asm"
+.include "Actor.Patch.asm"
 ;.include "ArrowMagic.Patch.asm"
 ;.include "BankAmount.Patch.asm"
 ;.include "BusinessScrub.Patch.asm"
@@ -86,7 +86,7 @@
 ;.include "StrayFairyGroup.Patch.asm"
 ;.include "SwordSchoolGong.Patch.asm"
 ;.include "SyatekiMan.Patch.asm"
-;.include "TargetHealth.Patch.asm"
+.include "TargetHealth.Patch.asm"
 ;.include "Thiefbird.Patch.asm"
 ;.include "WorldColors.Patch.asm"
 ;.include "ZoraLand.Patch.asm"
@@ -103,7 +103,7 @@ PAYLOAD_START:
 
 .include "Init.asm"
 .include "Config.asm"
-;.include "Actor.asm"
+.include "Actor.asm"
 ;.include "ArrowMagic.asm"
 ;.include "BankAmount.asm"
 ;.include "BusinessScrub.asm"
