@@ -1,4 +1,5 @@
 #include "Extra.h"
+#include "Reloc.h"
 
 extern uint8_t CFG_WS_ENABLED;
 extern uint8_t CFG_DUAL_DPAD_ENABLED;
@@ -13,11 +14,16 @@ extern uint8_t CFG_INFINITE_HEALTH;
 extern uint8_t CFG_INFINITE_MAGIC;
 extern uint8_t CFG_INFINITE_AMMO;
 extern uint8_t CFG_INFINITE_RUPEES;
+extern uint8_t CFG_UNEQUIP_ENABLED;
+extern uint8_t CFG_RUPEE_DRAIN;
 
 uint16_t deku_stick_timer_switch	= 0;
 uint16_t last_time					= 0;
 uint16_t started_timer				= 0;
 uint16_t elegy_timer                = 0;
+
+uint8_t rupee_drain_frames          = 0;
+uint8_t rupee_drain_secs            = 0;
 
 uint8_t dpad_alt                    = 0;
 uint8_t fps_switch					= 1;
@@ -44,8 +50,46 @@ void Handle_Extra_Functions(GlobalContext* ctxt) {
 	Handle_L_Button_Paused(ctxt);
 	Handle_Infinite();
 	
+	//Handle_Saving(ctxt);
+	Handle_Unequipping(ctxt);
+	
 	if (ctxt->pauseCtx.state == 6 && ctxt->pauseCtx.debugMenu == 0)
 		ctxt->state.input[0].current.buttons.dr = ctxt->state.input[0].current.buttons.dl = 0;
+}
+
+void Handle_Rupee_Drain(ActorPlayer* player, GlobalContext* ctxt) {
+	if (CFG_RUPEE_DRAIN == 0)
+		return;
+	if (ctxt->pauseCtx.state != 0 || gSaveContext.extra.fileIndex == 0xFF || gSaveContext.extra.titleSetupIndex != 0)
+		return;
+	if (player->stateFlags.state1 & PLAYER_STATE1_GROTTO_IN || player->stateFlags.state1 & PLAYER_STATE1_TIME_STOP  || player->stateFlags.state1 & PLAYER_STATE1_SPECIAL_2   || player->stateFlags.state1 & PLAYER_STATE1_GET_ITEM || player->stateFlags.state1 & PLAYER_STATE1_TIME_STOP_2 ||
+		player->stateFlags.state1 & PLAYER_STATE1_DEAD      || player->stateFlags.state1 & PLAYER_STATE1_MOVE_SCENE || player->stateFlags.state1 & PLAYER_STATE1_TIME_STOP_3 || player->stateFlags.state2 & PLAYER_STATE2_OCARINA  || player->stateFlags.state2 & PLAYER_STATE2_FROZEN      ||
+		player->stateFlags.state3 & PLAYER_STATE3_TRANS_PART)
+		return;
+	
+	if (gSaveContext.perm.unk24.currentLife > 1) {
+		rupee_drain_frames++;
+	
+		if (rupee_drain_frames >= 60 / ctxt->state.framerateDivisor) {
+			rupee_drain_frames = 0;
+			rupee_drain_secs++;
+		}
+	
+		if (rupee_drain_secs >= CFG_RUPEE_DRAIN) {
+			rupee_drain_secs = 0;
+			
+			if (gSaveContext.perm.unk24.rupees > 0)
+				gSaveContext.perm.unk24.rupees--;
+			else {
+				if (gSaveContext.perm.unk24.currentLife > 7)
+					gSaveContext.perm.unk24.currentLife -= 4;
+				else gSaveContext.perm.unk24.currentLife = 1;
+				z2_LinkInvincibility(player, 0x14);
+				z2_PlaySfx(0x6848);
+			}
+		}
+	}
+	else rupee_drain_frames = rupee_drain_secs = 0;
 }
 
 void Handle_L_Button_Ingame(GlobalContext* ctxt) {
@@ -604,7 +648,46 @@ void Handle_Quick_Pad(GlobalContext* ctxt) {
 				link_anim_1_ws = 0x67;
 		}
 	}
+}
+
+/*void Handle_Saving(GlobalContext* ctxt) {
+	if (ctxt->pauseCtx.state != 6 || gSaveContext.extra.fileIndex == 0xFF || gSaveContext.extra.titleSetupIndex != 0)
+		return;
+	if (!ctxt->state.input[0].pressEdge.buttons.b)
+		return;
+	ctxt->state.input[0].pressEdge.buttons.b = 0;
 	
+	ctxt->pauseCtx.state = 7;
+}*/
+
+void Handle_Unequipping(GlobalContext* ctxt) {
+	if (ctxt->pauseCtx.state != 6 || gSaveContext.extra.fileIndex == 0xFF || gSaveContext.extra.titleSetupIndex != 0)
+		return;
+	if (!CFG_UNEQUIP_ENABLED || (ctxt->pauseCtx.screenIndex != 0 && ctxt->pauseCtx.screenIndex != 3) )
+		return;
+	
+	uint8_t button;
+	if (ctxt->state.input[0].pressEdge.buttons.cl)
+		button = 1;
+	else if (ctxt->state.input[0].pressEdge.buttons.cd)
+		button = 2;
+	else if (ctxt->state.input[0].pressEdge.buttons.cr)
+		button = 3;
+	else return;
+	
+	uint8_t item = ctxt->pauseCtx.selectedItem;
+	if (item == 0x2)
+		item = 0x4A;
+	else if (item == 0x3)
+		item = 0x4B;
+	else if (item == 0x4)
+		item = 0x4C;
+	
+	if (gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] == item) {
+		ctxt->state.input[0].pressEdge.buttons.cl = ctxt->state.input[0].pressEdge.buttons.cd = ctxt->state.input[0].pressEdge.buttons.cr = 0;
+		gSaveContext.perm.unk4C.formButtonItems[0].buttons[button] = gSaveContext.perm.unk4C.formButtonSlots[0].buttons[button] = 0xFF;
+		z2_PlaySfx(0x480A);
+	}
 }
 
 void Set_B_Button(GlobalContext* ctxt) {

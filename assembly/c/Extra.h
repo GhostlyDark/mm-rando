@@ -7,6 +7,7 @@
 #include "Dpad.h"
 
 void Handle_Extra_Functions(GlobalContext* ctxt);
+void Handle_Rupee_Drain(ActorPlayer* player, GlobalContext* ctxt);
 void Handle_L_Button_Ingame(GlobalContext* ctxt);
 void Handle_L_Button_Paused(GlobalContext* ctxt);
 void Toggle_Minimap(GlobalContext* ctxt);
@@ -17,6 +18,8 @@ void Handle_Ocarina_Icons(GlobalContext* ctxt);
 void Handle_Infinite();
 void Inventory_Editor(GlobalContext* ctxt);
 void Handle_Quick_Pad(GlobalContext* ctxt);
+//void Handle_Saving(GlobalContext* ctxt);
+void Handle_Unequipping(GlobalContext* ctxt);
 void Set_B_Button(GlobalContext* ctxt);
 
 #define map_select_active			(*(uint32_t*)			0x8022A174) // 8024A484, 803E6C44
