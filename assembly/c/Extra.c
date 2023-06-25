@@ -269,24 +269,15 @@ void Handle_FPS(GlobalContext* ctxt) {
 		else z2_PlaySfx(0x4813);
 	}
 	
-	if (CFG_WS_ENABLED) {
-		opening_door		= opening_door_ws;
-		playable_state		= playable_state_ws;
-		use_hookshot		= use_hookshot_ws;
-		jump_state			= jump_state_ws;
-		text_state			= text_state_ws;
-		opening_chest		= opening_chest_ws;
-	}
-	
-	if (!fps_switch || opening_door == 0x00800020)
+	if (!fps_switch || ctxt->opening_door == 0x00800020)
 		ctxt->state.framerateDivisor = link_animation_speed = 3;
-	else if (text_state == 0x01 || jump_state == 0x0100 || opening_chest == 0x01 || var_801D7B44 == 0x01 || playing_ocarina)
+	else if (ctxt->text_state == 1 || ctxt->jump_state == 1 || ctxt->opening_chest == 1 || var_801D7B44 == 1 || playing_ocarina)
 		ctxt->state.framerateDivisor = link_animation_speed = 2;
-	else if (playable_state == 0xFF08)
+	else if (ctxt->playable_state == 0xFF08)
 		ctxt->state.framerateDivisor = link_animation_speed = 3;
 	else if (fps_switch)
 		ctxt->state.framerateDivisor = link_animation_speed = 2;
-	else if (playable_state == 0x3208 && use_hookshot == 0x100B)
+	else if (ctxt->playable_state == 0x3208 && ctxt->use_hookshot == 0x100B)
 		ctxt->state.framerateDivisor  = link_animation_speed = 3;
 	
 	if (ctxt->state.framerateDivisor == 2) {
@@ -296,94 +287,37 @@ void Handle_FPS(GlobalContext* ctxt) {
 		var_801160AE = 0x0006;
 		var_80116702 = 0x0000;
 		
-		if (!CFG_WS_ENABLED) {
-			if (jump_gravity == 0xC0B0)
-				jump_gravity = 0xC050;
-			else if (var_803FFE64 == 0x5008 && link_action == 0x4120)
-				jump_gravity = 0xBF00;
-			else if (jump_gravity == 0xBFB3 && link_action == 0x4140)
-				jump_gravity = 0xBFD0;
-			else if (jump_height > 0x4120 || link_action == 0x40E0 || link_action == 0x4110 || link_action == 0x4120 || link_action == 0x4150 || link_action == 0x4160 || link_action == 0x4170)
-				jump_gravity = 0xBF34;
+		if (ctxt->jump_gravity == 0xC0B0)
+			ctxt->jump_gravity = 0xC050;
+		else if (ctxt->var_803FFE64 == 0x5008 && ctxt->link_action == 0x4120)
+			ctxt->jump_gravity = 0xBF00;
+		else if (ctxt->jump_gravity == 0xBFB3 && ctxt->link_action == 0x4140)
+			ctxt->jump_gravity = 0xBFD0;
+		else if (ctxt->jump_height > 0x4120 || ctxt->link_action == 0x40E0 || ctxt->link_action == 0x4110 || ctxt->link_action == 0x4120 || ctxt->link_action == 0x4150 || ctxt->link_action == 0x4160 || ctxt->link_action == 0x4170)
+			ctxt->jump_gravity = 0xBF34;
 		
-			if (var_803FFE64 == 0x3208) {
-				if (link_action == 0x40A0 || link_action == 0x4110)
-					var_8040000C = 0x3F4CCCCD;
-			}
-			else if (var_803FFE64 == 0x5008) {
-				if (link_action == 0x40E0 || link_action == 0x4110 || link_action == 0x4120)
-					var_8040000C = 0x3F333333;
-			}
-			else if (var_803FFE64 == 0xC808) {
-				if (link_action == 0x4140 || link_action == 0x4198)
-					var_8040000C = 0x3F800000;
-			}
-			
-			if (var_8040000C == 0x3FA00000)
-				var_8040000C =  0x3F900000;
-		
-			if (deku_stick_timer == 100 && !deku_stick_timer_switch) {
-				deku_stick_timer += 100;
-				deku_stick_timer_switch = 1;
-			}
-			else if (deku_stick_timer == 0)
-				deku_stick_timer_switch = 0;
+		if (ctxt->var_803FFE64 == 0x3208) {
+			if (ctxt->link_action == 0x40A0 || ctxt->link_action == 0x4110)
+				ctxt->var_8040000C = 0x3F4CCCCD;
 		}
-		else {
-			if (jump_gravity_ws == 0xC0B0)
-				jump_gravity_ws = 0xC050;
-			else if (var_803FFE64_ws == 0x5008 && link_action_ws == 0x4120)
-				jump_gravity_ws = 0xBF00;
-			else if (jump_gravity_ws == 0xBFB3 && link_action_ws == 0x4140)
-				jump_gravity_ws = 0xBFD0;
-			else if (jump_height_ws > 0x4120 || link_action_ws == 0x40E0 || link_action_ws == 0x4110 || link_action_ws == 0x4120 || link_action_ws == 0x4150 || link_action_ws == 0x4160 || link_action_ws == 0x4170)
-				jump_gravity_ws  = 0xBF34;
-		
-			if (var_803FFE64_ws == 0x3208) {
-				if (link_action_ws == 0x40A0 || link_action_ws == 0x4110)
-					var_8040000C_ws = 0x3F4CCCCD;
-			}
-			else if (var_803FFE64_ws == 0x5008) {
-				if (link_action_ws == 0x40E0 || link_action_ws == 0x4110 || link_action_ws == 0x4120)
-					var_8040000C_ws = 0x3F333333;
-			}
-			else if (var_803FFE64_ws == 0xC808) {
-				if (link_action_ws == 0x4140 || link_action_ws == 0x4198)
-					var_8040000C_ws = 0x3F800000;
-			}
-			
-			if (var_8040000C_ws == 0x3FA00000)
-				var_8040000C_ws =  0x3F900000;
-		
-			if (deku_stick_timer_ws == 100 && !deku_stick_timer_switch) {
-				deku_stick_timer_ws += 100;
-				deku_stick_timer_switch = 1;
-			}
-			else if (deku_stick_timer_ws == 0)
-				deku_stick_timer_switch = 0;
+		else if (ctxt->var_803FFE64 == 0x5008) {
+			if (ctxt->link_action == 0x40E0 || ctxt->link_action == 0x4110 || ctxt->link_action == 0x4120)
+				ctxt->var_8040000C = 0x3F333333;
+		}
+		else if (ctxt->var_803FFE64 == 0xC808) {
+			if (ctxt->link_action == 0x4140 || ctxt->link_action == 0x4198)
+				ctxt->var_8040000C = 0x3F800000;
 		}
 		
-		/*if ( (z64_timer_type == 0x4 || z64_timer_type == 0x8 || z64_timer_type == 0xE) && !started_timer) {
-			started_timer	= 1;
-			last_time		= z64_time_remaining;
-		}
-		else if (z64_timer_type == 0 && started_timer)
-			started_timer	= 0;
+		if (ctxt->var_8040000C == 0x3FA00000)
+			ctxt->var_8040000C =  0x3F900000;
 		
-		if (z64_timer_type == 0x4 || z64_timer_type == 0x8) { // Decreasing
-			if (last_time == z64_time_remaining + 3) {
-				z64_time_remaining++;
-				z64_seconds_left++;
-				last_time = z64_time_remaining;
-			}
+		if (ctxt->deku_stick_timer == 100 && !deku_stick_timer_switch) {
+			ctxt->deku_stick_timer += 100;
+			deku_stick_timer_switch = 1;
 		}
-		else if (z64_timer_type == 0xE) { // Increasing
-			if (last_time == z64_time_remaining - 3) {
-				z64_time_remaining--;
-				z64_seconds_left--;
-				last_time = z64_time_remaining;
-			}
-		}*/
+		else if (ctxt->deku_stick_timer == 0)
+			deku_stick_timer_switch = 0;
 	}
 	else if (ctxt->state.framerateDivisor == 3) {
 		if (gStaticContext.timeSpeed == 2)
@@ -594,14 +528,10 @@ void Inventory_Editor(GlobalContext* ctxt) {
 }
 
 void Handle_Quick_Pad(GlobalContext* ctxt) {
-	if (CFG_INSTANT_ELEGY_ENABLED && !elegy_anim_state) {
-		if (link_anim_2 == 0x67 && !CFG_WS_ENABLED)
-			link_anim_1 = 5;
-		else if (link_anim_2_ws == 0x67 && CFG_WS_ENABLED)
-			link_anim_1_ws = 5;
-	}
+	if (CFG_INSTANT_ELEGY_ENABLED && !elegy_anim_state && ctxt->link_anim_2 == 0x67)
+		ctxt->link_anim_1 = 5;
 	
-	if ( (playable_state == 0xFF08 && !CFG_WS_ENABLED) || (playable_state_ws == 0xFF08 && CFG_WS_ENABLED) || ctxt->pauseCtx.state != 0)
+	if (ctxt->playable_state == 0xFF08 || ctxt->pauseCtx.state != 0)
 		return;
 	
 	if (gSaveContext.perm.inv.items[0] != ITEM_OCARINA && gSaveContext.perm.inv.items[0] != ITEM_DEKU_PIPES && gSaveContext.perm.inv.items[0] != ITEM_GORON_DRUMS && gSaveContext.perm.inv.items[0] != ITEM_ZORA_GUITAR)
@@ -641,12 +571,8 @@ void Handle_Quick_Pad(GlobalContext* ctxt) {
 		&& ctxt->sceneNum != SCENE_STONE_TOWER_TEMPLE_BOSS)
 			return;
 		
-		if (paddCurr.l && padPress.dd) { // Instant Elegy
-			if (link_anim_1 != 0x67 && !CFG_WS_ENABLED)
-				link_anim_1 = 0x67;
-			else if (link_anim_1_ws != 0x67 && CFG_WS_ENABLED) 
-				link_anim_1_ws = 0x67;
-		}
+		if (paddCurr.l && padPress.dd && ctxt->link_anim_1 != 0x67) // Instant Elegy
+			ctxt->link_anim_1 = 0x67;
 	}
 }
 
