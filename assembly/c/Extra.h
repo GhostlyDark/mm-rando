@@ -30,5 +30,6 @@ void Set_B_Button(GlobalContext* ctxt);
 #define var_80116702				(*(uint16_t*)			0x80116702)
 #define var_801D7B44				(*(uint8_t*)			0x801D7B44)
 #define elegy_anim_state			(*(uint8_t*)			0x801B1BEE)
+#define inverted_time_state         (*(int8_t*)				0x80119B1F)
 
 #endif
