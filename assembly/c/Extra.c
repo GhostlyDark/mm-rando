@@ -21,6 +21,7 @@ uint16_t deku_stick_timer_switch	= 0;
 uint16_t last_time					= 0;
 uint16_t started_timer				= 0;
 uint16_t elegy_timer                = 0;
+uint16_t time_tracker[3]            = { 0, 0, 0 };
 
 uint8_t rupee_drain_frames          = 0;
 uint8_t rupee_drain_secs            = 0;
@@ -278,12 +279,15 @@ void Handle_FPS(GlobalContext* ctxt) {
 	else if (fps_switch)
 		ctxt->state.framerateDivisor = link_animation_speed = 2;
 	else if (ctxt->playable_state == 0x3208 && ctxt->use_hookshot == 0x100B)
-		ctxt->state.framerateDivisor  = link_animation_speed = 3;
+		ctxt->state.framerateDivisor = link_animation_speed = 3;
 	
 	if (ctxt->state.framerateDivisor == 2) {
 		if (gStaticContext.timeSpeed == 3)
 			gStaticContext.timeSpeed = 2;
-		
+		if (gSaveContext.perm.timeSpeed == -2)
+			gSaveContext.perm.timeSpeed = -1;
+		inverted_time_state = -1;
+	
 		var_801160AE = 0x0006;
 		var_80116702 = 0x0000;
 		
@@ -322,6 +326,9 @@ void Handle_FPS(GlobalContext* ctxt) {
 	else if (ctxt->state.framerateDivisor == 3) {
 		if (gStaticContext.timeSpeed == 2)
 			gStaticContext.timeSpeed = 3;
+		if (gSaveContext.perm.timeSpeed == -1)
+			gSaveContext.perm.timeSpeed = -2;
+		inverted_time_state = -2;
 	}
 }
 
