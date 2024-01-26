@@ -45,5 +45,6 @@ extern struct DpadConfig DPAD_CONFIG;
 void Dpad_BeforePlayerActorUpdate(ActorPlayer* player, GlobalContext* ctxt);
 void Dpad_ClearItemTextures(void);
 void Dpad_Init(void);
+void Dpad_Draw(GlobalContext* ctxt);
 
 #endif // DPAD_H

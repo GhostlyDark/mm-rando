@@ -1,3 +1,12 @@
+#include <z64.h>
+#include "HudColors.h"
+#include "Misc.h"
+#include "QuestItemStorage.h"
+#include "QuestItems.h"
+#include "Reloc.h"
+#include "SaveFile.h"
+#include "macro.h"
+#include "controller.h"
 #include "PauseScreen.h"
 
 extern uint8_t CFG_SWAP_ENABLED;
@@ -199,6 +208,29 @@ void PauseMenu_BeforeUpdate(GlobalContext* ctxt) {
 	
 	if (CFG_B_BUTTON_ITEM_ENABLED && gPlayUpdateInput.pressEdge.buttons.cu)
 		Handle_Equip_Sword(ctxt);
+}
+
+static bool sHoldingStart = false;
+bool PauseMenu_SetupUpdate_HasPressedStart(GlobalContext* ctxt) {
+    Input* input = CONTROLLER1(ctxt);
+
+    if (CHECK_BTN_ALL(input->pressEdge.buttons.value, BTN_START)) {
+        return true;
+    }
+
+    if (MISC_CONFIG.flags.easyFrameByFrame) {
+        if (CHECK_BTN_ALL(input->current.buttons.value, BTN_START)) {
+            if (sHoldingStart) {
+                sHoldingStart = false;
+                return true;
+            }
+            sHoldingStart = true;
+        } else {
+            sHoldingStart = false;
+        }
+    }
+
+    return false;
 }
 
 void Handle_Sword_Swap(GlobalContext* ctxt) {

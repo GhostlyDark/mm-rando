@@ -1,4 +1,5 @@
 ﻿using MMR.Randomizer.Extensions;
+using MMR.Randomizer.Models.Settings;
 using SixLabors.ImageSharp.ColorSpaces;
 using SixLabors.ImageSharp.ColorSpaces.Conversion;
 using System;
@@ -68,6 +69,17 @@ namespace MMR.Randomizer.Asm
             Colors.SwordChargeSparksRed = redAdjusted;
 
             static float Increase(float input, float mult = 3f) => Math.Min(input * mult, 1f);
+        }
+
+        void SetWorldColorTunics(CosmeticSettings settings)
+        {
+            var defaultColor = Color.FromArgb(0x1E, 0x69, 0x1B);
+            var defaultFDColor = Color.FromArgb(0xBD, 0xB5, 0xAD);
+            Colors.HumanTunic = settings.UseTunicColors[GameObjects.TransformationForm.Human] ? settings.TunicColors[GameObjects.TransformationForm.Human] : defaultColor;
+            Colors.FierceDeityTunic = settings.UseTunicColors[GameObjects.TransformationForm.FierceDeity] ? settings.TunicColors[GameObjects.TransformationForm.FierceDeity] : defaultFDColor;
+            Colors.GoronTunic = settings.UseTunicColors[GameObjects.TransformationForm.Goron] ? settings.TunicColors[GameObjects.TransformationForm.Goron] : defaultColor;
+            Colors.ZoraTunic = settings.UseTunicColors[GameObjects.TransformationForm.Zora] ? settings.TunicColors[GameObjects.TransformationForm.Zora] : defaultColor;
+            Colors.DekuTunic = settings.UseTunicColors[GameObjects.TransformationForm.Deku] ? settings.TunicColors[GameObjects.TransformationForm.Deku] : defaultColor;
         }
     }
 }
