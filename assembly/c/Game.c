@@ -1,11 +1,11 @@
 #include <z64.h>
 #include <z64extended.h>
-#include "Models.h"
-#include "OverlayMenu.h"
+//#include "Models.h"
+//#include "OverlayMenu.h"
 #include "MMR.h"
 #include "Dpad.h"
-#include "Music.h"
-#include "WorldColors.h"
+//#include "Music.h"
+//#include "WorldColors.h"
 #include "Extra.h"
 
 bool Game_IsPlayerActor(void) {
@@ -21,7 +21,7 @@ bool Game_IsKaleidoScope(void) {
  **/
 void Game_AfterPrepareDisplayBuffers(GraphicsContext* gfx) {
     // Check if models objheap should finish advancing.
-    Models_AfterPrepareDisplayBuffers(gfx);
+    //Models_AfterPrepareDisplayBuffers(gfx);
 }
 
 const static u16 respawnTextId = 0x9002;
@@ -91,5 +91,5 @@ void Game_AfterUpdate(GlobalContext* ctxt) {
 
 void Game_DrawOverlay(GlobalContext* ctxt) {
     Dpad_Draw(ctxt);
-    Music_Draw(ctxt);
+    //Music_Draw(ctxt);
 }
