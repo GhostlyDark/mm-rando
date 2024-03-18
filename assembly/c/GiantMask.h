@@ -15,4 +15,6 @@ void GiantMask_MarkReset();
 void GiantMask_TryReset();
 void GiantMask_ClearState();
 
+#define giants_mask_scene_check (*(uint16_t*) 0x80111100)
+
 #endif // GIANT_MASK_H

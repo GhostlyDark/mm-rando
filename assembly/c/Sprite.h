@@ -26,6 +26,13 @@ extern Sprite gSpriteDpad;
 extern Sprite gSpriteFont;
 extern Sprite gSpriteIcon;
 extern Sprite gSpriteIcon24;
+extern Sprite gParameterCounter;
+extern Sprite gParameterAmmoDigit;
+extern Sprite gParameterClock;
+extern Sprite gParameterNoteButtons;
+extern Sprite gParameterSunMoon;
+extern Sprite gHudToggle;
+extern Sprite gDungeonMapLinkHead;
 
 void Sprite_Draw(DispBuf* db, Sprite* sprite, int tileIndex, int left, int top, int width, int height);
 void Sprite_DrawCropped(DispBuf* db, Sprite* sprite, int tileIndex, int left, int top, int width, int height, Crop crop);

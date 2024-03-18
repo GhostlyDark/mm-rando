@@ -60,7 +60,7 @@
 ;.include "FileSelect.Patch.asm"
 ;.include "FloorPhysics.Patch.asm"
 .include "Game.Patch.asm"
-;.include "GiantMask.Patch.asm"
+.include "GiantMask.Patch.asm"
 ;.include "GinkoMan.Patch.asm"
 ;.include "GoronElder.Patch.asm"
 ;.include "GossipStone.Patch.asm"
@@ -177,7 +177,23 @@ PAYLOAD_START:
 DPAD_TEXTURE:
 .incbin "../resources/dpad32.bin"
 FONT_TEXTURE:
-;.incbin "../resources/font.bin"
+.incbin "../resources/font.bin"
+
+PARAMETER_COUNTER_TEXTURE:
+.incbin "../resources/parameter_counter.bin"
+PARAMETER_AMMO_DIGIT_TEXTURE:
+.incbin "../resources/parameter_ammo_digit.bin"
+PARAMETER_CLOCK_TEXTURE:
+.incbin "../resources/parameter_clock_texture.bin"
+PARAMETER_NOTE_BUTTONS_TEXTURE:
+.incbin "../resources/parameter_note_buttons.bin"
+PARAMETER_SUN_MOON_TEXTURE:
+.incbin "../resources/parameter_sun_moon.bin"
+HUD_TOGGLE_TEXTURE:
+.incbin "../resources/hud_toggle.bin"
+DUNGEON_MAP_LINK_HEAD_TEXTURE:
+.incbin "../resources/dungeon_map_link_head.bin"
+
 
 .align 0x10
 PAYLOAD_END:

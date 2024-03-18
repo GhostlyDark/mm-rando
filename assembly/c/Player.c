@@ -64,6 +64,7 @@ void Player_InitFuncPointers() {
 
 extern uint8_t CFG_SWAP_ENABLED;
 extern uint8_t CFG_SKIP_GUARD_ENABLED;
+extern uint8_t CFG_INVERSE_AIM;
 
 bool Player_BeforeDamageProcess(ActorPlayer* player, GlobalContext* ctxt) {
     return Icetrap_Give(player, ctxt);
@@ -217,37 +218,50 @@ void Player_BeforeUpdate(ActorPlayer* player, GlobalContext* ctxt) {
     DekuHop_Handle(player, ctxt);
     GiantMask_Handle(player, ctxt);
     Player_PreventDangerousStates(player);
-    Player_CheckVictoryAndWarp(player, ctxt);
+    //Player_CheckVictoryAndWarp(player, ctxt);
     if (sInstantTranformTimer) {
         sInstantTranformTimer--;
     }
-	
-	Handle_Rupee_Drain(player, ctxt);
-	
-	if (CFG_SWAP_ENABLED) {
-		if (ctxt->msgCtx.currentMessageId == 0x00F6 && !LOST_HERO_SHIELD)
-			HAVE_EXTRA_SRAM ^= 16;
-		if (gSaveContext.perm.unk4C.equipment.shield == 1 && LOST_HERO_SHIELD)
-			HAVE_EXTRA_SRAM ^= 16;
-	}
-		
-	if (CFG_SKIP_GUARD_ENABLED) {
-		if (!(clock_town_guard & (1 << 5)) &&  HAVE_TALKED_GUARD)
-			clock_town_guard |= 32;
-		if ( (clock_town_guard & (1 << 5)) && !HAVE_TALKED_GUARD)
-			HAVE_EXTRA_SRAM |= 64;
-	}
-	
-	Handle_Hud(ctxt);
-	Handle_Ocarina_Icons(ctxt);
-	
-	if (!SAVE_DPAD) {
-		HAVE_EXTRA_SRAM |= 2;
-		DPAD_SET1_UP     = DPAD_SET2_UP    = ITEM_DEKU_MASK;
-		DPAD_SET1_RIGHT  = DPAD_SET2_RIGHT = ITEM_ZORA_MASK;
-		DPAD_SET1_DOWN   = DPAD_SET2_DOWN  = ITEM_OCARINA;
-		DPAD_SET1_LEFT   = DPAD_SET2_LEFT  = ITEM_GORON_MASK;
-	}
+    
+    Handle_Rupee_Drain(player, ctxt);
+    
+    if (CFG_SWAP_ENABLED) {
+        if (ctxt->msgCtx.currentMessageId == 0x00F6 && !LOST_HERO_SHIELD)
+            HAVE_EXTRA_SRAM ^= 16;
+        if (gSaveContext.perm.unk4C.equipment.shield == 1 && LOST_HERO_SHIELD)
+            HAVE_EXTRA_SRAM ^= 16;
+    }
+    
+    if (CFG_INVERSE_AIM)
+        //if (z64_MessageGetState(((uint8_t *)(&z64_game)) + 0x20D8) != 4 && (z64_game.camera_mode == CAM_MODE_FIRST_PERSON || z64_game.camera_mode == CAM_MODE_AIM_ADULT || z64_game.camera_mode == CAM_MODE_AIM_BOOMERANG || z64_game.camera_mode == CAM_MODE_AIM_CHILD) ) {
+        if (player->stateFlags.state1 & PLAYER_STATE1_AIM) {
+            ctxt->state.input[0].current.yAxis     = -ctxt->state.input[0].current.yAxis;
+            ctxt->state.input[0].last.yAxis        = -ctxt->state.input[0].last.yAxis;
+            ctxt->state.input[0].pressEdge.yAxis   = -ctxt->state.input[0].pressEdge.yAxis;
+            ctxt->state.input[0].releaseEdge.yAxis = -ctxt->state.input[0].releaseEdge.yAxis;
+        }
+        
+    if (CFG_SKIP_GUARD_ENABLED) {
+        if (!(clock_town_guard & (1 << 5)) &&  HAVE_TALKED_GUARD)
+            clock_town_guard |= 32;
+        if ( (clock_town_guard & (1 << 5)) && !HAVE_TALKED_GUARD)
+            HAVE_EXTRA_SRAM |= 64;
+    }
+    
+    Handle_Hud(ctxt);
+    Handle_Ocarina_Icons(ctxt);
+    
+    if (!SAVE_DPAD) {
+        HAVE_EXTRA_SRAM |= 2;
+        DPAD_SET1_UP    = ITEM_DEKU_MASK;
+        DPAD_SET1_RIGHT = ITEM_ZORA_MASK;
+        DPAD_SET1_DOWN  = ITEM_OCARINA;
+        DPAD_SET1_LEFT  = ITEM_GORON_MASK;
+        DPAD_SET2_UP    = ITEM_BOW;
+        DPAD_SET2_RIGHT = ITEM_DEKU_STICK;
+        DPAD_SET2_DOWN  = ITEM_HOOKSHOT;
+        DPAD_SET2_LEFT  = ITEM_DEKU_NUT;
+    }
 }
 
 bool Player_CanReceiveItem(GlobalContext* ctxt) {

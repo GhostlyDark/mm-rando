@@ -1,6 +1,9 @@
 #include <z64.h>
 #include "Misc.h"
 
+extern uint8_t CFG_BOSS_REMAINS_DEKU_HOP;
+#define IS_ABILITY_ACTIVATED(boss) (boss == 0 || (gSaveContext.perm.inv.questStatus.odolwasRemains && boss == 1) || (gSaveContext.perm.inv.questStatus.gohtsRemains && boss == 2) || (gSaveContext.perm.inv.questStatus.gyorgsRemains && boss == 3) || (gSaveContext.perm.inv.questStatus.twinmoldsRemains && boss == 4))
+
 struct DekuHopState {
     u8 lastHop;
     u8 isUsingContinuousDekuHop;
@@ -12,7 +15,7 @@ static struct DekuHopState gDekuHopState = {
 };
 
 void DekuHop_Handle(ActorPlayer* player, GlobalContext* ctxt) {
-    if (!MISC_CONFIG.flags.continuousDekuHop) {
+    if (!MISC_CONFIG.flags.continuousDekuHop || !IS_ABILITY_ACTIVATED(CFG_BOSS_REMAINS_DEKU_HOP)) {
         return;
     }
 

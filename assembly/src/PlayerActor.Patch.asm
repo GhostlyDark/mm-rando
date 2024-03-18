@@ -38,15 +38,15 @@
 ;
 ;       Audio_PlayFanfare(seqId);
 ;   }
-.org 0x80848324
-.area 0xF0, 0
-    addiu   t0, r0, 0x0001
-    sb      t0, 0x0AE7 (s0)
-    or      a0, a3, r0
-    or      a1, v1, r0
-    jal     MMR_ProcessItem
-    or      a2, r0, r0
-.endarea
+;.org 0x80848324
+;.area 0xF0, 0
+;    addiu   t0, r0, 0x0001
+;    sb      t0, 0x0AE7 (s0)
+;    or      a0, a3, r0
+;    or      a1, v1, r0
+;    jal     MMR_ProcessItem
+;    or      a2, r0, r0
+;.endarea
 
 ;==================================================================================================
 ; Player actor update hooks

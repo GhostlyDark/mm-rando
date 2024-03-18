@@ -4,7 +4,20 @@
 #include <z64.h>
 
 // Virtual File Addresses.
-#define ItemTextureFileVROM              0xA36C10
+#define ItemTextureFileVROM                0xA36C10
+
+/*#define z2ParameterCounterStaticVaddr    0x1EC14A0
+#define z2ParameterCounterStaticVsize      0x600
+#define z2ParameterAmmoDigitStaticVaddr    0x1EC1AA0
+#define z2ParameterAmmoDigitStaticVsize    0x280
+#define z2ParameterClockStaticVaddr        0x1EBF360
+#define z2ParameterClockStaticVsize        0x100
+#define z2ParameterNoteButtonsStaticVaddr  0x1EBF4A0
+#define z2ParameterNoteButtonsStaticVsize  0x500
+#define z2ParameterSunMoonStaticVaddr      0x1EC24E0
+#define z2ParameterSunMoonStaticVsize      0x480
+#define z2HudToggleStaticVaddr             0x9FD358
+#define z2HudToggleStaticVsize             0x80*/
 
 // Data Addresses.
 #define ArenaAddr                        0x8009CD20

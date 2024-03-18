@@ -3,6 +3,10 @@
 #include "Misc.h"
 #include "GiantMask.h"
 
+extern uint8_t CFG_BOSS_REMAINS_UNDERWATER_OCARINA;
+#define IS_ABILITY_ACTIVATED(boss) (boss == 0 || (gSaveContext.perm.inv.questStatus.odolwasRemains && boss == 1) || (gSaveContext.perm.inv.questStatus.gohtsRemains && boss == 2) || (gSaveContext.perm.inv.questStatus.gyorgsRemains && boss == 3) || (gSaveContext.perm.inv.questStatus.twinmoldsRemains && boss == 4))
+
+
 struct MiscConfig MISC_CONFIG = {
     .magic = MISC_CONFIG_MAGIC,
     .version = 3,
@@ -33,7 +37,7 @@ struct IkanaSpeed {
 };
 
 bool Misc_CanUseOcarinaUnderwater(void) {
-    return MISC_CONFIG.flags.ocarinaUnderwater != 0;
+    return MISC_CONFIG.flags.ocarinaUnderwater != 0 && IS_ABILITY_ACTIVATED(CFG_BOSS_REMAINS_UNDERWATER_OCARINA);
 }
 
 /**
