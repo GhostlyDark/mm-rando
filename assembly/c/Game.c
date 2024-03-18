@@ -7,6 +7,7 @@
 //#include "Music.h"
 //#include "WorldColors.h"
 #include "Extra.h"
+#include "PauseMenu.h"
 
 bool Game_IsPlayerActor(void) {
     return s801D0B70.selected == &s801D0B70.playerActor;
@@ -85,11 +86,21 @@ void Game_AfterUpdate(GlobalContext* ctxt) {
         // TODO Fix HUD visibility settings after respawning
         // CheckRespawn(ctxt);
     }*/
-	
-	Handle_Extra_Functions(ctxt);
+    
+    Handle_Clock_Controls(ctxt);
+    Handle_Extra_Functions(ctxt);
 }
 
 void Game_DrawOverlay(GlobalContext* ctxt) {
-    Dpad_Draw(ctxt);
+    DispBuf* db = &ctxt->state.gfxCtx->overlay;
+    gSPDisplayList(db->p++, &gSetupDb);
+    gDPPipeSync(db->p++);
+    
+    if (!Dpad_DrawAlt(ctxt, db))
+        Dpad_Draw(ctxt, db);
+    Draw_Clock_Controls(ctxt, db);
+    Draw_Hud_Toggle(ctxt, db);
     //Music_Draw(ctxt);
+    
+    gDPPipeSync(db->p++);
 }

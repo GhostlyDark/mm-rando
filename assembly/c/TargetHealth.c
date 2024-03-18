@@ -2,6 +2,9 @@
 #include <z64.h>
 #include "Misc.h"
 
+extern uint8_t CFG_BOSS_REMAINS_HEALTH_BAR;
+#define IS_ABILITY_ACTIVATED(boss) (boss == 0 || (gSaveContext.perm.inv.questStatus.odolwasRemains && boss == 1) || (gSaveContext.perm.inv.questStatus.gohtsRemains && boss == 2) || (gSaveContext.perm.inv.questStatus.gyorgsRemains && boss == 3) || (gSaveContext.perm.inv.questStatus.twinmoldsRemains && boss == 4))
+
 static void TargetHealth_Draw(GlobalContext* ctxt, Vec3f* pos, ColorRGBA8* color, s8 health, s8 maxHealth) {
     s16 x = (s16)(160.0 + pos->x) - 0x1C;
     s16 y = (s16)(120.0 - pos->y) - 0x20;
@@ -87,7 +90,7 @@ static s8 TargetHealth_GetMaxHealth(Actor* actor, s8* currentHealth) {
 }
 
 void TargetHealth_Draw_Hook(GlobalContext* ctxt, Vec3f* pos) {
-    if (MISC_CONFIG.flags.targetHealth) {
+    if (MISC_CONFIG.flags.targetHealth && IS_ABILITY_ACTIVATED(CFG_BOSS_REMAINS_HEALTH_BAR)) {
         // TODO wearing mask of truth?
         TargetContext* targetContext = &ctxt->actorCtx.targetContext;
         bool isEnemy = targetContext->targetType == 5 || targetContext->targetType == 9;

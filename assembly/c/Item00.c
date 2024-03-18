@@ -6,6 +6,9 @@
 #include "BaseRupee.h"
 #include "macro.h"
 
+extern uint8_t CFG_BOSS_REMAINS_BOMBCHU_DROPS;
+#define IS_ABILITY_ACTIVATED(boss) (boss == 0 || (gSaveContext.perm.inv.questStatus.odolwasRemains && boss == 1) || (gSaveContext.perm.inv.questStatus.gohtsRemains && boss == 2) || (gSaveContext.perm.inv.questStatus.gyorgsRemains && boss == 3) || (gSaveContext.perm.inv.questStatus.twinmoldsRemains && boss == 4))
+
 bool gShouldForceItemSpawn = false;
 
 void Item00_Constructor(ActorEnItem00* actor, GlobalContext* ctxt) {
@@ -86,7 +89,7 @@ s16 Item00_GetAlteredDropId(s16 dropId) {
         }
     }
 
-    if (dropId == ITEM00_BOMBS_A && MISC_CONFIG.flags.bombchuDrops && INV_CONTENT(ITEM_BOMBCHU) != ITEM_NONE) {
+    if (dropId == ITEM00_BOMBS_A && MISC_CONFIG.flags.bombchuDrops && INV_CONTENT(ITEM_BOMBCHU) != ITEM_NONE && IS_ABILITY_ACTIVATED(CFG_BOSS_REMAINS_BOMBCHU_DROPS)) {
         u8 bombCount = AMMO(ITEM_BOMB);
         u8 bombchuCount = AMMO(ITEM_BOMBCHU);
         if (bombCount > 15 && bombchuCount > 15) {

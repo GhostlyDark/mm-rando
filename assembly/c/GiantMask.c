@@ -102,14 +102,80 @@ static f32 sNextScaleFactor = 10.0f;
 
 static bool sShouldReset = false;
 
+extern uint8_t CFG_FIERCE_DEITY_GIANTS_MASK;
+
 void GiantMask_Handle(ActorPlayer* player, GlobalContext* globalCtx) {
     if (!MISC_CONFIG.flags.giantMaskAnywhere) {
         return;
     }
-
-    if (globalCtx->sceneNum == SCENE_INISIE_BS) {
-        return;
-    }
+	
+	if (CFG_FIERCE_DEITY_GIANTS_MASK)
+		if (gSaveContext.perm.inv.masks[SLOT_FIERCE_DEITY_MASK] != ITEM_FIERCE_DEITY_MASK)
+			return;
+	
+	switch (globalCtx->sceneNum) {
+		case SCENE_INISIE_BS:
+			giants_mask_scene_check = 0x51E1;
+			return;
+		case SCENE_MITURIN_BS: // Boss Rooms
+		case SCENE_HAKUGIN_BS:
+		case SCENE_SEA_BS:
+		case SCENE_IKNINSIDE:
+		case SCENE_LAST_BS:
+		case SCENE_MITURIN: // Dungeons
+		case SCENE_HAKUGIN:
+		case SCENE_SEA:
+		case SCENE_CASTLE:
+		case SCENE_INISIE_N:
+		case SCENE_INISIE_R:
+		case SCENE_SOUGEN:
+		case SCENE_LAST_DEKU:
+		case SCENE_LAST_GORON:
+		case SCENE_LAST_ZORA:
+		case SCENE_LAST_LINK:
+		case SCENE_00KEIKOKU: // Termina
+		case SCENE_ROMANYMAE:
+		case SCENE_F01:
+		case SCENE_F01_B:
+		case SCENE_KOEPONARACE:
+		case SCENE_TOWN: // Clock Town
+		case SCENE_ICHIBA:
+		case SCENE_BACKTOWN:
+		case SCENE_CLOCKTOWER:
+		case SCENE_ALLEY:
+		case SCENE_OKUJOU:
+		case SCENE_24KEMONOMITI: // Southern Swamp
+		case SCENE_20SICHITAI:
+		case SCENE_20SICHITAI2:
+		case SCENE_26SARUNOMORI:
+		case SCENE_21MITURINMAE:
+		case SCENE_13HUBUKINOMITI: // Snowhead
+		case SCENE_10YUKIYAMANOMURA:
+		case SCENE_10YUKIYAMANOMURA2:
+		case SCENE_16GORON_HOUSE:
+		case SCENE_17SETUGEN:
+		case SCENE_17SETUGEN2:
+		case SCENE_11GORONNOSATO:
+		case SCENE_11GORONNOSATO2:
+		case SCENE_GORONRACE:
+		case SCENE_14YUKIDAMANOMITI:
+		case SCENE_12HAKUGINMAE:
+		case SCENE_30GYOSON: // Great Bay
+		case SCENE_TORIDE:
+		case SCENE_KAIZOKU:
+		case SCENE_SINKAI:
+		case SCENE_31MISAKI:
+		case SCENE_35TAKI:
+		case SCENE_IKANAMAE: // Ikana Canyon
+		case SCENE_BOTI:
+		case SCENE_IKANA:
+		case SCENE_F40:
+		case SCENE_F41:
+			giants_mask_scene_check = 0x1500;
+			break;
+		default:
+			giants_mask_scene_check = 0x1100;
+	}
 
     s16 i;
     Vec3f subCamEyeOffset;

@@ -45,6 +45,8 @@ extern struct DpadConfig DPAD_CONFIG;
 void Dpad_BeforePlayerActorUpdate(ActorPlayer* player, GlobalContext* ctxt);
 void Dpad_ClearItemTextures(void);
 void Dpad_Init(void);
-void Dpad_Draw(GlobalContext* ctxt);
+uint8_t Dpad_DrawAlt(GlobalContext* ctxt, DispBuf* db);
+void Dpad_Draw(GlobalContext* ctxt, DispBuf* db);
+void Draw_Ammo(DispBuf* db, u8 alpha, u8 item, u8 x, u8 y, u8 size, s8 spacing);
 
 #endif // DPAD_H

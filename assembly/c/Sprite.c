@@ -3,8 +3,24 @@
 #include "Util.h"
 
 extern uint8_t CFG_WS_ENABLED;
+
 extern char DPAD_TEXTURE;
-#define DpadTextureRaw ((u8*)&DPAD_TEXTURE)
+extern char PARAMETER_COUNTER_TEXTURE;
+extern char PARAMETER_AMMO_DIGIT_TEXTURE;
+extern char PARAMETER_CLOCK_TEXTURE;
+extern char PARAMETER_NOTE_BUTTONS_TEXTURE;
+extern char PARAMETER_SUN_MOON_TEXTURE;
+extern char HUD_TOGGLE_TEXTURE;
+extern char DUNGEON_MAP_LINK_HEAD_TEXTURE;
+
+#define DpadTextureRaw          ((u8*)&DPAD_TEXTURE)
+#define ParameterCounterRaw     ((u8*)&PARAMETER_COUNTER_TEXTURE)
+#define ParameterAmmoDigitRaw   ((u8*)&PARAMETER_AMMO_DIGIT_TEXTURE)
+#define ParameterClockRaw       ((u8*)&PARAMETER_CLOCK_TEXTURE)
+#define ParameterNoteButtonsRaw ((u8*)&PARAMETER_NOTE_BUTTONS_TEXTURE)
+#define ParameterSunMoonRaw     ((u8*)&PARAMETER_SUN_MOON_TEXTURE)
+#define HudToggleRaw            ((u8*)&HUD_TOGGLE_TEXTURE)
+#define DungeonMapLinkHeadRaw   ((u8*)&DUNGEON_MAP_LINK_HEAD_TEXTURE)
 
 extern u8 FONT_TEXTURE[];
 
@@ -50,6 +66,41 @@ static Sprite gItemTexturesSprite = {
     G_IM_FMT_RGBA, G_IM_SIZ_32b, 4
 };
 
+Sprite gParameterCounter = {
+    NULL, 8, 16, 12,
+    G_IM_FMT_I, G_IM_SIZ_8b, 1
+};
+
+Sprite gParameterAmmoDigit = {
+    NULL, 8, 8, 12,
+    G_IM_FMT_IA, G_IM_SIZ_8b, 1
+};
+
+Sprite gParameterClock = {
+    NULL, 16, 16, 1,
+    G_IM_FMT_IA, G_IM_SIZ_8b, 1
+};
+
+Sprite gParameterNoteButtons = {
+    NULL, 16, 16, 5,
+    G_IM_FMT_IA, G_IM_SIZ_8b, 1
+};
+
+Sprite gParameterSunMoon = {
+    NULL, 24, 24, 2,
+    G_IM_FMT_IA, G_IM_SIZ_8b, 1
+};
+
+Sprite gHudToggle = {
+    NULL, 16, 16, 1,
+    G_IM_FMT_IA, G_IM_SIZ_4b, 1
+};
+
+Sprite gDungeonMapLinkHead = {
+    NULL, 16, 16, 1,
+    G_IM_FMT_RGBA, G_IM_SIZ_16b, 1
+};
+
 int Sprite_GetBytesPerTile(Sprite* sprite) {
     return sprite->tileW * sprite->tileH * sprite->bytesPerTexel;
 }
@@ -93,14 +144,57 @@ Sprite* Sprite_GetItemTexturesSprite(void) {
 }
 
 void Sprite_Init(void) {
-	if (CFG_WS_ENABLED)
+    if (CFG_WS_ENABLED)
         gSetupDb[2] = gsDPSetScissor(G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH + 104, SCREEN_HEIGHT);
-	
-    gSpriteDpad.buf = DpadTextureRaw;
+    
+    gSpriteDpad.buf           = DpadTextureRaw;
+    gParameterCounter.buf     = ParameterCounterRaw;
+    gParameterAmmoDigit.buf   = ParameterAmmoDigitRaw;
+    gParameterClock.buf       = ParameterClockRaw;
+    gParameterNoteButtons.buf = ParameterNoteButtonsRaw;
+    gParameterSunMoon.buf     = ParameterSunMoonRaw;
+    gHudToggle.buf            = HudToggleRaw;
+    gDungeonMapLinkHead.buf   = DungeonMapLinkHeadRaw;
 
     // Allocate space for item textures
     int size = Sprite_GetBytesTotal(&gItemTexturesSprite);
     gItemTexturesSprite.buf = Util_HeapAlloc(size);
+    
+    /*UtilFile gParameterCounterStatic = {
+        NULL, z2ParameterCounterStaticVaddr, z2ParameterCounterStaticVsize
+    };
+    Util_FileInit(&gParameterCounterStatic);
+    gParameterCounter.buf = gParameterCounterStatic.buf;
+    
+    UtilFile gParameterAmmoDigitStatic = {
+        NULL, z2ParameterAmmoDigitStaticVaddr, z2ParameterAmmoDigitStaticVsize
+    };
+    Util_FileInit(&gParameterAmmoDigitStatic);
+    gParameterAmmoDigit.buf = gParameterAmmoDigitStatic.buf;
+    
+    UtilFile gParameterClockStatic = {
+        NULL, z2ParameterClockStaticVaddr, z2ParameterClockStaticVsize
+    };
+    Util_FileInit(&gParameterClockStatic);
+    gParameterClock.buf = gParameterClockStatic.buf;
+    
+    UtilFile gParameterNoteButtonsStatic = {
+        NULL, z2ParameterNoteButtonsStaticVaddr, z2ParameterNoteButtonsStaticVsize
+    };
+    Util_FileInit(&gParameterNoteButtonsStatic);
+    gParameterNoteButtons.buf = gParameterNoteButtonsStatic.buf;
+    
+    UtilFile gParameterSunMoonStatic = {
+        NULL, z2ParameterSunMoonStaticVaddr, z2ParameterSunMoonStaticVsize
+    };
+    Util_FileInit(&gParameterSunMoonStatic);
+    gParameterSunMoon.buf = gParameterSunMoonStatic.buf;
+    
+    UtilFile gHudToggleStatic = {
+        NULL, z2HudToggleStaticVaddr, z2HudToggleStaticVsize
+    };
+    Util_FileInit(&gHudToggleStatic);
+    gHudToggle.buf = gHudToggleStatic.buf;*/
 
     // Initialize font texture buffer.
     int fontBytes = Sprite_GetBytesTotal(&gSpriteFont);
