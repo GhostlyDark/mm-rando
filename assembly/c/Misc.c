@@ -10,6 +10,7 @@ extern uint8_t CFG_BOSS_REMAINS_UNDERWATER_OCARINA;
 struct MiscConfig MISC_CONFIG = {
     .magic = MISC_CONFIG_MAGIC,
     .version = 3,
+    .internal.vanillaLayout = 1,
 };
 
 union FaucetSpeed {

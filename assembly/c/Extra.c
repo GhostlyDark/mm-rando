@@ -35,6 +35,7 @@ uint8_t hud_counter              = 0;
 
 uint8_t block                    = 0;
 uint8_t used_block               = 0;
+uint8_t timer_holding_l          = 0;
 PressedButtons pressed;
 
 void Handle_Extra_Functions(GlobalContext* ctxt) {
@@ -130,8 +131,6 @@ void Handle_Rupee_Drain(ActorPlayer* player, GlobalContext* ctxt) {
 }
 
 void Handle_L_Button_Ingame(GlobalContext* ctxt) {
-    //if (!CFG_DUAL_DPAD_ENABLED && !CFG_FPS_ENABLED && !CFG_FLOW_OF_TIME_ENABLED && !CFG_INSTANT_ELEGY_ENABLED && !CFG_HIDE_HUD_ENABLED)
-    //    return;
     if (ctxt->pauseCtx.state != 0 || !IS_PLAYABLE || !L_PAD_ENABLED)
         return;
     
@@ -150,18 +149,20 @@ void Handle_L_Button_Ingame(GlobalContext* ctxt) {
     if (padCurr.dl)
         pressed.dl = 1;
     
-    if (ctxt->state.input[0].releaseEdge.buttons.l && !pressed.r && !pressed.z && !pressed.du && !pressed.dr && !pressed.dd && !pressed.dl)
+    if (ctxt->state.input[0].releaseEdge.buttons.l && !pressed.r && !pressed.z && !pressed.du && !pressed.dr && !pressed.dd && !pressed.dl && timer_holding_l != 30 / ctxt->state.framerateDivisor)
         Toggle_Minimap(ctxt);
     
+    if (padCurr.l && timer_holding_l < 30 / ctxt->state.framerateDivisor)
+        timer_holding_l++;
     if (!padCurr.l)
-        pressed.r = pressed.z = pressed.du = pressed.dr = pressed.dd = pressed.dl = 0;
+        pressed.r = pressed.z = pressed.du = pressed.dr = pressed.dd = pressed.dl = timer_holding_l = 0;
     if (ctxt->state.input[0].pressEdge.buttons.l)
         block = 1;
     if (!padCurr.l)
         block = 0;
     if (block)
         ctxt->state.input[0].current.buttons.r = ctxt->state.input[0].current.buttons.z = 0;
-    ctxt->state.input[0].pressEdge.buttons.l = 0;    
+    ctxt->state.input[0].pressEdge.buttons.l = 0;
 }
 
 void Handle_L_Button_Paused(GlobalContext* ctxt) {

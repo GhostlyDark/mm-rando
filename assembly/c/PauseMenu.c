@@ -318,7 +318,7 @@ void Handle_Shield_Swap(GlobalContext* ctxt) {
 
 void Handle_Mapping_Items(GlobalContext* ctxt) {
     uint8_t index = ctxt->pauseCtx.screenIndex;
-    if (index != 0 && index != 3)
+    if ( (index != 0 && index != 3) || ctxt->pauseCtx.sideButton != 0)
         return;
     
     uint8_t item = ctxt->pauseCtx.selectedItem;
