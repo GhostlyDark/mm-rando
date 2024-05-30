@@ -559,9 +559,9 @@ void Handle_Infinite() {
     }
     
     if (CFG_INFINITE_AMMO) {
-        gSaveContext.perm.inv.quantities[SLOT_DEKU_NUT] =                                              gItemUpgradeCapacity.nutCapacity[gSaveContext.perm.inv.upgrades.dekuNut];
-        gSaveContext.perm.inv.quantities[SLOT_DEKU_STICK] =                                            gItemUpgradeCapacity.stickCapacity[gSaveContext.perm.inv.upgrades.dekuStick];
-        gSaveContext.perm.inv.quantities[SLOT_BOW]  =                                                  gItemUpgradeCapacity.arrowCapacity[gSaveContext.perm.inv.upgrades.quiver];
+        gSaveContext.perm.inv.quantities[SLOT_DEKU_NUT]                                              = gItemUpgradeCapacity.nutCapacity[gSaveContext.perm.inv.upgrades.dekuNut];
+        gSaveContext.perm.inv.quantities[SLOT_DEKU_STICK]                                            = gItemUpgradeCapacity.stickCapacity[gSaveContext.perm.inv.upgrades.dekuStick];
+        gSaveContext.perm.inv.quantities[SLOT_BOW]                                                   = gItemUpgradeCapacity.arrowCapacity[gSaveContext.perm.inv.upgrades.quiver];
         gSaveContext.perm.inv.quantities[SLOT_BOMB] = gSaveContext.perm.inv.quantities[SLOT_BOMBCHU] = gItemUpgradeCapacity.bombCapacity[gSaveContext.perm.inv.upgrades.bombBag];
     }
     
