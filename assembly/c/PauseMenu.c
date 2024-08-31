@@ -408,7 +408,8 @@ void Handle_Clock_Controls(GlobalContext* ctxt) {
     if (ctxt->pauseCtx.state != 6)
      return;
     
-    if (!IS_ABILITY_ACTIVATED(CFG_CLOCK_CONTROL_ENABLED-1) || (gSaveContext.perm.inv.items[0] != ITEM_OCARINA && gSaveContext.perm.inv.items[0] != ITEM_DEKU_PIPES && gSaveContext.perm.inv.items[0] != ITEM_GORON_DRUMS && gSaveContext.perm.inv.items[0] != ITEM_ZORA_GUITAR) || !gSaveContext.perm.inv.questStatus.songOfTime) {
+    if (!IS_ABILITY_ACTIVATED(CFG_CLOCK_CONTROL_ENABLED-1) || (gSaveContext.perm.inv.items[0] != ITEM_OCARINA && gSaveContext.perm.inv.items[0] != ITEM_DEKU_PIPES && gSaveContext.perm.inv.items[0] != ITEM_GORON_DRUMS && gSaveContext.perm.inv.items[0] != ITEM_ZORA_GUITAR) || \
+        !gSaveContext.perm.inv.questStatus.songOfTime || ctxt->interfaceCtx.restrictions.songOfTime || ctxt->interfaceCtx.restrictions.songOfDoubleTime) {
         if (ctxt->state.input[0].pressEdge.buttons.b)
             z2_PlaySfx(0x4806);
         ctxt->state.input[0].pressEdge.buttons.b = 0;
