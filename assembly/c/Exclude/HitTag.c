@@ -7,13 +7,13 @@ static ColorRGBA8 sparkleEnvColor = { 255, 255, 255, 0 };
 static Vec3f sparkleVelocity = { 0.0f, 0.1f, 0.0f };
 static Vec3f sparkleAcceleration = { 0.0f, 0.01f, 0.0f };
 
-ActorEnItem00* HitTag_RupeeSpawn(GlobalContext* ctxt, Actor* actor, u8 count) {
+/*ActorEnItem00* HitTag_RupeeSpawn(GlobalContext* ctxt, Actor* actor, u8 count) {
     ActorEnItem00* item = z2_fixed_drop_spawn(ctxt, &actor->currPosRot.pos, 0);
     u16 tagId = actor->params & 0x1F;
     u16 giIndex = 0x3C5 + tagId*3 + count;
     Rupee_CheckAndSetGiIndex(&item->base, ctxt, giIndex);
     return item;
-}
+}*/
 
 void HitTag_Draw(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.flags.hiddenRupeesSparkle && (ctxt->sceneFrameCount & 1) == 0) {

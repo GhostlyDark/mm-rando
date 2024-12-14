@@ -67,7 +67,7 @@ u16 Rupee_GetDrawGiIndex(Actor* actor) {
     return *pointer;
 }
 
-void Rupee_CheckAndSetGiIndex(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
+/*void Rupee_CheckAndSetGiIndex(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
     if (MISC_CONFIG.internal.vanillaLayout) {
         return;
     }
@@ -78,4 +78,4 @@ void Rupee_CheckAndSetGiIndex(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
         u16 drawGiIndex = MMR_GetNewGiIndex(ctxt, 0, giIndex, false);
         Rupee_SetDrawGiIndex(actor, drawGiIndex);
     }
-}
+}*/

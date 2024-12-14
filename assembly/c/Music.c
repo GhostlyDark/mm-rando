@@ -7,20 +7,209 @@
 #include "Text.h"
 #include "Sprite.h"
 
-struct MusicConfig MUSIC_CONFIG = {
+extern u8 CFG_MUSIC_TRACK_DISPLAY_ENABLED;
+
+static char sCurrentTrackName[SEQUENCE_NAME_MAX_SIZE] = "\0";
+static ColorRGBA8 sColor                              = { 0xFF, 0xFF, 0xFF, 0xFF };
+static ColorRGBA8 titleColor                          = { 0x00, 0xFF, 0x00, 0xFF };
+static s16 sAlpha                                     = 0;
+static u8 sLoadingSequenceId                          = 0;
+
+char music_track_titles[SEQUENCES_LENGTH][SEQUENCE_NAME_MAX_SIZE] = {
+/* 00 */    "",
+/* 01 */    "",    
+/* 02 */    "Termina Field",
+/* 03 */    "Chase",
+/* 04 */    "Majora's Theme",
+/* 05 */    "The Clock Tower",
+/* 06 */    "Stone Tower Temple",
+/* 07 */    "Stone Tower Temple Upside-Down",
+/* 08 */    "Missed Event 1",
+/* 09 */    "Missed Event 2",
+/* 0A */    "Happy Mask Salesman",
+/* 0B */    "Song of Healing",
+/* 0C */    "Southern Swamp",
+/* 0D */    "Ghost Attack",
+/* 0E */    "Boat Cruise",
+/* 0F */    "Sharp's Curse",
+/* 10 */    "Great Bay Coast",
+/* 11 */    "Ikana Valley",
+/* 12 */    "Deku Palace",
+/* 13 */    "Mountain Village",
+/* 14 */    "Pirates' Fortress",
+/* 15 */    "Clock Town, First Day",
+/* 16 */    "Clock Town, Second Day",
+/* 17 */    "Clock Town, Third Day",
+/* 18 */    "File Select",
+/* 19 */    "Event Clear",
+/* 1A */    "Battle",
+/* 1B */    "Boss Battle",
+/* 1C */    "Woodfall Temple",
+/* 1D */    "Clock Town",
+/* 1E */    "Opening",
+/* 1F */    "House",                       
+/* 20 */    "Game Over",
+/* 21 */    "Boss Clear",
+/* 22 */    "Item Catch",
+/* 23 */    "Clock Town, Second Day",
+/* 24 */    "Get A Heart Container!",
+/* 25 */    "Mini Game",
+/* 26 */    "Goron Race",
+/* 27 */    "Music Box House",
+/* 28 */    "Fairy's Fountain",
+/* 29 */    "Zelda's Theme",
+/* 2A */    "Rosa Sisters",
+/* 2B */    "Open Treasure Box",
+/* 2C */    "Marine Research Laboratory",
+/* 2D */    "Giants' Theme",
+/* 2E */    "Guru-Guru's Song",
+/* 2F */    "Romani Ranch",
+/* 30 */    "Goron Village",
+/* 31 */    "Mayor's Meeting",
+/* 32 */    "Ocarina \"Epona's Song\"",
+/* 33 */    "Ocarina \"Sun's Song\"",
+/* 34 */    "Ocarina \"Song of Time\"",
+/* 35 */    "Ocarina \"Song of Storms\"",
+/* 36 */    "Zora Hall",
+/* 37 */    "Get A Mask!",
+/* 38 */    "Mini Boss",
+/* 39 */    "Small Item Catch",
+/* 3A */    "Astral Observatory",
+/* 3B */    "Cavern",
+/* 3C */    "Milk Bar",
+/* 3D */    "Enter Zelda",
+/* 3E */    "Woods of Mystery",
+/* 3F */    "Goron Race Goal",
+/* 40 */    "Horse Race",
+/* 41 */    "Horse Race Goal",
+/* 42 */    "Gorman Track",
+/* 43 */    "Magic Hags' Potion Shop",
+/* 44 */    "Shop",
+/* 45 */    "Owl",
+/* 46 */    "Shooting Gallery",
+/* 47 */    "Ocarina \"Song of Soaring\"",
+/* 48 */    "Ocarina \"Song of Healing\"",
+/* 49 */    "Ocrina \"Inverted Song of Time\"",
+/* 4A */    "Ocarina \"Song of Double Time\"",
+/* 4B */    "Sonatate of Awakening",
+/* 4C */    "Goron Lullaby",
+/* 4D */    "New Wave Bossa Nova",
+/* 4E */    "Elegy of Emptiness",
+/* 4F */    "Oath to Order",
+/* 50 */    "Swordman's School",
+/* 51 */    "Ocarina \"Goron Lullaby Intro\"",
+/* 52 */    "Get The Ocarina!",
+/* 53 */    "Bremen March",
+/* 54 */    "Ballad of the Wind Wish",
+/* 55 */    "Song of Soaring",
+/* 56 */    "Milk Bar",
+/* 57 */    "Last Day",
+/* 58 */    "Mikau",
+/* 59 */    "Mikau (End)",
+/* 5A */    "Frog Song",
+/* 5B */    "Ocarina \"Sonato of Awakening\"",
+/* 5C */    "Ocarina \"Goron Lullaby\"",
+/* 5D */    "Ocarina \"New Wave Bossa Nova\" ",
+/* 5E */    "Ocarina \"Elegy of Emptiness\"",
+/* 5F */    "Ocarina \"Oath to Order\"",
+/* 60 */    "Majora's Lair",
+/* 61 */    "Ocarina \"Goron Lullaby Intro\"",
+/* 62 */    "Bass and Guitar Session",
+/* 63 */    "Piano Solo",
+/* 64 */    "The Indigo-Go's",
+/* 65 */    "Snowhead Temple",
+/* 66 */    "Great Bay Temple",
+/* 67 */    "New Wave Bossa Nova (Saxophone)",
+/* 68 */    "New Wave Bossa Nova (Vocals)",
+/* 69 */    "Majora's Wrath Battle",
+/* 6A */    "Majora's Incarnate Battle",
+/* 6B */    "Majora's Mask Battle",
+/* 6C */    "Bass Practice",
+/* 6D */    "Drums Practice",
+/* 6E */    "Piano Practice",
+/* 6F */    "Ikana Castle",
+/* 70 */    "Calling The Four Giants",
+/* 71 */    "Kamaro's Dance",
+/* 72 */    "Cremia's Carriage",
+/* 73 */    "Keaton's Quiz",
+/* 74 */    "The End / Credits",
+/* 75 */    "Opening (Loop)",
+/* 76 */    "Title Theme",
+/* 77 */    "Woodfall Rises",
+/* 78 */    "Southern Swamp Clear",
+/* 79 */    "Snowhead Clear",
+/* 7A */    "",
+/* 7B */    "To The Moon",
+/* 7C */    "The Giants' Exit",
+/* 7D */    "Tatl & Tael",
+/* 7E */    "Moon's Destruction",
+/* 7F */    "The End / Credits II"
+};
+
+void Music_DrawCurrentTrackName(GlobalContext* ctxt, DispBuf* db) {
+    if (!CFG_MUSIC_TRACK_DISPLAY_ENABLED || !s801D0B70.selected || !sAlpha)
+        return;
+    
+    u8 i;
+    sColor.a      = titleColor.a = sAlpha < 0x100 ? (u8)sAlpha : 0xFF;
+    u8 spaceIndex = 0;
+    u16 x         = 10;
+    u16 y         = 90;
+    Text_SetSize(5, 9);
+    
+    for (i=11; i<SEQUENCE_NAME_MAX_SIZE; i++)
+        if (sCurrentTrackName[i] == ' ') {
+            spaceIndex = i;
+            break;
+        }
+    
+    if (spaceIndex > 0) {
+        char str1[SEQUENCE_NAME_MAX_SIZE];
+        char str2[SEQUENCE_NAME_MAX_SIZE];
+        
+        for (i=0; i<spaceIndex; i++)
+            str1[i] = sCurrentTrackName[i];
+        for (i=spaceIndex+1; i<SEQUENCE_NAME_MAX_SIZE; i++)
+            str2[i-spaceIndex-1] = sCurrentTrackName[i];
+        
+        Text_PrintWithColor(str1, x, y + 9,  sColor);
+        Text_PrintWithColor(str2, x, y + 18, sColor);
+    }
+    else Text_PrintWithColor(sCurrentTrackName, x, y + 9, sColor);
+    
+    Text_PrintWithColor("Track Title:", x, y, titleColor);
+    Text_Flush(db);
+    z2_Math_StepToS(&sAlpha, 0, 0x10);
+}
+
+static void LoadTrackName(u32 id) {
+    for (u8 index=0; index < SEQUENCE_NAME_MAX_SIZE; index++)
+      sCurrentTrackName[index] = music_track_titles[id][index]; 
+    sAlpha = 0x300;
+}
+
+void Music_SetLoadingSequenceId(u32 id) {
+    if (id == 0x00 || id == 0x01 || id == 0x18 || id == 0x1A || id == 0x76 || id == 0x7A)
+        return;
+    
+    sLoadingSequenceId = id;
+    if (sLoadingSequenceId)
+        LoadTrackName(sLoadingSequenceId);
+}
+
+/*struct MusicConfig MUSIC_CONFIG = {
     .magic = MUSIC_CONFIG_MAGIC,
     .version = 1,
-};
+};*/
 
-static MusicState musicState = {
+/*static MusicState musicState = {
     .currentState = 0,
-};
+};*/
 
-static u32 sLoadingSequenceId = 0;
-static bool sIsMusicIndoors = false;
-static bool sIsMusicCave = false;
+//static bool sIsMusicIndoors = false;
+//static bool sIsMusicCave = false;
 
-static void LoadMuteMask() {
+/*static void LoadMuteMask() {
     u8 sequenceId = gSequenceContext->sequenceId;
     if (musicState.loadedSequenceId != sequenceId) {
         musicState.loadedSequenceId = sequenceId;
@@ -37,11 +226,11 @@ static void LoadMuteMask() {
             musicState.hasSequenceMaskFile = 0;
         }
     }
-}
+}*/
 
-static const u8* sAudioBaseFilter = (u8*)0x801D66E0;
+//static const u8* sAudioBaseFilter = (u8*)0x801D66E0;
 
-static u16 CalculateCurrentState() {
+/*static u16 CalculateCurrentState() {
     u16 state;
     ActorPlayer* player = GET_PLAYER(&gGlobalContext);
     if (player) {
@@ -115,9 +304,9 @@ static u16 CalculateCurrentState() {
         state = 1;
     }
     return state;
-}
+}*/
 
-static void ProcessChannel(u8 channelIndex, u16 stateMask) {
+/*static void ProcessChannel(u8 channelIndex, u16 stateMask) {
     SequenceChannelContext* channelContext = gSequenceContext->channels[channelIndex];
     if (channelContext->playState.playing) {
         bool shouldBeMuted = false;
@@ -142,9 +331,9 @@ static void ProcessChannel(u8 channelIndex, u16 stateMask) {
             channelContext->playState.muted = false;
         }
     }
-}
+}*/
 
-static void HandleFormChannels(GlobalContext* ctxt) {
+/*static void HandleFormChannels(GlobalContext* ctxt) {
     LoadMuteMask();
 
     if (musicState.hasSequenceMaskFile) {
@@ -157,50 +346,13 @@ static void HandleFormChannels(GlobalContext* ctxt) {
             }
         }
     }
-}
+}*/
 
-static char sCurrentTrackName[SEQUENCE_NAME_MAX_SIZE] = "\0";
-static ColorRGBA8 sColor = { 0xFF, 0xFF, 0xFF, 0xFF };
-static s16 sAlpha = 0;
-void Music_DrawCurrentTrackName(GlobalContext* ctxt) {
-    if (!MUSIC_CONFIG.flags.showTrackName || !s801D0B70.selected || !sAlpha) {
-        return;
-    }
-
-    sColor.a = sAlpha < 0x100 ? (u8)sAlpha : 0xFF;
-    Text_PrintWithColor(sCurrentTrackName, 5, 0xE0, sColor);
-
-    DispBuf* db = &ctxt->state.gfxCtx->overlay;
-    gSPDisplayList(db->p++, &gSetupDb);
-    gDPPipeSync(db->p++);
-    Text_Flush(db);
-    gDPPipeSync(db->p++);
-
-    z2_Math_StepToS(&sAlpha, 0, 0x10);
-}
-
-static void LoadTrackName(u32 id) {
-    u32 index = MUSIC_CONFIG.sequenceNamesFileIndex;
-    if (index) {
-        DmaEntry entry = dmadata[index];
-
-        u32 start = entry.romStart + (id * SEQUENCE_NAME_MAX_SIZE);
-
-        z2_RomToRam(start, &sCurrentTrackName, SEQUENCE_NAME_MAX_SIZE);
-
-        sAlpha = 0x300;
-    }
-}
-
-void Music_Draw(GlobalContext* ctxt) {
-    Music_DrawCurrentTrackName(ctxt);
-}
-
-void Music_Update(GlobalContext* ctxt) {
+/*void Music_Update(GlobalContext* ctxt) {
     HandleFormChannels(ctxt);
-}
+}*/
 
-void Music_AfterChannelInit(SequenceContext* sequence, u8 channelIndex) {
+/*void Music_AfterChannelInit(SequenceContext* sequence, u8 channelIndex) {
     if (sequence == gSequenceContext) {
         LoadMuteMask();
 
@@ -210,9 +362,9 @@ void Music_AfterChannelInit(SequenceContext* sequence, u8 channelIndex) {
             ProcessChannel(channelIndex, state);
         }
     }
-}
+}*/
 
-void Music_HandleChannelMute(SequenceChannelContext* channelContext, ChannelState* channelState, SequenceContext* sequence, u8 channelIndex) {
+/*void Music_HandleChannelMute(SequenceChannelContext* channelContext, ChannelState* channelState, SequenceContext* sequence, u8 channelIndex) {
     u8 shouldBeMuted = channelState->param;
     if (shouldBeMuted) {
         if (musicState.hasSequenceMaskFile && sequence == gSequenceContext && !channelContext->playState.stopped) {
@@ -227,16 +379,9 @@ void Music_HandleChannelMute(SequenceChannelContext* channelContext, ChannelStat
             channelContext->playState.muted = false;
         }
     }
-}
+}*/
 
-void Music_SetLoadingSequenceId(u32 id) {
-    sLoadingSequenceId = id;
-    if (id) {
-        LoadTrackName(id);
-    }
-}
-
-s8 Music_GetAudioLoadType(AudioInfo* audioInfo, u8 audioType) {
+/*s8 Music_GetAudioLoadType(AudioInfo* audioInfo, u8 audioType) {
     s8 defaultLoadType = audioInfo[1].metadata[1];
     if (audioType == 1 && defaultLoadType != 0 && sLoadingSequenceId != 0) {
         AudioInfo* sequenceInfoTable = z2_GetAudioTable(0);
@@ -244,11 +389,11 @@ s8 Music_GetAudioLoadType(AudioInfo* audioInfo, u8 audioType) {
     } else {
         return defaultLoadType;
     }
-}
+}*/
 
-static u8 sLastSeqId = 0xFF;
+//static u8 sLastSeqId = 0xFF;
 
-bool Music_ShouldFadeOut(GlobalContext* ctxt, s16 sceneLayer) {
+/*bool Music_ShouldFadeOut(GlobalContext* ctxt, s16 sceneLayer) {
     // TODO handle alternate exit scenarios
     // TODO handle taking a water void exit: z_player line 5760
     s16 currentScene = ctxt->sceneNum;
@@ -350,9 +495,9 @@ bool Music_ShouldFadeOut(GlobalContext* ctxt, s16 sceneLayer) {
         }
     }
     return !(z2_Entrance_GetTransitionFlags(entrance) & 0x8000);
-}
+}*/
 
-void Music_HandleCommandSoundSettings(GlobalContext* ctxt, SceneCmd* cmd) {
+/*void Music_HandleCommandSoundSettings(GlobalContext* ctxt, SceneCmd* cmd) {
     ctxt->sequenceCtx.ambienceId = cmd->soundSettings.ambienceId;
 
     sIsMusicCave = false;
@@ -415,9 +560,9 @@ void Music_HandleCommandSoundSettings(GlobalContext* ctxt, SceneCmd* cmd) {
         sLastSeqId = cmd->soundSettings.seqId;
     }
     ctxt->sequenceCtx.seqId = sLastSeqId;
-}
+}*/
 
-static bool ObjSound_ShouldSetBgm(Actor* objSound, GlobalContext* ctxt) {
+/*static bool ObjSound_ShouldSetBgm(Actor* objSound, GlobalContext* ctxt) {
     if (MUSIC_CONFIG.flags.removeMinorMusic) {
         switch (ctxt->sceneNum) {
             case SCENE_BOWLING: // Honey and Darling
@@ -435,18 +580,18 @@ static bool ObjSound_ShouldSetBgm(Actor* objSound, GlobalContext* ctxt) {
         }
     }
     return true;
-}
+}*/
 
-void Music_ObjSound_PlayBgm(Actor* objSound, GlobalContext* ctxt) {
+/*void Music_ObjSound_PlayBgm(Actor* objSound, GlobalContext* ctxt) {
     if (!ObjSound_ShouldSetBgm(objSound, ctxt)) {
         z2_ActorUnload(objSound);
         return;
     }
     z2_Audio_PlayObjSoundBgm(&objSound->projectedPos, objSound->params);
-}
+}*/
 
-void Music_ObjSound_StopBgm(Actor* objSound, GlobalContext* ctxt) {
+/*void Music_ObjSound_StopBgm(Actor* objSound, GlobalContext* ctxt) {
     if (ObjSound_ShouldSetBgm(objSound, ctxt)) {
         z2_Audio_PlayObjSoundBgm(NULL, 0);
     }
-}
+}*/

@@ -4,6 +4,7 @@
 #include <z64.h>
 
 void Text_Init(void);
+void Text_SetSize(u8 width, u8 height);
 void Text_Print(const char* s, int left, int top);
 void Text_PrintWithColor(const char* s, int left, int top, ColorRGBA8 color);
 void Text_Flush(DispBuf* db);

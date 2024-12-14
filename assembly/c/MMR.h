@@ -21,14 +21,14 @@ typedef struct {
 GetItemEntry* MMR_GetGiEntry(u16 index);
 bool MMR_GetGiFlag(u16 giIndex);
 void MMR_Init(void);
-u16 MMR_GetNewGiIndex(GlobalContext* ctxt, Actor* actor, u16 giIndex, bool grant);
-void MMR_ProcessItem(GlobalContext* ctxt, u16 giIndex, bool continueTextbox);
+//u16 MMR_GetNewGiIndex(GlobalContext* ctxt, Actor* actor, u16 giIndex, bool grant);
+//void MMR_ProcessItem(GlobalContext* ctxt, u16 giIndex, bool continueTextbox);
 void MMR_ClearItemQueue();
-void MMR_ProcessItemQueue(GlobalContext* ctxt);
-void MMR_GiveItemToHold(Actor* actor, GlobalContext* ctxt, u16 giIndex);
-bool MMR_GiveItemIfMinor(GlobalContext* ctxt, Actor* actor, u16 giIndex);
+//void MMR_ProcessItemQueue(GlobalContext* ctxt);
+//void MMR_GiveItemToHold(Actor* actor, GlobalContext* ctxt, u16 giIndex);
+//bool MMR_GiveItemIfMinor(GlobalContext* ctxt, Actor* actor, u16 giIndex);
 void MMR_QueueItem(u16 giIndex, bool forceProcess);
-bool MMR_GiveItem(GlobalContext* ctxt, Actor* actor, u16 giIndex);
+//bool MMR_GiveItem(GlobalContext* ctxt, Actor* actor, u16 giIndex);
 u16 MMR_GetProcessingItemGiIndex(GlobalContext* ctxt);
 bool MMR_IsRecoveryHeart(u16 giIndex);
 
@@ -93,16 +93,16 @@ typedef union {
 } ExtraStartingMaps; // size = 0x1
 
 // Data about the MMR Get Item Table
-struct MMRConfig {
-    /* 0x000 */ u32 magic;
-    /* 0x004 */ u32 version;
-    /* 0x008 */ MMRLocations locations;
-    /* 0x132 */ ExtraStartingMaps extraStartingMaps;
-    /* 0x133 */ u8 unused12D; // Padding.
-    /* 0x134 */ ExtraStartingItems extraStartingItems;
-    /* 0x146 */ ItemsToReturn itemsToReturn;
-}; // size = 0x168
+//struct MMRConfig {
+//    /* 0x000 */ u32 magic;
+//    /* 0x004 */ u32 version;
+//    /* 0x008 */ MMRLocations locations;
+//    /* 0x132 */ ExtraStartingMaps extraStartingMaps;
+//    /* 0x133 */ u8 unused12D; // Padding.
+//    /* 0x134 */ ExtraStartingItems extraStartingItems;
+//    /* 0x146 */ ItemsToReturn itemsToReturn;
+//}; // size = 0x168
 
-extern struct MMRConfig MMR_CONFIG;
+//extern struct MMRConfig MMR_CONFIG;
 
 #endif // MMR_H

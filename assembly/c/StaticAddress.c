@@ -7,8 +7,8 @@ static StaticAddressConfig sStaticAddressConfig = {
     .dpadConfig = &DPAD_CONFIG,
     .hudColorConfig = &HUD_COLOR_CONFIG,
     .miscConfig = &MISC_CONFIG,
-    .mmrConfig = &MMR_CONFIG,
-    .musicConfig = &MUSIC_CONFIG,
+    //.mmrConfig = &MMR_CONFIG,
+    //.musicConfig = &MUSIC_CONFIG,
     .saveFileConfig = &SAVE_FILE_CONFIG,
     .worldColorConfig = &WORLD_COLOR_CONFIG,
 };

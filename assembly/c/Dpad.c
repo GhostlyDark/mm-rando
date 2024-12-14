@@ -304,10 +304,11 @@ bool Dpad_Handle(ActorPlayer* player, GlobalContext* ctxt) {
         return false;
     }
     
-    // Lens of Truth, Masks, Items not unequiping when not on C buttons
-    (*(uint16_t*) 0x8011660C) = (*(uint16_t*) 0x80116618) = (*(uint16_t*) 0x80116624) = (*(uint16_t*) 0x806ED4B0) = (*(uint16_t*) 0x806ED4FC) = (*(uint16_t*) 0x8018BFE0) = (*(uint16_t*) 0x806ED30C) = 0x1000;
-    if (gSaveContext.perm.stolenItem == ITEM_FAIRY_SWORD && player->heldItemActionParam == PLAYER_IA_SWORD_GREAT_FAIRY)
-        (*(uint16_t*) 0x806ED4B0) = (*(uint16_t*) 0x806ED4FC) = (*(uint16_t*) 0x8018BFE0) = 0x1440;
+    if (gSaveContext.perm.stolenItem == ITEM_FAIRY_SWORD && player->heldItemActionParam == PLAYER_IA_SWORD_GREAT_FAIRY) {
+        if (gSaveContext.owl.jinxCounter < 60 / ctxt->state.framerateDivisor)
+            gSaveContext.owl.jinxCounter = 60 / ctxt->state.framerateDivisor;
+        player->itemActionParam = player->heldItemActionParam = PLAYER_IA_SWORD_KOKIRI + ( (gSaveContext.perm.unk4C.equipment.sword > 0) ? (gSaveContext.perm.unk4C.equipment.sword - 1) : 0);
+    }
     
     if (!dpad_alt) {
         if (padPressed.du && gUsable[0])
@@ -333,27 +334,30 @@ bool Dpad_Handle(ActorPlayer* player, GlobalContext* ctxt) {
     return false;
 }
 
-uint8_t Dpad_DrawAlt(GlobalContext* ctxt, DispBuf* db) {    
+uint8_t Dpad_DrawAlt(GlobalContext* ctxt, DispBuf* db) {
     if (!IS_PLAYABLE || !block || !L_PAD_ENABLED || DPAD_CONFIG.display == DPAD_DISPLAY_NONE)
         return false;
     
     // Get index of main sprite position (left or right)
-    uint8_t posIdx = 0;
+    uint8_t posIdx;
     if (DPAD_CONFIG.display == DPAD_DISPLAY_RIGHT)
-        posIdx == CFG_WS_ENABLED ? 2 : 1;
+        posIdx = CFG_WS_ENABLED ? 2 : 1;
+    else posIdx = 0;
 
     // Main sprite position
     u16 x = gPosition[posIdx][0];
     u16 y = gPosition[posIdx][1];
     y = UpdateYPosition(x, y, 10);
     
-    gDPSetPrimColor(db->p++, 0, 0, HUD_COLOR_CONFIG.dpad.r, HUD_COLOR_CONFIG.dpad.g, HUD_COLOR_CONFIG.dpad.b, 255);
+    u8 primAlpha = ctxt->interfaceCtx.alphas.buttonA & 0xFF;
+    
+    gDPSetPrimColor(db->p++, 0, 0, DPAD_RGB, DPAD_RGB, DPAD_RGB, primAlpha);
     gDPSetCombineMode(db->p++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
     Sprite_Load(db, &gSpriteDpad, 0, 1);
     Sprite_Draw(db, &gSpriteDpad, 0, x, y, 16, 16);
     
     Sprite* sprite = Sprite_GetItemTexturesSprite();
-    gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, 255);
+    gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, primAlpha);
     
     // Right
     if (CFG_SWAP_ENABLED && gSaveContext.perm.unk4C.equipment.sword > 0) {
@@ -371,7 +375,10 @@ uint8_t Dpad_DrawAlt(GlobalContext* ctxt, DispBuf* db) {
     
     // Top
     if (CFG_INSTANT_ELEGY_ENABLED) {
-        gDPSetPrimColor(db->p++, 0, 0, 255, 165, 0, Can_Use_Elegy(ctxt) ? 255 : 160);
+        u8 alpha = Can_Use_Elegy(ctxt) ? primAlpha : 160;
+        if (alpha > primAlpha)
+            alpha = primAlpha;
+        gDPSetPrimColor(db->p++, 0, 0, 255, 165, 0, alpha);
         Sprite_Load(db, &gDungeonMapLinkHead, 0, 1);
         Sprite_Draw(db, &gDungeonMapLinkHead, 0, x + gPositions[0][0] + 1, y + gPositions[0][1] + 4, 12, 12);
     }
@@ -379,31 +386,20 @@ uint8_t Dpad_DrawAlt(GlobalContext* ctxt, DispBuf* db) {
     // Bottom
     if (CFG_FLOW_OF_TIME_ENABLED && gStaticContext.timeSpeed != 0) {
         if (gSaveContext.perm.timeSpeed == 0)
-            gDPSetPrimColor(db->p++, 0, 0, 0, 170, 100, 255);
-        else gDPSetPrimColor(db->p++, 0, 0, 0, 100, 205, 255);
+            gDPSetPrimColor(db->p++, 0, 0, 0, 170, 100, primAlpha);
+        else gDPSetPrimColor(db->p++, 0, 0, 0, 100, 205, primAlpha);
         Sprite_Load(db, &gParameterSunMoon, !gSaveContext.perm.isNight, 1);
         Sprite_Draw(db, &gParameterSunMoon, 0, x + gPositions[2][0] - 1, y + gPositions[2][1], 16, 16);
-    }
-    
-    // Top-Right
-    if (CFG_DUAL_DPAD_ENABLED) {
-        if (!dpad_alt)
-            gDPSetPrimColor(db->p++, 0, 0, 255, 0, 0, 255);
-        else gDPSetPrimColor(db->p++, 0, 0, 0, 255, 0, 255);
-        Sprite_Load(db, &gSpriteDpad, 0, 1);
-        Sprite_Draw(db, &gSpriteDpad, 0, x + gPositions[0][0] + 16, y + gPositions[0][1] + 4, 12, 12);
     }
     
     // Top-Left
     if (CFG_FPS_ENABLED) {
         x = x + gPositions[0][0] - 20;
         y = y + gPositions[0][1] + 4;
-    
-        uint16_t fps = 60 / ctxt->state.framerateDivisor;
-        if (fps == 20)
-            gDPSetPrimColor(db->p++, 0, 0, 255, 0, 0, 255);
-        else gDPSetPrimColor(db->p++, 0, 0, 0, 255, 0, 255);
-    
+        
+        uint8_t fps = 60 / ctxt->state.framerateDivisor;
+        gDPSetPrimColor(db->p++, 0, 0, fps == 20 ? 255: 0, fps == 20 ? 0 : 255, 0, 255);
+        gDPSetPrimColor(db->p++, 0, 0, 0, 255, 0, 255);
         Sprite_Load(db, &gParameterAmmoDigit, fps / 10, 1);
         Sprite_Draw(db, &gParameterAmmoDigit, 0, x, y + 0, 8, 8);
         Sprite_Load(db, &gParameterAmmoDigit, fps % 10, 1);
@@ -486,9 +482,10 @@ void Dpad_Draw(GlobalContext* ctxt, DispBuf* db) {
     }
 
     // Get index of main sprite position (left or right)
-    u8 posIdx = 0;
+    u8 posIdx;
     if (DPAD_CONFIG.display == DPAD_DISPLAY_RIGHT)
-        posIdx == CFG_WS_ENABLED ? 2 : 1;
+        posIdx = CFG_WS_ENABLED ? 2 : 1;
+    else posIdx = 0;
 
     // Main sprite position
     u16 x = gPosition[posIdx][0];
@@ -496,12 +493,12 @@ void Dpad_Draw(GlobalContext* ctxt, DispBuf* db) {
     y = UpdateYPosition(x, y, 10);
 
     // Main sprite color
-    Color color = HUD_COLOR_CONFIG.dpad;
+    //Color color = HUD_COLOR_CONFIG.dpad;
     
     if (ctxt->pauseCtx.state == 6)
         primAlpha = 0xFF;
     
-    gDPSetPrimColor(db->p++, 0, 0, color.r, color.g, color.b, primAlpha);
+    gDPSetPrimColor(db->p++, 0, 0, DPAD_RGB, DPAD_RGB, DPAD_RGB, primAlpha);
     gDPSetCombineMode(db->p++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
     Sprite_Load(db, &gSpriteDpad, 0, 1);
     Sprite_Draw(db, &gSpriteDpad, 0, x, y, 16, 16);

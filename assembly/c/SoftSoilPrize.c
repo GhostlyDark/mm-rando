@@ -63,7 +63,7 @@ u16 SoftSoilPrize_GetGiIndex(GlobalContext* ctxt, Actor* actor) {
     return giIndex;
 }
 
-ActorEnItem00* SoftSoilPrize_ItemSpawn(GlobalContext* ctxt, Actor* actor, u16 type) {
+/*ActorEnItem00* SoftSoilPrize_ItemSpawn(GlobalContext* ctxt, Actor* actor, u16 type) {
     u16 giIndex = SoftSoilPrize_GetGiIndex(ctxt, actor);
 
     if (giIndex > 0) {
@@ -89,4 +89,4 @@ ActorEnItem00* SoftSoilPrize_ItemSpawn(GlobalContext* ctxt, Actor* actor, u16 ty
         }
     }
     return item;
-}
+}*/

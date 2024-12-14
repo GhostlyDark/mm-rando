@@ -12,7 +12,7 @@
 
 #define SkulltulaSoundTimerPtr(actor) ((s8*)(&actor->shape.pad16))
 
-static void ProcessActorGiIndex(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
+/*static void ProcessActorGiIndex(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
     s8 skulltulaSoundTimer = *SkulltulaSoundTimerPtr(actor);
     if ((ctxt->actorCtx.unk5 & 0x8) && (skulltulaSoundTimer > 1)) {
         return;
@@ -41,13 +41,13 @@ static void ProcessActorGiIndex(Actor* actor, GlobalContext* ctxt, u16 giIndex) 
             *SkulltulaSoundTimerPtr(actor) = 41 + (s8)(z2_Rand_ZeroOne() * 80);
         }
     }
-}
+}*/
 
-static void ProcessGoldenSkulltulaFlag(Actor* actor, GlobalContext* ctxt, u16 skulltulaFlag) {
+/*static void ProcessGoldenSkulltulaFlag(Actor* actor, GlobalContext* ctxt, u16 skulltulaFlag) {
     u16 enSwBaseGiIndex = ctxt->sceneNum == SCENE_KINSTA1 ? 0x13A : 0x158;
     *SkulltulaSoundTimerPtr(actor) = -2;
     ProcessActorGiIndex(actor, ctxt, enSwBaseGiIndex + skulltulaFlag);
-}
+}*/
 
 /**
  * Check if a Stray Fairy actor gives an item
@@ -62,12 +62,12 @@ static bool StrayFairyGivesItem(Actor* actor, GlobalContext* ctxt) {
     return (flag != 1) && (flag != 8);
 }
 
-static void ProcessStrayFairyFlag(Actor* actor, GlobalContext* ctxt, u16 strayFairyFlag) {
+/*static void ProcessStrayFairyFlag(Actor* actor, GlobalContext* ctxt, u16 strayFairyFlag) {
     u16 curDungeonOffset = *(u16*)0x801F3F38;
     ProcessActorGiIndex(actor, ctxt, 0x16D + (curDungeonOffset * 0x14) + strayFairyFlag);
-}
+}*/
 
-void ItemDetector_AfterActorUpdate(Actor* actor, GlobalContext* ctxt) {
+/*void ItemDetector_AfterActorUpdate(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.internal.vanillaLayout) {
         return;
     }
@@ -771,4 +771,4 @@ void ItemDetector_AfterActorUpdate(Actor* actor, GlobalContext* ctxt) {
             *SkulltulaSoundTimerPtr(actor) = -1;
             break;
     }
-}
+}*/

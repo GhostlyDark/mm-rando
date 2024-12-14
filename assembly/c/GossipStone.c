@@ -68,7 +68,7 @@ u16 GossipStone_GetGiIndex(ActorEnGs* actor, GlobalContext* ctxt) {
     return giIndex;
 }
 
-ActorEnElf* GossipStone_FairySpawn(ActorEnGs* actor, GlobalContext* ctxt, s16 actorId, f32 posX, f32 posY, f32 posZ, s16 rotX,
+/*ActorEnElf* GossipStone_FairySpawn(ActorEnGs* actor, GlobalContext* ctxt, s16 actorId, f32 posX, f32 posY, f32 posZ, s16 rotX,
                    s16 rotY, s16 rotZ, s32 params) {
     ActorEnElf* fairy = (ActorEnElf*)z2_SpawnActor(&ctxt->actorCtx, ctxt, actorId, posX, posY, posZ, rotX, rotY, rotZ, params);
     u16 giIndex = GossipStone_GetGiIndex(actor, ctxt);
@@ -76,4 +76,4 @@ ActorEnElf* GossipStone_FairySpawn(ActorEnGs* actor, GlobalContext* ctxt, s16 ac
         Rupee_CheckAndSetGiIndex(&fairy->base, ctxt, giIndex);
     }
     return fairy;
-}
+}*/

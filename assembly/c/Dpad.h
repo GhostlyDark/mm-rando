@@ -8,6 +8,8 @@
 // Magic number for DpadConfig: "DPAD"
 #define DPAD_CONFIG_MAGIC 0x44504144
 
+#define DPAD_RGB (!dpad_alt ? 0x90 : 0xCC)
+
 typedef enum {
     DPAD_DISPLAY_NONE,
     DPAD_DISPLAY_LEFT,

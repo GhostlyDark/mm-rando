@@ -20,7 +20,7 @@ u16 KeatonGrassCluster_GetGiIndex(GlobalContext* ctxt, u16 count) {
     return 0;
 }
 
-ActorEnItem00* KeatonGrassCluster_RupeeSpawn(GlobalContext* ctxt, Vec3f* position, u16 count) {
+/*ActorEnItem00* KeatonGrassCluster_RupeeSpawn(GlobalContext* ctxt, Vec3f* position, u16 count) {
     u16 type = count == 8 ? 2 : 0;
     ActorEnItem00* item = z2_fixed_drop_spawn(ctxt, position, type);
     u16 giIndex = KeatonGrassCluster_GetGiIndex(ctxt, count);
@@ -28,4 +28,4 @@ ActorEnItem00* KeatonGrassCluster_RupeeSpawn(GlobalContext* ctxt, Vec3f* positio
         Rupee_CheckAndSetGiIndex(&item->base, ctxt, giIndex);
     }
     return item;
-}
+}*/

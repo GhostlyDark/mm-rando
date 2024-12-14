@@ -19,7 +19,7 @@ u16 Minifrog_GetGiIndex(ActorEnMinifrog* this, GlobalContext* ctxt) {
     return 0;
 }
 
-void Minifrog_GiveReward(Actor* actor, GlobalContext* ctxt, s16 frogIndex) {
+/*void Minifrog_GiveReward(Actor* actor, GlobalContext* ctxt, s16 frogIndex) {
     if (frogIndex <= 0 || frogIndex >= ARRAY_COUNT(giIndices)) {
         return;
     }
@@ -35,7 +35,7 @@ void Minifrog_GiveReward(Actor* actor, GlobalContext* ctxt, s16 frogIndex) {
     }
 
     SET_WEEKEVENTREG(isFrogReturnedFlags[frogIndex]);
-}
+}*/
 
 bool Minifrog_HasGivenReward(ActorEnMinifrog* this, GlobalContext* ctxt) {
     if (this->frogIndex == 0 || this->frogIndex >= ARRAY_COUNT(giIndices)) {
