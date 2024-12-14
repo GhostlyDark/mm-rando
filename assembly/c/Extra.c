@@ -1,6 +1,4 @@
 #include "Extra.h"
-#include "Reloc.h"
-#include "GiantMask.h"
 
 extern uint8_t CFG_WS_ENABLED;
 extern uint8_t CFG_DUAL_DPAD_ENABLED;

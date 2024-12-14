@@ -1,14 +1,4 @@
-#include <z64.h>
-#include "HudColors.h"
-#include "Misc.h"
-#include "QuestItemStorage.h"
-#include "QuestItems.h"
-#include "Reloc.h"
-#include "SaveFile.h"
-#include "macro.h"
-#include "controller.h"
 #include "PauseMenu.h"
-#include "Text.h"
 
 extern uint8_t CFG_WS_ENABLED;
 extern uint8_t CFG_CLOCK_CONTROL_ENABLED;
@@ -78,7 +68,7 @@ static void DrawIcon(GraphicsContext* gfx, const Vtx* vtx, u32 segAddr, u16 widt
     gSP1Quadrangle(db->p++, qidx + 0, qidx + 2, qidx + 3, qidx + 1, 0);
 }
 
-static void CycleQuestItem(GlobalContext* ctxt, u8 item, u8 slot) {
+/*static void CycleQuestItem(GlobalContext* ctxt, u8 item, u8 slot) {
     u8 orig = gSaveContext.perm.inv.items[slot];
     // Replace item in inventory.
     gSaveContext.perm.inv.items[slot] = item;
@@ -91,14 +81,14 @@ static void CycleQuestItem(GlobalContext* ctxt, u8 item, u8 slot) {
     }
     // Play sound effect.
     z2_PlaySfx(0x4808);
-}
+}*/
 
-static bool IsQuestItemInCorrectSlot(u8 item, int slot) {
+/*static bool IsQuestItemInCorrectSlot(u8 item, int slot) {
     int cell;
     return QuestItems_GetSlot(&cell, item) && cell == slot;
-}
+}*/
 
-static bool IsQuestItemWithStorageSelected(GlobalContext* ctxt) {
+/*static bool IsQuestItemWithStorageSelected(GlobalContext* ctxt) {
     // Get cell and selected item.
     s16 cell = ctxt->pauseCtx.cells1.item;
     u8 item = gSaveContext.perm.inv.items[cell];
@@ -116,7 +106,7 @@ static bool IsQuestItemWithStorageSelected(GlobalContext* ctxt) {
     bool side = ctxt->pauseCtx.sideButton != 0;
 
     return (quest && correctSlot && !side && item != ITEM_NONE && next != ITEM_NONE);
-}
+}*/
 
 /**
  * Hook function called during the draw loop for item icons on the "Select Item" subscreen.
@@ -128,7 +118,7 @@ void PauseMenu_SelectItemDrawIcon(GraphicsContext* gfx, u8 item, u16 width, u16 
     u32 origSegAddr = gItemTextureSegAddrTable[item];
     z2_PauseDrawItemIcon(gfx, origSegAddr, width, height, quadIdx);
     // If quest item storage, draw next quest item texture on bottom-right of current texture
-    if (MISC_CONFIG.flags.questItemStorage && IsQuestItemInCorrectSlot(item, slot)) {
+    /*if (MISC_CONFIG.flags.questItemStorage && IsQuestItemInCorrectSlot(item, slot)) {
         struct QuestItemStorage* storage = &SAVE_FILE_CONFIG.questStorage;
         if (QuestItemStorage_Has(storage, item)) {
             int sslot, unused;
@@ -139,7 +129,7 @@ void PauseMenu_SelectItemDrawIcon(GraphicsContext* gfx, u8 item, u16 width, u16 
                 DrawIcon(gfx, vtx, segAddr, width, height, quadIdx);
             }
         }
-    }
+    }*/
 }
 
 /**
@@ -148,7 +138,7 @@ void PauseMenu_SelectItemDrawIcon(GraphicsContext* gfx, u8 item, u16 width, u16 
  * Used to set the text on the A button to "Decide" for selecting quest items.
  **/
 void PauseMenu_SelectItemSubscreenAfterProcess(GlobalContext* ctxt) {
-    if (MISC_CONFIG.flags.questItemStorage) {
+    /*if (MISC_CONFIG.flags.questItemStorage) {
         u16 text = ctxt->interfaceCtx.buttonATextCurrent;
         if (IsQuestItemWithStorageSelected(ctxt)) {
             // Set A button text to "Decide" (only if on "Info")
@@ -161,7 +151,7 @@ void PauseMenu_SelectItemSubscreenAfterProcess(GlobalContext* ctxt) {
                 z2_HudSetAButtonText(ctxt, BUTTON_TEXT_INFO);
             }
         }
-    }
+    }*/
 }
 
 /**
@@ -170,7 +160,7 @@ void PauseMenu_SelectItemSubscreenAfterProcess(GlobalContext* ctxt) {
  * Checks if A button would be used to cycle quest items.
  **/
 bool PauseMenu_SelectItemProcessAButton(GlobalContext* ctxt, u32 curVal, u32 noneVal) {
-    if (MISC_CONFIG.flags.questItemStorage && IsQuestItemWithStorageSelected(ctxt)) {
+    /*if (MISC_CONFIG.flags.questItemStorage && IsQuestItemWithStorageSelected(ctxt)) {
         s16 cell = ctxt->pauseCtx.cells1.item;
         if (curVal != noneVal) {
             u8 item = (u8)curVal;
@@ -184,7 +174,7 @@ bool PauseMenu_SelectItemProcessAButton(GlobalContext* ctxt, u32 curVal, u32 non
         }
     }
     // Perform original check.
-    return curVal == noneVal;
+    return curVal == noneVal;*/
 }
 
 /**
@@ -193,13 +183,13 @@ bool PauseMenu_SelectItemProcessAButton(GlobalContext* ctxt, u32 curVal, u32 non
  * Checks if a quest item with storage is selected. If so, always show the A button as enabled.
  **/
 bool PauseMenu_SelectItemShowAButtonEnabled(GlobalContext* ctxt) {
-    if (MISC_CONFIG.flags.questItemStorage && IsQuestItemWithStorageSelected(ctxt)) {
+    /*if (MISC_CONFIG.flags.questItemStorage && IsQuestItemWithStorageSelected(ctxt)) {
         // If on a quest item with storage, show A button as enabled even during "Item Prompt."
         return true;
     } else {
         // Perform original check.
         return ctxt->msgCtx.unk11F10 == 0;
-    }
+    }*/
 }
 
 /**

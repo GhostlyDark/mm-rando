@@ -19,7 +19,7 @@ bool BombersNotebook_ShouldGrant(GlobalContext* ctxt, u8 notebookEntryIndex) {
     return sBombersNotebookEventMessages[notebookEntryIndex] != 0 && !MMR_GetGiFlag(baseGiIndex + notebookEntryIndex);
 }
 
-s8 BombersNotebook_Grant(GlobalContext* ctxt) {
+/*s8 BombersNotebook_Grant(GlobalContext* ctxt) {
     if (MISC_CONFIG.internal.vanillaLayout) {
         return 0;
     }
@@ -48,7 +48,7 @@ s8 BombersNotebook_Grant(GlobalContext* ctxt) {
         return 1;
     }
     return -1;
-}
+}*/
 
 /*
 2147 - Meeting the Bombers

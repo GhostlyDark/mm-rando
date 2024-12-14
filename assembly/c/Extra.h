@@ -6,6 +6,8 @@
 #include "Input.h"
 #include "Dpad.h"
 #include "PauseMenu.h"
+#include "Reloc.h"
+#include "GiantMask.h"
 
 void Handle_Extra_Functions(GlobalContext* ctxt);
 void Handle_Items_On_Dpad(GlobalContext* ctxt);

@@ -1,10 +1,10 @@
 #include <z64.h>
 #include <z64extended.h>
 //#include "Models.h"
-//#include "OverlayMenu.h"
+#include "OverlayMenu.h"
 #include "MMR.h"
 #include "Dpad.h"
-//#include "Music.h"
+#include "Music.h"
 //#include "WorldColors.h"
 #include "Extra.h"
 #include "PauseMenu.h"
@@ -76,8 +76,8 @@ static void CheckRespawn(GlobalContext* ctxt) {
  * Hook function called after game processes next frame.
  **/
 void Game_AfterUpdate(GlobalContext* ctxt) {
-    /*OverlayMenu_Draw(ctxt);
-    Music_Update(ctxt);
+    OverlayMenu_Draw(ctxt);
+    /*Music_Update(ctxt);
     if (Game_IsPlayerActor()) {
         MMR_ProcessItemQueue(ctxt);
         WorldColors_CycleTunic(ctxt);
@@ -100,7 +100,7 @@ void Game_DrawOverlay(GlobalContext* ctxt) {
         Dpad_Draw(ctxt, db);
     Draw_Clock_Controls(ctxt, db);
     Draw_Hud_Toggle(ctxt, db);
-    //Music_Draw(ctxt);
+    Music_DrawCurrentTrackName(ctxt, db);
     
     gDPPipeSync(db->p++);
 }

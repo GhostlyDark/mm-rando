@@ -1375,7 +1375,15 @@ typedef union {
             };
             u8 pad08;
         };
-        /* 0x09 */ UNK_TYPE1 pad0B[0x5];
+        /* 0x09 */ UNK_TYPE1 pad0B[0x4];
+        /* 0x0D */ union {
+            struct {
+                u8                         : 1;
+                u8 receivedOceansideWallet : 1;
+                u8                         : 6;
+            };
+            u8 pad0D;
+        };
         /* 0x0E */ union {
             struct {
                 u8                         : 4;

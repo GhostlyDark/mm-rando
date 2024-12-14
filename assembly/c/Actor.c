@@ -1,6 +1,6 @@
 #include <z64.h>
 #include "ActorExt.h"
-#include "Models.h"
+//#include "Models.h"
 #include "TargetHealth.h"
 #include "ItemDetector.h"
 
@@ -9,9 +9,9 @@
  **/
 void Actor_AfterDtor(Actor* actor, GlobalContext* ctxt) {
     // Free any Actor Extended data this actor may point to.
-    ActorExt_AfterActorDtor(actor);
+    //ActorExt_AfterActorDtor(actor);
     // Unload actor model information after dtor.
-    Models_AfterActorDtor(actor);
+    //Models_AfterActorDtor(actor);
 }
 
 void Actor_Init(Actor* actor, GlobalContext* ctxt) {
@@ -25,5 +25,5 @@ Actor* Actor_Spawn(GlobalContext* ctxt, u8 id, Vec3f pos, Vec3s rot, u16 params)
 
 void Actor_Update(Actor* actor, GlobalContext* ctxt) {
     actor->update(actor, ctxt);
-    ItemDetector_AfterActorUpdate(actor, ctxt);
+    //ItemDetector_AfterActorUpdate(actor, ctxt);
 }

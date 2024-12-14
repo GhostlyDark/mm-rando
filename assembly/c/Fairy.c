@@ -85,7 +85,7 @@ void Fairy_ResetInstanceUsage(void) {
     }
 }
 
-bool Fairy_Constructor(ActorEnElf* actor, GlobalContext* ctxt) {
+/*bool Fairy_Constructor(ActorEnElf* actor, GlobalContext* ctxt) {
     if (z2_get_collectible_flag(ctxt, actor->collectableFlag)) {
         return true;
     }
@@ -98,9 +98,9 @@ bool Fairy_Constructor(ActorEnElf* actor, GlobalContext* ctxt) {
         }
     }
     return false;
-}
+}*/
 
-void Fairy_GiveItem(ActorEnElf* actor, GlobalContext* ctxt) {
+/*void Fairy_GiveItem(ActorEnElf* actor, GlobalContext* ctxt) {
     u16 giIndex = Rupee_GetGiIndex(&actor->base);
     if (giIndex == 0) {
         if (!MISC_CONFIG.flags.fewerHealthDrops) {
@@ -115,7 +115,7 @@ void Fairy_GiveItem(ActorEnElf* actor, GlobalContext* ctxt) {
     }
     Rupee_SetGiIndex(&actor->base, 0);
     // return true;
-}
+}*/
 
 static void SpawnIceSmoke(ActorEnElf* actor, GlobalContext* ctxt) {
     Vec3f pos;
@@ -169,7 +169,7 @@ void Fairy_SetHealthAccumulator(ActorEnElf* actor, GlobalContext* ctxt) {
 
 const static u16 sBaseGiIndex = 0x4D9;
 
-Actor* Fairy_SpawnFairyGroupMember(ActorContext* actorCtxt, GlobalContext* ctxt, s16 id, f32 x, f32 y, f32 z, s16 rx,
+/*Actor* Fairy_SpawnFairyGroupMember(ActorContext* actorCtxt, GlobalContext* ctxt, s16 id, f32 x, f32 y, f32 z, s16 rx,
                    s16 ry, s16 rz, s32 params, s32 count) {
     Actor* fairy = z2_SpawnActor(actorCtxt, ctxt, id, x, y, z, rx, ry, rz, params);
 
@@ -178,4 +178,4 @@ Actor* Fairy_SpawnFairyGroupMember(ActorContext* actorCtxt, GlobalContext* ctxt,
     Rupee_CheckAndSetGiIndex(fairy, ctxt, giIndex);
 
     return fairy;
-}
+}*/

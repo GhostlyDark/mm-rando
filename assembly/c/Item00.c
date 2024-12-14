@@ -11,7 +11,7 @@ extern uint8_t CFG_BOSS_REMAINS_BOMBCHU_DROPS;
 
 bool gShouldForceItemSpawn = false;
 
-void Item00_Constructor(ActorEnItem00* actor, GlobalContext* ctxt) {
+/*void Item00_Constructor(ActorEnItem00* actor, GlobalContext* ctxt) {
     if (actor->collectableFlag != 0) {
         u16 giIndex = Rupee_CollectableFlagToGiIndex(actor->collectableFlag);
         if (giIndex > 0) {
@@ -20,9 +20,9 @@ void Item00_Constructor(ActorEnItem00* actor, GlobalContext* ctxt) {
             Rupee_SetDrawGiIndex(&actor->base, drawGiIndex);
         }
     }
-}
+}*/
 
-bool Item00_GiveItem(ActorEnItem00* actor, GlobalContext* ctxt) {
+/*bool Item00_GiveItem(ActorEnItem00* actor, GlobalContext* ctxt) {
     u16 giIndex = Rupee_GetGiIndex(&actor->base);
     if (giIndex == 0) {
         return false;
@@ -32,7 +32,7 @@ bool Item00_GiveItem(ActorEnItem00* actor, GlobalContext* ctxt) {
         Player_Pause(ctxt);
     }
     return true;
-}
+}*/
 
 u16 Item00_GetDespawnDelayAmount(ActorEnItem00* actor) {
     u16 giIndex = Rupee_GetDrawGiIndex(&actor->base);

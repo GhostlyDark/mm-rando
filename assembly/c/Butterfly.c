@@ -45,7 +45,7 @@ u16 Bufferfly_GetGiIndex(ActorEnButte* actor, GlobalContext* ctxt) {
     return giIndex;
 }
 
-ActorEnElf* Butterfly_FairySpawn(ActorEnButte* actor, GlobalContext* ctxt, s16 actorId, f32 posX, f32 posY, f32 posZ, s16 rotX,
+/*ActorEnElf* Butterfly_FairySpawn(ActorEnButte* actor, GlobalContext* ctxt, s16 actorId, f32 posX, f32 posY, f32 posZ, s16 rotX,
                    s16 rotY, s16 rotZ, s32 params) {
     ActorEnElf* fairy = (ActorEnElf*)z2_SpawnActor(&ctxt->actorCtx, ctxt, actorId, posX, posY, posZ, rotX, rotY, rotZ, params);
 
@@ -56,4 +56,4 @@ ActorEnElf* Butterfly_FairySpawn(ActorEnButte* actor, GlobalContext* ctxt, s16 a
     }
 
     return fairy;
-}
+}*/

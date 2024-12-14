@@ -337,7 +337,7 @@ static u8 ProcessCurrentReplacement(GlobalContext* ctxt, MessageCharacterProcess
 /**
  * TODO
  **/
-u8 Message_BeforeCharacterProcess(GlobalContext* ctxt, MessageCharacterProcessVariables* args) {
+/*u8 Message_BeforeCharacterProcess(GlobalContext* ctxt, MessageCharacterProcessVariables* args) {
     u16 index = ctxt->msgCtx.currentMessageCharIndex;
     u8 currentCharacter = ctxt->msgCtx.currentMessageRaw[index];
     if (currentCharacter == 0x09) {
@@ -553,7 +553,7 @@ u8 Message_BeforeCharacterProcess(GlobalContext* ctxt, MessageCharacterProcessVa
 
     ctxt->msgCtx.currentMessageDisplayed[args->outputIndex] = currentCharacter;
     return currentCharacter;
-}
+}*/
 
 u16 Message_GetStrayFairyIconColorIndex(MessageContext* msgCtx) {
     u16 id = msgCtx->currentMessageId;

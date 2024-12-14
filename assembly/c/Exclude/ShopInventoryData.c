@@ -89,7 +89,7 @@ static bool IsItemAtMaxCapacity(u8 item) {
     return false;
 }
 
-u8 ShopInventoryData_CheckPurchase(GlobalContext* ctxt, ActorEnGirlA* actor) {
+/*u8 ShopInventoryData_CheckPurchase(GlobalContext* ctxt, ActorEnGirlA* actor) {
     if (MISC_CONFIG.internal.vanillaLayout) {
         return actor->checkPurchase(ctxt, actor);
     }
@@ -117,9 +117,9 @@ u8 ShopInventoryData_CheckPurchase(GlobalContext* ctxt, ActorEnGirlA* actor) {
     }
 
     return 0;
-}
+}*/
 
-void ShopInventoryData_HandleInstantPurchase(GlobalContext* ctxt, ActorEnGirlA* actor) {
+/*void ShopInventoryData_HandleInstantPurchase(GlobalContext* ctxt, ActorEnGirlA* actor) {
     if (MISC_CONFIG.internal.vanillaLayout) {
         actor->handleInstantPurchase(ctxt, actor);
         return;
@@ -129,4 +129,4 @@ void ShopInventoryData_HandleInstantPurchase(GlobalContext* ctxt, ActorEnGirlA* 
     *MMR_GetItemEntryContext = *giEntry;
     z2_GiveItem(ctxt, giEntry->item);
     z2_AddRupees(-ctxt->msgCtx.messageCost);
-}
+}*/

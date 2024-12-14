@@ -2,7 +2,7 @@
 #include "MMR.h"
 #include "Misc.h"
 
-void ZoraLand_GiveReward(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
+/*void ZoraLand_GiveReward(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
     if (MISC_CONFIG.internal.vanillaLayout) {
         z2_AddRupees(90);
     } else {
@@ -11,4 +11,4 @@ void ZoraLand_GiveReward(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
         }
         z2_AddRupees(-10);
     }
-}
+}*/

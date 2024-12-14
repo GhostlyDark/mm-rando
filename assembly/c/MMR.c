@@ -7,7 +7,7 @@
 #include "Music.h"
 #include "SaveFile.h"
 
-struct MMRConfig MMR_CONFIG = {
+/*struct MMRConfig MMR_CONFIG = {
     .magic = MMR_CONFIG_MAGIC,
     .version = 1,
     .locations = {
@@ -33,7 +33,7 @@ struct MMRConfig MMR_CONFIG = {
         .lullaby = 0x74,
         .lullabyIntro = 0x44E,
     },
-};
+};*/
 
 static GetItemEntry* gGiTable = NULL;
 
@@ -109,7 +109,7 @@ void MMR_SetGiFlag(u16 giIndex) {
     *byte |= (1 << bit);
 }
 
-bool MMR_CheckBottleAndGetGiFlag(u16 giIndex, u16* newGiIndex) {
+/*bool MMR_CheckBottleAndGetGiFlag(u16 giIndex, u16* newGiIndex) {
     if (giIndex == MMR_CONFIG.locations.bottleRedPotion) {
         giIndex = 0x5B;
     } else if (giIndex == MMR_CONFIG.locations.bottleChateau) {
@@ -121,9 +121,9 @@ bool MMR_CheckBottleAndGetGiFlag(u16 giIndex, u16* newGiIndex) {
     }
     *newGiIndex = giIndex;
     return MMR_GetGiFlag(giIndex);
-}
+}*/
 
-u16 MMR_CheckProgressiveUpgrades(u16 giIndex, bool grant) {
+/*u16 MMR_CheckProgressiveUpgrades(u16 giIndex, bool grant) {
     if (giIndex == MMR_CONFIG.locations.swordKokiri || giIndex == MMR_CONFIG.locations.swordRazor || giIndex == MMR_CONFIG.locations.swordGilded) {
         u16 swordLevel = gSaveContext.perm.unk4C.equipment.sword;
         if (swordLevel == 0) {
@@ -216,7 +216,7 @@ u16 MMR_CheckProgressiveUpgrades(u16 giIndex, bool grant) {
         return MMR_CONFIG.locations.lullaby;
     }
     return giIndex;
-}
+}*/
 
 #define cycleRepeatableItemsLength 38
 static u8 cycleRepeatableItems[cycleRepeatableItemsLength] = {
@@ -259,7 +259,8 @@ static u8 cycleRepeatableItems[cycleRepeatableItemsLength] = {
     CUSTOM_ITEM_NOTHING,
     0xFF, // ? Stray Fairy ?
 };
-bool MMR_IsCycleRepeatable(u16 giIndex) {
+
+/*bool MMR_IsCycleRepeatable(u16 giIndex) {
     GetItemEntry* entry = MMR_GetGiEntry(giIndex);
     if (entry->item >= 0x28 && entry->item <= 0x30) {
         // Trade/Quest items
@@ -283,9 +284,9 @@ bool MMR_IsCycleRepeatable(u16 giIndex) {
         }
     }
     return false;
-}
+}*/
 
-u16 MMR_GetNewGiIndex(GlobalContext* ctxt, Actor* actor, u16 giIndex, bool grant) {
+/*u16 MMR_GetNewGiIndex(GlobalContext* ctxt, Actor* actor, u16 giIndex, bool grant) {
     if (gSaveContext.perm.cutscene != 0) {
         grant = false;
     }
@@ -320,12 +321,12 @@ u16 MMR_GetNewGiIndex(GlobalContext* ctxt, Actor* actor, u16 giIndex, bool grant
         }
     }
     return newGiIndex;
-}
+}*/
 
-GetItemEntry* MMR_GetNewGiEntry(u16 giIndex) {
+/*GetItemEntry* MMR_GetNewGiEntry(u16 giIndex) {
     u16 newGiIndex = MMR_GetNewGiIndex(NULL, NULL, giIndex, false);
     return MMR_GetGiEntry(newGiIndex);
-}
+}*/
 
 static u16 gFanfares[] = { 0x4831, 0x4855, 0x0922, 0x0924, 0x0037, 0x0039, 0x0052 };
 
@@ -334,7 +335,7 @@ static u16 itemQueue[ITEM_QUEUE_LENGTH] = { 0, 0, 0, 0 };
 static s16 forceProcessIndex = -1;
 static u16 lastProcessedGiIndex = 0;
 
-void MMR_ProcessItem(GlobalContext* ctxt, u16 giIndex, bool continueTextbox) {
+/*void MMR_ProcessItem(GlobalContext* ctxt, u16 giIndex, bool continueTextbox) {
     // TODO ideally instead of forcing MMR_GetNewGiIndex to not set grant to false by temporarily
     // setting the cutscene to 0, the `grant` parameter should be removed and assumed false in the function,
     // and the granting functionality should be done here, since this grants the item for real even
@@ -363,7 +364,7 @@ void MMR_ProcessItem(GlobalContext* ctxt, u16 giIndex, bool continueTextbox) {
         }
     }
     z2_GiveItem(ctxt, entry->item);
-}
+}*/
 
 u16 MMR_GetProcessingItemGiIndex(GlobalContext* ctxt) {
     ActorPlayer* player = GET_PLAYER(ctxt);
@@ -385,7 +386,7 @@ void MMR_ClearItemQueue() {
     forceProcessIndex = -1;
 }
 
-void MMR_ProcessItemQueue(GlobalContext* ctxt) {
+/*void MMR_ProcessItemQueue(GlobalContext* ctxt) {
     u16 giIndex = MMR_GetProcessingItemGiIndex(ctxt);
     if (giIndex) {
         u8 messageState = z2_GetMessageState(&ctxt->msgCtx);
@@ -407,7 +408,7 @@ void MMR_ProcessItemQueue(GlobalContext* ctxt) {
             }
         }
     }
-}
+}*/
 
 u32 MMR_GetMinorItemSfxId(u8 item) {
     if (item >= ITEM_GREEN_RUPEE && item <= ITEM_GOLD_RUPEE) {
@@ -437,12 +438,12 @@ u32 MMR_GetMinorItemSfxId(u8 item) {
     return 0;
 }
 
-void MMR_GiveItemToHold(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
+/*void MMR_GiveItemToHold(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
     ActorPlayer* player = GET_PLAYER(ctxt);
     player->stateFlags.state1 |= PLAYER_STATE1_HOLD;
     player->getItem = giIndex;
     player->givingActor = actor;
-}
+}*/
 
 bool MMR_IsActorFreestanding(s16 id) {
     if (id == 0xE || id == 0x25A || id == 0x1D2) {
@@ -451,7 +452,7 @@ bool MMR_IsActorFreestanding(s16 id) {
     return false;
 }
 
-bool MMR_GiveItemIfMinor(GlobalContext* ctxt, Actor* actor, u16 giIndex) {
+/*bool MMR_GiveItemIfMinor(GlobalContext* ctxt, Actor* actor, u16 giIndex) {
     bool isActorFreestanding = MMR_IsActorFreestanding(actor->id);
     giIndex = MMR_GetNewGiIndex(ctxt, NULL, giIndex, false);
     GetItemEntry* entry = MMR_GetGiEntry(giIndex);
@@ -485,7 +486,7 @@ bool MMR_GiveItemIfMinor(GlobalContext* ctxt, Actor* actor, u16 giIndex) {
     }
 
     return false;
-}
+}*/
 
 void MMR_QueueItem(u16 giIndex, bool forceProcess) {
     for (u8 i = 0; i < ITEM_QUEUE_LENGTH; i++) {
@@ -499,18 +500,18 @@ void MMR_QueueItem(u16 giIndex, bool forceProcess) {
     }
 }
 
-bool MMR_GiveItem(GlobalContext* ctxt, Actor* actor, u16 giIndex) {
+/*bool MMR_GiveItem(GlobalContext* ctxt, Actor* actor, u16 giIndex) {
     bool result = MMR_GiveItemIfMinor(ctxt, actor, giIndex);
     if (!result) {
         MMR_QueueItem(giIndex, false);
     }
     return result;
-}
+}*/
 
-bool MMR_IsRecoveryHeart(u16 giIndex) {
+/*bool MMR_IsRecoveryHeart(u16 giIndex) {
     // Check that resolved get-item index does not evaluate to recovery heart (0xA).
     return MMR_GetNewGiIndex(NULL, NULL, giIndex, false) == 0xA;
-}
+}*/
 
 void MMR_Init(void) {
     // If using vanilla layout, gi-table mod file is not included.

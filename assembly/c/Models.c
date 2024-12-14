@@ -86,7 +86,7 @@ static u8 FixGraphicId(u8 graphic) {
  * Get the Get-Item table entry for a specific index, and optionally load relevant entry values
  * into a model structure for drawing.
  **/
-static GetItemEntry* PrepareGiEntry(struct Model* model, GlobalContext* ctxt, u16 giIndex, bool resolve) {
+/*static GetItemEntry* PrepareGiEntry(struct Model* model, GlobalContext* ctxt, u16 giIndex, bool resolve) {
     if (resolve) {
         giIndex = MMR_GetNewGiIndex(ctxt, 0, giIndex, false);
     }
@@ -105,23 +105,23 @@ static GetItemEntry* PrepareGiEntry(struct Model* model, GlobalContext* ctxt, u1
     }
 
     return entry;
-}
+}*/
 
 /**
  * Load information from the Get-Item table using an index and draw the corresponding model.
  **/
-static void DrawFromGiTable(Actor* actor, GlobalContext* ctxt, f32 scale, u16 giIndex) {
+/*static void DrawFromGiTable(Actor* actor, GlobalContext* ctxt, f32 scale, u16 giIndex) {
     struct Model model;
     GetItemEntry* entry = PrepareGiEntry(&model, ctxt, giIndex, true);
     z2_CallSetupDList(gGlobalContext.state.gfxCtx);
     DrawModel(model, actor, ctxt, scale);
-}
+}*/
 
 /**
  * Load the actor model information for later reference if not already stored, and return in model
  * parameter.
  **/
-static bool SetLoadedActorModel(struct Model* model, Actor* actor, GlobalContext* ctxt, u16 giIndex) {
+/*static bool SetLoadedActorModel(struct Model* model, Actor* actor, GlobalContext* ctxt, u16 giIndex) {
     if (!LoadedModels_GetActorModel(model, NULL, actor)) {
         GetItemEntry* entry = PrepareGiEntry(model, ctxt, giIndex, true);
         LoadedModels_AddActorModel(*model, entry, actor);
@@ -129,7 +129,7 @@ static bool SetLoadedActorModel(struct Model* model, Actor* actor, GlobalContext
     } else {
         return false;
     }
-}
+}*/
 
 /**
  * Cause model to "float" using rotation value.
@@ -142,7 +142,7 @@ static void ApplyHoverFloat(Actor* actor, f32 base, f32 multiplier) {
 /**
  * Check if a model should rotate backwards (trap item).
  **/
-static bool ShouldRotateBackwards(GlobalContext* ctxt, u16 giIndex) {
+/*static bool ShouldRotateBackwards(GlobalContext* ctxt, u16 giIndex) {
     // Only rotate ice traps backwards if Ice Trap Quirks enabled.
     if (MISC_CONFIG.flags.iceTrapQuirks) {
         struct Model model;
@@ -151,35 +151,35 @@ static bool ShouldRotateBackwards(GlobalContext* ctxt, u16 giIndex) {
     } else {
         return false;
     }
-}
+}*/
 
 /**
  * Rotate an actor model by a specific amount.
  **/
-static void RotateActor(Actor* actor, GlobalContext* ctxt, u16 giIndex, u16 amount) {
+/*static void RotateActor(Actor* actor, GlobalContext* ctxt, u16 giIndex, u16 amount) {
     if (!ShouldRotateBackwards(ctxt, giIndex)) {
         actor->shape.rot.y += amount;
     } else {
         actor->shape.rot.y -= amount;
     }
-}
+}*/
 
 /**
  * Hook function for drawing Heart Piece actors as their new item.
  **/
-void Models_DrawHeartPiece(Actor* actor, GlobalContext* ctxt) {
+/*void Models_DrawHeartPiece(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 index = actor->params + 0x80;
         DrawFromGiTable(actor, ctxt, 22.0, index);
     } else {
         z2_DrawHeartPiece(actor, ctxt);
     }
-}
+}*/
 
 /**
  * Hook function for drawing En_Item00 actors as their new item.
  **/
-bool Models_DrawItem00(ActorEnItem00* actor, GlobalContext* ctxt) {
+/*bool Models_DrawItem00(ActorEnItem00* actor, GlobalContext* ctxt) {
     if (actor->unkState == 0x23 && Rupee_GetGiIndex(&actor->base) > 0) {
         if (actor->disappearCountdown == 0x0F) {
             return true;
@@ -211,7 +211,8 @@ bool Models_DrawItem00(ActorEnItem00* actor, GlobalContext* ctxt) {
     }
 
     return false;
-}
+}*/
+
 /**
  * Hook function for setting Item00 scale during constructor.
  **/
@@ -229,7 +230,7 @@ bool Models_Item00_SetActorSize(GlobalContext* ctxt, Actor* actor) {
 /**
  * Hook function for rotating En_Item00 actors (Heart Piece).
  **/
-void Models_RotateEnItem00(Actor* actor, GlobalContext* ctxt) {
+/*void Models_RotateEnItem00(Actor* actor, GlobalContext* ctxt) {
     u16 index = 0;
     if (MISC_CONFIG.drawFlags.freestanding) {
         // MMR Heart Pieces use masked variable 0x1D or greater.
@@ -244,7 +245,7 @@ void Models_RotateEnItem00(Actor* actor, GlobalContext* ctxt) {
     } else {
         actor->shape.rot.y += 0x3C0;
     }
-}
+}*/
 
 bool Models_ShouldEnItem00Rotate(ActorEnItem00* actor, GlobalContext* ctxt) {
     if (actor->base.params < 3) {
@@ -291,26 +292,26 @@ static u16 GetSkulltulaTokenGiIndex(Actor* actor, GlobalContext* ctxt) {
 /**
  * Hook function for drawing Skulltula Token actors as their new item.
  **/
-void Models_DrawSkulltulaToken(Actor* actor, GlobalContext* ctxt) {
+/*void Models_DrawSkulltulaToken(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 giIndex = GetSkulltulaTokenGiIndex(actor, ctxt);
         DrawFromGiTable(actor, ctxt, 1.0, giIndex);
     } else {
         DrawModelLowLevel(actor, ctxt, GRAPHIC_ST_TOKEN - 1);
     }
-}
+}*/
 
 /**
  * Hook function for rotating Skulltula Token actors.
  **/
-void Models_RotateSkulltulaToken(Actor* actor, GlobalContext* ctxt) {
+/*void Models_RotateSkulltulaToken(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 giIndex = GetSkulltulaTokenGiIndex(actor, ctxt);
         RotateActor(actor, ctxt, giIndex, 0x38E);
     } else {
         actor->shape.rot.y += 0x38E;
     }
-}
+}*/
 
 /**
  * Check whether or not a model draws a Stray Fairy.
@@ -350,7 +351,7 @@ static bool ShouldOverrideStrayFairyDraw(Actor* actor, GlobalContext* ctxt) {
 /**
  * Hook function called before Stray Fairy actor's main function.
  **/
-void Models_BeforeStrayFairyMain(Actor* actor, GlobalContext* ctxt) {
+/*void Models_BeforeStrayFairyMain(Actor* actor, GlobalContext* ctxt) {
     // If not a Stray Fairy, rotate like En_Item00 does.
     bool draw = ShouldOverrideStrayFairyDraw(actor, ctxt);
     if (MISC_CONFIG.drawFlags.freestanding && draw) {
@@ -366,14 +367,14 @@ void Models_BeforeStrayFairyMain(Actor* actor, GlobalContext* ctxt) {
             }
         }
     }
-}
+}*/
 
 /**
  * Hook function for drawing Stray Fairy actors as their new item.
  *
  * Return true if overriding functionality, false if using original functionality.
  **/
-bool Models_DrawStrayFairy(Actor* actor, GlobalContext* ctxt) {
+/*bool Models_DrawStrayFairy(Actor* actor, GlobalContext* ctxt) {
     bool draw = ShouldOverrideStrayFairyDraw(actor, ctxt);
     if (MISC_CONFIG.drawFlags.freestanding && draw) {
         GetItemEntry* entry;
@@ -398,7 +399,7 @@ bool Models_DrawStrayFairy(Actor* actor, GlobalContext* ctxt) {
     } else {
         return false;
     }
-}
+}*/
 
 /**
  * Get the Get-Item index for a Heart Container actor.
@@ -422,7 +423,7 @@ static u16 GetHeartContainerGiIndex(GlobalContext* ctxt) {
  *
  * Return true if overriding functionality, false if using original functionality.
  **/
-bool Models_DrawHeartContainer(Actor* actor, GlobalContext* ctxt) {
+/*bool Models_DrawHeartContainer(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 index = GetHeartContainerGiIndex(ctxt);
         DrawFromGiTable(actor, ctxt, 1.0, index);
@@ -430,19 +431,19 @@ bool Models_DrawHeartContainer(Actor* actor, GlobalContext* ctxt) {
     } else {
         return false;
     }
-}
+}*/
 
 /**
  * Hook function for rotating Heart Container actors.
  **/
-void Models_RotateHeartContainer(Actor* actor, GlobalContext* ctxt) {
+/*void Models_RotateHeartContainer(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 giIndex = GetHeartContainerGiIndex(ctxt);
         RotateActor(actor, ctxt, giIndex, 0x400);
     } else {
         actor->shape.rot.y += 0x400;
     }
-}
+}*/
 
 /**
  * Hook function for replacing original behaviour of the Get-Item draw function for Boss Remains,
@@ -469,18 +470,18 @@ void Models_WriteBossRemainsObjectSegment(GlobalContext* ctxt, u32 graphicIdMinu
     }
 }
 
-s16 Models_GetBossRemainRotation(Actor* actor, GlobalContext* ctxt) {
+/*s16 Models_GetBossRemainRotation(Actor* actor, GlobalContext* ctxt) {
     s32 frameCount = ctxt->sceneFrameCount;
     if (MISC_CONFIG.drawFlags.freestanding && ShouldRotateBackwards(ctxt, Rupee_GetDrawGiIndex(actor))) {
         frameCount = -frameCount;
     }
     return (s16)(frameCount*1000);
-}
+}*/
 
 /**
  * Hook function for drawing Boss Remain actors as their new item.
  **/
-void Models_DrawBossRemains(Actor* actor, GlobalContext* ctxt, u32 graphicIdMinus1) {
+/*void Models_DrawBossRemains(Actor* actor, GlobalContext* ctxt, u32 graphicIdMinus1) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         //DrawFromGiTable(actor, ctxt, 1.0, 0x448 + actor->params);
 
@@ -499,7 +500,7 @@ void Models_DrawBossRemains(Actor* actor, GlobalContext* ctxt, u32 graphicIdMinu
     } else {
         DrawModelLowLevel(actor, ctxt, graphicIdMinus1);
     }
-}
+}*/
 
 /**
  * Check whether or not a model draws a Moon's Tear.
@@ -511,17 +512,17 @@ static bool IsMoonsTearModel(struct Model model) {
 /**
  * Check if a Moon's Tear actor should be drawn as its Get-Item.
  **/
-static bool ShouldOverrideMoonsTearDraw(Actor* actor, GlobalContext* ctxt) {
+/*static bool ShouldOverrideMoonsTearDraw(Actor* actor, GlobalContext* ctxt) {
     // Check if a vanilla Moon's Tear is being drawn.
     struct Model model;
     GetItemEntry* entry = PrepareGiEntry(&model, ctxt, 0x96, true);
     return !IsMoonsTearModel(model);
-}
+}*/
 
 /**
  * Hook function called before a Moon's Tear actor's main function.
  **/
-void Models_BeforeMoonsTearMain(Actor* actor, GlobalContext* ctxt) {
+/*void Models_BeforeMoonsTearMain(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         if (ShouldOverrideMoonsTearDraw(actor, ctxt)) {
             // If the Moon's Tear on display, reposition and rotate.
@@ -534,12 +535,12 @@ void Models_BeforeMoonsTearMain(Actor* actor, GlobalContext* ctxt) {
             }
         }
     }
-}
+}*/
 
 /**
  * Hook function for drawing Moon's Tear actor as its new item.
  **/
-bool Models_DrawMoonsTear(Actor* actor, GlobalContext* ctxt) {
+/*bool Models_DrawMoonsTear(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         if (ShouldOverrideMoonsTearDraw(actor, ctxt)) {
             struct Model model;
@@ -558,30 +559,30 @@ bool Models_DrawMoonsTear(Actor* actor, GlobalContext* ctxt) {
         }
     }
     return false;
-}
+}*/
 
 /**
  * Hook function for drawing Lab Fish Heart Piece actor as its new item.
  **/
-bool Models_DrawLabFishHeartPiece(Actor* actor, GlobalContext* ctxt) {
+/*bool Models_DrawLabFishHeartPiece(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         DrawFromGiTable(actor, ctxt, 25.0, 0x112);
         return true;
     } else {
         return false;
     }
-}
+}*/
 
 /**
  * Hook function for rotating Lab Fish Heart Piece actor.
  **/
-void Models_RotateLabFishHeartPiece(Actor* actor, GlobalContext* ctxt) {
+/*void Models_RotateLabFishHeartPiece(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         RotateActor(actor, ctxt, 0x112, 0x3E8);
     } else {
         actor->shape.rot.y += 0x3E8;
     }
-}
+}*/
 
 /**
  * Check whether or not a model draws a Seahorse.
@@ -593,31 +594,31 @@ static bool IsSeahorseModel(struct Model model) {
 /**
  * Check if a Seahorse actor should be drawn as its Get-Item.
  **/
-static bool ShouldOverrideSeahorseDraw(Actor* actor, GlobalContext* ctxt) {
+/*static bool ShouldOverrideSeahorseDraw(Actor* actor, GlobalContext* ctxt) {
     // Check if a vanilla Seahorse is being drawn.
     struct Model model;
     GetItemEntry* entry = PrepareGiEntry(&model, ctxt, 0x95, true);
     // Ensure that only the fishtank Seahorse is being drawn over.
     bool isFishtank = actor->params == 0xFFFF;
     return isFishtank && !IsSeahorseModel(model);
-}
+}*/
 
 /**
  * Hook function called before a Seahorse actor's main function.
  **/
-void Models_BeforeSeahorseMain(Actor* actor, GlobalContext* ctxt) {
+/*void Models_BeforeSeahorseMain(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         if (ShouldOverrideSeahorseDraw(actor, ctxt)) {
             RotateActor(actor, ctxt, 0x95, 0x3C0);
             ApplyHoverFloat(actor, -1000.0, 1000.0);
         }
     }
-}
+}*/
 
 /**
  * Hook function for drawing Seahorse actor as its new item.
  **/
-bool Models_DrawSeahorse(Actor* actor, GlobalContext* ctxt) {
+/*bool Models_DrawSeahorse(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         if (ShouldOverrideSeahorseDraw(actor, ctxt)) {
             DrawFromGiTable(actor, ctxt, 50.0, 0x95);
@@ -626,17 +627,17 @@ bool Models_DrawSeahorse(Actor* actor, GlobalContext* ctxt) {
     }
 
     return false;
-}
+}*/
 
-void Models_DrawShopInventory(ActorEnGirlA* actor, GlobalContext* ctxt, u32 graphicIdMinus1) {
+/*void Models_DrawShopInventory(ActorEnGirlA* actor, GlobalContext* ctxt, u32 graphicIdMinus1) {
     if (MISC_CONFIG.drawFlags.shopModels) {
         DrawFromGiTable(&actor->base, ctxt, 1.0, actor->giIndex);
     } else {
         DrawModelLowLevel(&actor->base, ctxt, graphicIdMinus1);
     }
-}
+}*/
 
-bool Models_DrawScopecoin(Actor* actor, GlobalContext* ctxt) {
+/*bool Models_DrawScopecoin(Actor* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 giIndex = Scopecoin_GetGiIndex(actor);
         if (giIndex > 0) {
@@ -646,9 +647,9 @@ bool Models_DrawScopecoin(Actor* actor, GlobalContext* ctxt) {
     }
 
     return false;
-}
+}*/
 
-void Models_RotateScopecoin(Actor* actor, GlobalContext* ctxt) {
+/*void Models_RotateScopecoin(Actor* actor, GlobalContext* ctxt) {
     u16 index = 0;
     if (MISC_CONFIG.drawFlags.freestanding) {
         index = Scopecoin_GetGiIndex(actor);
@@ -658,9 +659,9 @@ void Models_RotateScopecoin(Actor* actor, GlobalContext* ctxt) {
     } else {
         actor->shape.rot.y += 0x1F4;
     }
-}
+}*/
 
-bool Models_DrawScRuppe(ActorEnScRuppe* actor, GlobalContext* ctxt) {
+/*bool Models_DrawScRuppe(ActorEnScRuppe* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 giIndex = Rupee_GetGiIndex(&actor->base);
         if (giIndex > 0) {
@@ -681,9 +682,9 @@ bool Models_DrawScRuppe(ActorEnScRuppe* actor, GlobalContext* ctxt) {
     }
 
     return false;
-}
+}*/
 
-void Models_RotateScRuppe(Actor* actor, GlobalContext* ctxt) {
+/*void Models_RotateScRuppe(Actor* actor, GlobalContext* ctxt) {
     u16 index = 0;
     if (MISC_CONFIG.drawFlags.freestanding) {
         index = Rupee_GetDrawGiIndex(actor);
@@ -693,9 +694,9 @@ void Models_RotateScRuppe(Actor* actor, GlobalContext* ctxt) {
     } else {
         actor->shape.rot.y += 0x1F4;
     }
-}
+}*/
 
-bool Models_DrawDekuScrubPlaygroundRupee(ActorEnGamelupy* actor, GlobalContext* ctxt) {
+/*bool Models_DrawDekuScrubPlaygroundRupee(ActorEnGamelupy* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 giIndex = Rupee_GetGiIndex(&actor->base);
         if (giIndex > 0) {
@@ -716,9 +717,9 @@ bool Models_DrawDekuScrubPlaygroundRupee(ActorEnGamelupy* actor, GlobalContext* 
     }
 
     return false;
-}
+}*/
 
-void Models_RotateDekuScrubPlaygroundRupee(Actor* actor, GlobalContext* ctxt) {
+/*void Models_RotateDekuScrubPlaygroundRupee(Actor* actor, GlobalContext* ctxt) {
     u16 index = 0;
     if (MISC_CONFIG.drawFlags.freestanding) {
         index = Rupee_GetDrawGiIndex(actor);
@@ -728,9 +729,9 @@ void Models_RotateDekuScrubPlaygroundRupee(Actor* actor, GlobalContext* ctxt) {
     } else {
         actor->shape.rot.y += 0x1F4;
     }
-}
+}*/
 
-void Models_DrawCutsceneItem(GlobalContext* ctxt, Actor* actor, Vec3s* posRot, Vec3s* posRot2, f32 scale, u16 giIndex) {
+/*void Models_DrawCutsceneItem(GlobalContext* ctxt, Actor* actor, Vec3s* posRot, Vec3s* posRot2, f32 scale, u16 giIndex) {
     // z2_PushMatrixStackCopy();
 
     Vec3f pos;
@@ -757,9 +758,9 @@ void Models_DrawCutsceneItem(GlobalContext* ctxt, Actor* actor, Vec3s* posRot, V
     DrawFromGiTable(actor, ctxt, scale, giIndex);
 
     // z2_PopMatrixStack();
-}
+}*/
 
-void Models_DrawCutsceneMask(GlobalContext* ctxt, Actor* actor, Vec3s* posRot, u16 giIndex) {
+/*void Models_DrawCutsceneMask(GlobalContext* ctxt, Actor* actor, Vec3s* posRot, u16 giIndex) {
     Vec3s posRot2[2] = {
         {
             .x = 1024,
@@ -774,36 +775,36 @@ void Models_DrawCutsceneMask(GlobalContext* ctxt, Actor* actor, Vec3s* posRot, u
     };
 
     Models_DrawCutsceneItem(ctxt, actor, posRot, posRot2, 22.0, giIndex);
-}
+}*/
 
-void Models_DrawZoraMask(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable, bool* overrideLimbDraw, void* postLimbDraw, Actor* actor) {
+/*void Models_DrawZoraMask(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable, bool* overrideLimbDraw, void* postLimbDraw, Actor* actor) {
     if (!MISC_CONFIG.drawFlags.freestanding) {
         z2_SkelAnime_DrawLimb(ctxt, skeleton, limbDrawTable, overrideLimbDraw, postLimbDraw, actor);
         return;
     }
 
     Models_DrawCutsceneMask(ctxt, actor, limbDrawTable, 0x7A);
-}
+}*/
 
-void Models_DrawGoronMask(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable, bool* overrideLimbDraw, void* postLimbDraw, Actor* actor) {
+/*void Models_DrawGoronMask(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable, bool* overrideLimbDraw, void* postLimbDraw, Actor* actor) {
     if (!MISC_CONFIG.drawFlags.freestanding) {
         z2_SkelAnime_DrawLimb(ctxt, skeleton, limbDrawTable, overrideLimbDraw, postLimbDraw, actor);
         return;
     }
 
     Models_DrawCutsceneMask(ctxt, actor, limbDrawTable, 0x79);
-}
+}*/
 
-void Models_DrawGibdoMask(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable, s32 dListCount, bool* overrideLimbDraw, bool* postLimbDraw, Actor* actor) {
+/*void Models_DrawGibdoMask(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable, s32 dListCount, bool* overrideLimbDraw, bool* postLimbDraw, Actor* actor) {
     if (!MISC_CONFIG.drawFlags.freestanding) {
         z2_SkelAnime_DrawLimb2(ctxt, skeleton, limbDrawTable, dListCount, overrideLimbDraw, postLimbDraw, actor);
         return;
     }
 
     Models_DrawCutsceneMask(ctxt, actor, limbDrawTable, 0x87);
-}
+}*/
 
-void Models_DrawOcarina(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable, s32 dListCount, bool* overrideLimbDraw, bool* postLimbDraw, void* unkDraw, Actor* actor) {
+/*void Models_DrawOcarina(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable, s32 dListCount, bool* overrideLimbDraw, bool* postLimbDraw, void* unkDraw, Actor* actor) {
     if (!MISC_CONFIG.drawFlags.freestanding) {
         z2_SkelAnime_DrawLimb3(ctxt, skeleton, limbDrawTable, dListCount, overrideLimbDraw, postLimbDraw, unkDraw, actor);
         return;
@@ -823,9 +824,9 @@ void Models_DrawOcarina(GlobalContext* ctxt, u32* skeleton, Vec3s* limbDrawTable
     };
 
     Models_DrawCutsceneItem(ctxt, actor, limbDrawTable, posRot2, 16.0, 0x4C);
-}
+}*/
 
-void Models_DrawOcarinaLimb(GlobalContext* ctxt, Actor* actor) {
+/*void Models_DrawOcarinaLimb(GlobalContext* ctxt, Actor* actor) {
     if (!MISC_CONFIG.drawFlags.freestanding) {
         gSPDisplayList(ctxt->state.gfxCtx->polyOpa.p++, 0x0600CAD0);
         return;
@@ -864,9 +865,9 @@ void Models_DrawOcarinaLimb(GlobalContext* ctxt, Actor* actor) {
 
     // Restore matrix pointer for Skull Kid's hand.
     *(ctxt->state.gfxCtx->polyOpa.p++) = backup;
-}
+}*/
 
-static void DrawSmithyGetItem(GlobalContext* ctxt, u16 giIndex) {
+/*static void DrawSmithyGetItem(GlobalContext* ctxt, u16 giIndex) {
     struct Model model;
     GetItemEntry* entry = PrepareGiEntry(&model, ctxt, giIndex, true);
     if (model.graphicId == 0 && model.objectId == 0) {
@@ -902,9 +903,9 @@ static void DrawSmithyGetItem(GlobalContext* ctxt, u16 giIndex) {
         DispBuf* opa = &ctxt->state.gfxCtx->polyOpa;
         gSPDisplayList(opa->p++, 0x06000000 | smithyModel.displayListOffset);
     }
-}
+}*/
 
-bool Models_DrawSmithyItem(Actor* actor, GlobalContext* ctxt) {
+/*bool Models_DrawSmithyItem(Actor* actor, GlobalContext* ctxt) {
     if (!MISC_CONFIG.drawFlags.freestanding){
         return false;
     }
@@ -934,9 +935,9 @@ bool Models_DrawSmithyItem(Actor* actor, GlobalContext* ctxt) {
 
     z2_Gfx_8012C28C(ctxt->state.gfxCtx);
     return true;
-}
+}*/
 
-void Models_DrawKeatonMask(GlobalContext* ctxt, ActorPlayer* actor) {
+/*void Models_DrawKeatonMask(GlobalContext* ctxt, ActorPlayer* actor) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         if (actor->mask == 0x05) {
             if (MISC_CONFIG.MMRbytes.npcKafeiReplaceMask == 0) {
@@ -948,9 +949,9 @@ void Models_DrawKeatonMask(GlobalContext* ctxt, ActorPlayer* actor) {
             }
         }
     }
-}
+}*/
 
-void Models_DrawDonGeroMask(GlobalContext* ctxt, Actor* actor) {
+/*void Models_DrawDonGeroMask(GlobalContext* ctxt, Actor* actor) {
     if (MISC_CONFIG.drawFlags.freestanding && !MISC_CONFIG.drawFlags.drawDonGeroMask) {
         z2_PushMatrixStackCopy();
 
@@ -971,9 +972,9 @@ void Models_DrawDonGeroMask(GlobalContext* ctxt, Actor* actor) {
         z2_Gfx_8012C28C(ctxt->state.gfxCtx);
         gSPDisplayList(ctxt->state.gfxCtx->polyOpa.p++, 0x06004DB0);
     }
-}
+}*/
 
-void Models_DrawPostmanHat(Actor* actor, DispBuf* buf, GlobalContext* ctxt) {
+/*void Models_DrawPostmanHat(Actor* actor, DispBuf* buf, GlobalContext* ctxt) {
     // The skeleton function used doesn't update the polyOpa buffer pointer until
     // it's entirely done, so we're updating it here. This -should- be okay, the hook
     // is at the end of the postman's limbs and draw functions.
@@ -997,7 +998,7 @@ void Models_DrawPostmanHat(Actor* actor, DispBuf* buf, GlobalContext* ctxt) {
     }
     // update the stack-stored polyOpa pointer so the draw function finishes properly
     buf->p = ctxt->state.gfxCtx->polyOpa.p;
-}
+}*/
 
 bool Models_SetEnSshMatrix(GlobalContext* ctxt, ActorEnSsh* actor) {
     if (MISC_CONFIG.drawFlags.freestanding && !MISC_CONFIG.drawFlags.drawMaskOfTruth) {
@@ -1019,14 +1020,14 @@ bool Models_SetEnSshMatrix(GlobalContext* ctxt, ActorEnSsh* actor) {
     }
 }
 
-void Models_DrawEnSshMaskOfTruth(GlobalContext* ctxt, ActorEnSsh* actor) {
+/*void Models_DrawEnSshMaskOfTruth(GlobalContext* ctxt, ActorEnSsh* actor) {
     if (MISC_CONFIG.drawFlags.freestanding && !MISC_CONFIG.drawFlags.drawMaskOfTruth) {
         z2_CopyToMatrixStackTop(&actor->mtx0);
         DrawFromGiTable(&actor->base, ctxt, 12.0, 0x8A);
     }
-}
+}*/
 
-u16 Models_DrawEnSthMaskOfTruth(GlobalContext* ctxt, ActorEnSth* actor) {
+/*u16 Models_DrawEnSthMaskOfTruth(GlobalContext* ctxt, ActorEnSth* actor) {
     if (actor->maskFlag & 0x0001) {
         if (MISC_CONFIG.drawFlags.freestanding && !MISC_CONFIG.drawFlags.drawMaskOfTruth) {
             Vec3f pos;
@@ -1049,7 +1050,7 @@ u16 Models_DrawEnSthMaskOfTruth(GlobalContext* ctxt, ActorEnSth* actor) {
     } else {
         return 0x0000;
     }
-}
+}*/
 
 void Models_SetEnInHead(u32 *buf) {
     if (!MISC_CONFIG.drawFlags.freestanding || MISC_CONFIG.drawFlags.drawGaroMask) {
@@ -1058,7 +1059,7 @@ void Models_SetEnInHead(u32 *buf) {
     }
 }
 
-void Models_DrawGaroMask(GlobalContext* ctxt, ActorEnIn* actor) {
+/*void Models_DrawGaroMask(GlobalContext* ctxt, ActorEnIn* actor) {
     if (actor->modelFlag & 4) {
         if (MISC_CONFIG.drawFlags.freestanding && !MISC_CONFIG.drawFlags.drawGaroMask) {
             z2_CopyToMatrixStackTop(&actor->mtx0);
@@ -1078,9 +1079,9 @@ void Models_DrawGaroMask(GlobalContext* ctxt, ActorEnIn* actor) {
             DrawFromGiTable(&actor->base, ctxt, 25.0, 0x81);
         }
     }
-}
+}*/
 
-void Models_DrawPendantOfMemories(GlobalContext* ctxt, ActorPlayer* actor) {
+/*void Models_DrawPendantOfMemories(GlobalContext* ctxt, ActorPlayer* actor) {
     if (MISC_CONFIG.drawFlags.freestanding && !MISC_CONFIG.drawFlags.drawPendant) {
         z2_PushMatrixStackCopy();
         Vec3f pos;
@@ -1100,9 +1101,9 @@ void Models_DrawPendantOfMemories(GlobalContext* ctxt, ActorPlayer* actor) {
     } else {
         gSPDisplayList(ctxt->state.gfxCtx->polyOpa.p++, 0x0600CB60);
     }
-}
+}*/
 
-void Models_DrawPendantInHand(GlobalContext* ctxt, ActorPlayer* actor) {
+/*void Models_DrawPendantInHand(GlobalContext* ctxt, ActorPlayer* actor) {
     if (MISC_CONFIG.drawFlags.freestanding && (!MISC_CONFIG.drawFlags.drawPendant) && ((actor->stateFlags.state1 & PLAYER_STATE1_GET_ITEM) == 0)) {
         z2_TranslateMatrix(((z2_Math_SinS(actor->base.shape.rot.y)) * 3.3) + actor->bodyPartsPos[0xC].x,
                             actor->bodyPartsPos[0xC].y + 8.0,
@@ -1124,9 +1125,9 @@ void Models_DrawPendantInHand(GlobalContext* ctxt, ActorPlayer* actor) {
     } else {
     z2_Player_DrawGetItem(ctxt, actor);
     }
-}
+}*/
 
-bool Models_DrawFairy(ActorEnElf* actor, GlobalContext* ctxt) {
+/*bool Models_DrawFairy(ActorEnElf* actor, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.freestanding) {
         u16 giIndex = Rupee_GetGiIndex(&actor->base);
         if (giIndex > 0) {
@@ -1147,7 +1148,7 @@ bool Models_DrawFairy(ActorEnElf* actor, GlobalContext* ctxt) {
     }
 
     return false;
-}
+}*/
 
 static z_Matrix sBombShopKeeperHandMtx;
 
@@ -1159,7 +1160,7 @@ void Models_SetBombShopkeeperHand(GlobalContext* ctxt, s32 limbIndex, Gfx** dLis
     }
 }
 
-void Models_BombShopkeeperDrawBomb(Actor* this, GlobalContext* ctxt) {
+/*void Models_BombShopkeeperDrawBomb(Actor* this, GlobalContext* ctxt) {
     if (MISC_CONFIG.drawFlags.shopModels) {
         z2_CopyToMatrixStackTop(&sBombShopKeeperHandMtx);
 
@@ -1181,7 +1182,7 @@ void Models_BombShopkeeperDrawBomb(Actor* this, GlobalContext* ctxt) {
         z2_CallSetupDList(ctxt->state.gfxCtx);
         DrawModel(model, this, ctxt, 25.0);
     }
-}
+}*/
 
 void Models_AfterActorDtor(Actor* actor) {
     if (MISC_CONFIG.drawFlags.freestanding) {

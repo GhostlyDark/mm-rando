@@ -1,7 +1,7 @@
 #include <z64.h>
 #include "BaseRupee.h"
 
-ActorEnItem00* RupeeCluster_SpawnRupee(GlobalContext* ctxt, Actor* spawner, ActorEnItem00* item, u8 count) {
+/*ActorEnItem00* RupeeCluster_SpawnRupee(GlobalContext* ctxt, Actor* spawner, ActorEnItem00* item, u8 count) {
     u16 giIndex;
     if (spawner->params == 0x4013) {
         // Deku Palace
@@ -17,4 +17,4 @@ ActorEnItem00* RupeeCluster_SpawnRupee(GlobalContext* ctxt, Actor* spawner, Acto
         Rupee_CheckAndSetGiIndex(&item->base, ctxt, giIndex);
     }
     return item;
-}
+}*/

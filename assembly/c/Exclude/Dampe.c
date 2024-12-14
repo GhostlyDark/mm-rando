@@ -2,7 +2,7 @@
 #include "MMR.h"
 #include "Misc.h"
 
-void Dampe_GiveReward(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
+/*void Dampe_GiveReward(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
     if (MISC_CONFIG.internal.vanillaLayout) {
         z2_AddRupees(30);
     } else {
@@ -10,4 +10,4 @@ void Dampe_GiveReward(Actor* actor, GlobalContext* ctxt, u16 giIndex) {
             MMR_GiveItemToHold(actor, ctxt, giIndex);
         }
     }
-}
+}*/

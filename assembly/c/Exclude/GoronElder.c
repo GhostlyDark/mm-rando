@@ -9,7 +9,7 @@ bool GoronElder_HasGivenReward(bool override) {
     return override || MMR_GetGiFlag(0x44E);
 }
 
-void GoronElder_GiveReward(ActorEnJg* actor, GlobalContext* ctxt) {
+/*void GoronElder_GiveReward(ActorEnJg* actor, GlobalContext* ctxt) {
     // Displaced code:
     actor->csAction = 99;
     actor->freezeTimer = 1000;
@@ -19,4 +19,4 @@ void GoronElder_GiveReward(ActorEnJg* actor, GlobalContext* ctxt) {
     }
 
     MMR_GiveItemToHold(&actor->base, ctxt, 0x44E);
-}
+}*/

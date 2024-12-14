@@ -26,11 +26,11 @@ u16 Scopecoin_GetGiIndex(Actor* actor) {
     return giIndex;
 }
 
-ActorEnItem00* Scopecoin_RupeeSpawn(GlobalContext* ctxt, Actor* actor, u16 type) {
+/*ActorEnItem00* Scopecoin_RupeeSpawn(GlobalContext* ctxt, Actor* actor, u16 type) {
     ActorEnItem00* item = z2_fixed_drop_spawn(ctxt, &actor->currPosRot.pos, type);
     u16 giIndex = Scopecoin_GetGiIndex(actor);
     if (giIndex > 0) {
         Rupee_CheckAndSetGiIndex(&item->base, ctxt, giIndex);
     }
     return item;
-}
+}*/

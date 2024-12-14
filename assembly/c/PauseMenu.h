@@ -3,15 +3,14 @@
 
 #include <z64.h>
 #include <z64extended.h>
-#include "HudColors.h"
 #include "Misc.h"
-#include "QuestItemStorage.h"
-#include "QuestItems.h"
 #include "Reloc.h"
-#include "SaveFile.h"
 #include "Input.h"
 #include "Dpad.h"
 #include "Sprite.h"
+#include "Text.h"
+#include "macro.h"
+#include "controller.h"
 
 #define TIME_ONE_HOUR            (0x2000                 / 3)
 #define NEW_TIME_HOURS           (new_time               / TIME_ONE_HOUR)

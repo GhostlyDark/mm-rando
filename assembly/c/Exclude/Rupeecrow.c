@@ -2,7 +2,7 @@
 #include "BaseRupee.h"
 #include "MMR.h"
 
-ActorEnItem00* Rupeecrow_AfterRupeeSpawn(GlobalContext* ctxt, ActorEnRuppecrow* actor, ActorEnItem00* item) {
+/*ActorEnItem00* Rupeecrow_AfterRupeeSpawn(GlobalContext* ctxt, ActorEnRuppecrow* actor, ActorEnItem00* item) {
     u16 giIndex;
     if ((item->base.params & 0x03) == 1) {
         // blue rupee
@@ -13,4 +13,4 @@ ActorEnItem00* Rupeecrow_AfterRupeeSpawn(GlobalContext* ctxt, ActorEnRuppecrow* 
     }
     Rupee_CheckAndSetGiIndex(&item->base, ctxt, giIndex);
     return item;
-}
+}*/

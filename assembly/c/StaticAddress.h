@@ -20,8 +20,8 @@ typedef struct {
     struct DpadConfig* dpadConfig;
     struct HudColorConfig* hudColorConfig;
     struct MiscConfig* miscConfig;
-    struct MMRConfig* mmrConfig;
-    struct MusicConfig* musicConfig;
+    //struct MMRConfig* mmrConfig;
+    //struct MusicConfig* musicConfig;
     struct SaveFileConfig* saveFileConfig;
     struct WorldColorConfig* worldColorConfig;
 } StaticAddressConfig;

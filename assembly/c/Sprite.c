@@ -45,7 +45,7 @@ Sprite gSpriteDpad = {
 };
 
 Sprite gSpriteFont = {
-    NULL, 8, 14, 95,
+    NULL, 8, 14, 108,
     G_IM_FMT_IA, G_IM_SIZ_8b, 1
 };
 
@@ -159,42 +159,6 @@ void Sprite_Init(void) {
     // Allocate space for item textures
     int size = Sprite_GetBytesTotal(&gItemTexturesSprite);
     gItemTexturesSprite.buf = Util_HeapAlloc(size);
-    
-    /*UtilFile gParameterCounterStatic = {
-        NULL, z2ParameterCounterStaticVaddr, z2ParameterCounterStaticVsize
-    };
-    Util_FileInit(&gParameterCounterStatic);
-    gParameterCounter.buf = gParameterCounterStatic.buf;
-    
-    UtilFile gParameterAmmoDigitStatic = {
-        NULL, z2ParameterAmmoDigitStaticVaddr, z2ParameterAmmoDigitStaticVsize
-    };
-    Util_FileInit(&gParameterAmmoDigitStatic);
-    gParameterAmmoDigit.buf = gParameterAmmoDigitStatic.buf;
-    
-    UtilFile gParameterClockStatic = {
-        NULL, z2ParameterClockStaticVaddr, z2ParameterClockStaticVsize
-    };
-    Util_FileInit(&gParameterClockStatic);
-    gParameterClock.buf = gParameterClockStatic.buf;
-    
-    UtilFile gParameterNoteButtonsStatic = {
-        NULL, z2ParameterNoteButtonsStaticVaddr, z2ParameterNoteButtonsStaticVsize
-    };
-    Util_FileInit(&gParameterNoteButtonsStatic);
-    gParameterNoteButtons.buf = gParameterNoteButtonsStatic.buf;
-    
-    UtilFile gParameterSunMoonStatic = {
-        NULL, z2ParameterSunMoonStaticVaddr, z2ParameterSunMoonStaticVsize
-    };
-    Util_FileInit(&gParameterSunMoonStatic);
-    gParameterSunMoon.buf = gParameterSunMoonStatic.buf;
-    
-    UtilFile gHudToggleStatic = {
-        NULL, z2HudToggleStaticVaddr, z2HudToggleStaticVsize
-    };
-    Util_FileInit(&gHudToggleStatic);
-    gHudToggle.buf = gHudToggleStatic.buf;*/
 
     // Initialize font texture buffer.
     int fontBytes = Sprite_GetBytesTotal(&gSpriteFont);

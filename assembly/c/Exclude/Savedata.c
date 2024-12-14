@@ -16,7 +16,7 @@ typedef struct {
 
 // TODO enum for ItemToReceive
 #define resettingItemsLength 6
-static ResettingItem resettingItems[resettingItemsLength] = {
+/*static ResettingItem resettingItems[resettingItemsLength] = {
     {
         .originalId = 0xA, // Magic Bean
         .newId = 0xA,
@@ -41,7 +41,7 @@ static ResettingItem resettingItems[resettingItemsLength] = {
         .originalId = 0x25, // Bottle with Chateau Romani
         .newId = 0x9F, // Chateau Romani
     },
-};
+};*/
 
 static void Savedata_SetStartingItems(GlobalContext* ctxt) {
     // Give extra starting maps.
